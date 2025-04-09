@@ -6,39 +6,85 @@
 }
 
 <div class="min-h-screen flex items-center justify-center bg-cover bg-center" style="background-image: url('/images/background.png');">
-    <!-- Aumentando o tamanho do container do formulário -->
-    <div class="bg-white bg-opacity-90 p-12 rounded-2xl shadow-lg w-full max-w-5xl h-screen"> <!-- Aumentei o max-w para 5xl e a altura para a tela inteira -->
+    <!-- Container do formulário ajustado para ser um pouco menor -->
+    <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-lg w-full max-w-4xl h-auto">
         
-        <!-- Foto de perfil -->
-        <div class="flex justify-center mb-8">
-            <img src="url-da-imagem" alt="Foto de Perfil" class="w-32 h-32 rounded-full border-4 border-green-900" />
+        <!-- Foto de perfil com funcionalidade de selecionar imagem -->
+        <div class="flex justify-center mb-6 relative">
+            <!-- Imagem de perfil -->
+            <img id="perfil-img" src="/images/efault-profile.jpg" class="w-28 h-28 rounded-full border-4 border-green-900 cursor-pointer" onclick="document.getElementById('image-picker').click();" />
+            <!-- Galeria de imagens (escondida por padrão) -->
+            <div id="image-gallery" class="absolute top-10 bg-white border p-4 rounded-lg shadow-md grid grid-cols-4 gap-2 hidden">
+                <!-- Exemplo de imagens predefinidas -->
+                <img src="/images/mulher.jpg" class="w-14 h-14 rounded-full cursor-pointer" onclick="selectImage('/images/mulher.jpg')" />
+                <img src="/images/homem.jpg" class="w-14 h-14 rounded-full cursor-pointer" onclick="selectImage('/images/homem.jpg')" />
+                <img src="/images/mulher2.jpg" class="w-14 h-14 rounded-full cursor-pointer" onclick="selectImage('/images/mulher2.jpg')" />
+                <img src="/images/homem2.jpg" class="w-14 h-14 rounded-full cursor-pointer" onclick="selectImage('/images/homem2.jpg')" />
+                <img src="/images/mulher3.jpg" class="w-14 h-14 rounded-full cursor-pointer" onclick="selectImage('/images/mulher3.jpg')" />
+                <img src="/images/homem3.jpg" class="w-14 h-14 rounded-full cursor-pointer" onclick="selectImage('/images/homem3.jpg')" />
+            </div>
         </div>
 
-        <h2 class="text-3xl font-semibold mb-8 text-center text-green-900">Editar Perfil</h2>
+        <h2 class="text-2xl font-semibold mb-6 text-center text-green-900">Editar Perfil</h2>
 
         <!-- Seção de Informações Pessoais -->
         <div class="space-y-6">
-            <h3 class="text-2xl font-semibold text-green-900">Informações Pessoais</h3>
+            <h3 class="text-xl font-semibold text-green-900">Informações Pessoais</h3>
 
             <div class="flex justify-between">
                 <label asp-for="Utilizador.Nome" class="block text-sm font-medium text-gray-700 w-1/3">Nome</label>
-                <input asp-for="Utilizador.Nome" class="mt-1 block w-2/3 rounded-md border-gray-300 shadow-sm focus:border-green-900 focus:ring focus:ring-green-200" />
+                <input asp-for="Utilizador.Nome" class="mt-1 block w-2/3 p-3 rounded-xl border-gray-300 shadow-sm focus:border-green-900 focus:ring focus:ring-green-200" />
             </div>
 
             <div class="flex justify-between">
                 <label asp-for="Utilizador.Email" class="block text-sm font-medium text-gray-700 w-1/3">Email</label>
-                <input asp-for="Utilizador.Email" class="mt-1 block w-2/3 rounded-md border-gray-300 shadow-sm focus:border-green-900 focus:ring focus:ring-green-200" />
+                <input asp-for="Utilizador.Email" class="mt-1 block w-2/3 p-3 rounded-xl border-gray-300 shadow-sm focus:border-green-900 focus:ring focus:ring-green-200" />
             </div>
 
             <div class="flex justify-between">
                 <label asp-for="Utilizador.CargaHorariaDiaria" class="block text-sm font-medium text-gray-700 w-1/3">Carga Horária Diária</label>
-                <input asp-for="Utilizador.CargaHorariaDiaria" type="number" class="mt-1 block w-2/3 rounded-md border-gray-300 shadow-sm focus:border-green-900 focus:ring focus:ring-green-200" />
+                <input asp-for="Utilizador.CargaHorariaDiaria" type="number" class="mt-1 block w-2/3 p-3 rounded-xl border-gray-300 shadow-sm focus:border-green-900 focus:ring focus:ring-green-200" />
             </div>
         </div>
 
         <div class="flex justify-between pt-6">
-            <button type="submit" class="bg-green-900 text-white px-8 py-3 rounded-lg hover:bg-green-800">Guardar</button>
-            <a asp-page="/PerfilVisualizar" class="bg-gray-300 text-gray-800 px-8 py-3 rounded-lg hover:bg-gray-400">Cancelar</a>
+            <button type="submit" class="bg-green-900 text-white px-6 py-2 rounded-lg hover:bg-green-800">Guardar</button>
+            <a asp-page="/PerfilVisualizar" class="bg-gray-300 text-gray-800 px-6 py-2 rounded-xl hover:bg-gray-400">Cancelar</a>
         </div>
     </div>  
 </div>
+
+<!-- Hidden file input for selecting image (used when clicking on profile image) -->
+<input id="image-picker" type="file" class="hidden" accept="image/*" onchange="previewImage(event)" />
+
+<script>
+    // Função para selecionar a imagem ao clicar na galeria
+    function selectImage(imageSrc) {
+        document.getElementById('perfil-img').src = imageSrc;
+        document.getElementById('image-gallery').classList.add('hidden'); // Oculta a galeria após a seleção
+    }
+
+    // Função para mostrar a galeria ao clicar na foto de perfil
+    document.getElementById('perfil-img').addEventListener('click', function() {
+        document.getElementById('image-gallery').classList.toggle('hidden');
+    });
+
+    // Função para fechar a galeria ao clicar fora dela
+    document.addEventListener('click', function(event) {
+        const imageGallery = document.getElementById('image-gallery');
+        const profileImg = document.getElementById('perfil-img');
+        if (!imageGallery.contains(event.target) && event.target !== profileImg) {
+            imageGallery.classList.add('hidden');
+        }
+    });
+
+    // Função para fazer upload de uma imagem
+    function previewImage(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('perfil-img').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+</script>
