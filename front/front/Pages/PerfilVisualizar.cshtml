@@ -1,30 +1,105 @@
 @page
 @model front.Pages.PerfilVisualizarModel
 @{
-    ViewData["Title"] = "Ver Perfil";
-    Layout = "_Layout";
+    ViewData["Title"] = "Perfil do Utilizador";
 }
 
-<div class="max-w-2xl mx-auto mt-10 bg-white rounded-2xl shadow-lg p-6">
-    <h2 class="text-2xl font-semibold mb-6 text-center text-green-900">Informações do Perfil</h2>
+<div class="min-h-screen bg-[url('/images/background.png')] bg-cover bg-center flex items-center justify-center p-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start w-full max-w-5xl">
 
-    <div class="space-y-4">
-        <div>
-            <span class="text-sm font-medium text-gray-600">Nome</span>
-            <div class="text-lg font-semibold text-gray-900">@Model.Utilizador.Nome</div>
-        </div>
-        <div>
-            <span class="text-sm font-medium text-gray-600">Email</span>
-            <div class="text-lg font-semibold text-gray-900">@Model.Utilizador.Email</div>
-        </div>
-        <div>
-            <span class="text-sm font-medium text-gray-600">Carga Horária Diária</span>
-            <div class="text-lg font-semibold text-gray-900">@Model.Utilizador.CargaHorariaDiaria horas</div>
-        </div>
-    </div>
+        <!-- Coluna 1: Card do Perfil -->
+        <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-lg hover:shadow-2xl transition">
+            <div class="flex justify-center mb-4">
+                <div class="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center shadow-md">
+                    <svg class="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M5.121 17.804A9.004 9.004 0 0112 15c1.657 0 3.183.507 4.443 1.367M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                </div>
+            </div>
 
-    <div class="flex justify-between pt-6">
-        <a asp-page="/PerfilEditar" class="bg-green-900 text-white px-4 py-2 rounded hover:bg-green-800">Editar</a>
-        <a asp-page="/Home" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">Voltar</a>
+            <h2 class="text-2xl font-bold text-green-800 text-center mb-6">Meu Perfil</h2>
+
+            <div class="text-sm space-y-4">
+                <div>
+                    <p class="text-gray-700 font-semibold">Nome</p>
+                    <p class="text-lg font-bold">@Model.Utilizador.Nome</p>
+                </div>
+                <div>
+                    <p class="text-gray-700 font-semibold">Email</p>
+                    <p class="text-lg font-bold">@Model.Utilizador.Email</p>
+                </div>
+                <div>
+                    <p class="text-gray-700 font-semibold">Carga Horária Diária</p>
+                    <p class="text-lg font-bold">@Model.Utilizador.CargaHorariaDiaria horas</p>
+                </div>
+            </div>
+
+            <div class="flex justify-between mt-6">
+                <a href="/PerfilEditar"
+                   class="inline-flex items-center gap-2 bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-green-800 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M15.232 5.232l3.536 3.536M9 13l6-6m-4 10h4a2 2 0 002-2v-4m-6 6H6a2 2 0 01-2-2v-4m0 0l10-10" />
+                    </svg>
+                    Editar Perfil
+                </a>
+                <a href="/Dashboard" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 transition">Voltar</a>
+            </div>
+        </div>
+
+        <!-- Coluna 2: Resumo lateral -->
+        <div class="space-y-6">
+            <div class="bg-green-50 p-6 rounded-2xl shadow w-full">
+                <h3 class="text-lg font-semibold text-green-800 mb-4">Resumo</h3>
+                <ul class="text-sm space-y-3 text-black">
+                    <li class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 7v10a1 1 0 001 1h16a1 1 0 001-1V7M3 7l9 6 9-6" />
+                        </svg>
+                        <strong>3</strong> projetos ativos
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <strong>32</strong> horas este mês
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 7V3m8 4V3m-9 4h10M5 11h14M5 15h14M5 19h14" />
+                        </svg>
+                        <strong>4</strong> tarefas em curso
+                    </li>
+                </ul>
+            </div>
+
+            <div class="space-y-3">
+                <a href="/RelatorioMensal" class="block bg-green-100 text-black px-4 py-2 rounded hover:bg-green-200 transition flex items-center gap-2">
+                    <svg class="h-5 w-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 3h18M9 3v18M15 3v18" />
+                    </svg>
+                    Aceder ao Relatório Mensal 
+                </a>
+                <a href="/Dashboard" class="block bg-green-100 text-black px-4 py-2 rounded hover:bg-green-200 transition flex items-center gap-2">
+                    <svg class="h-5 w-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6m-6 0H5v10h14V12h-6z" />
+                    </svg>
+                    Voltar ao Dashboard
+                </a>
+                <a href="/Tarefas" class="block bg-green-100 text-black px-4 py-2 rounded hover:bg-green-200 transition flex items-center gap-2">
+                    <svg class="h-5 w-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6M9 16h6M9 8h6M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Aceder às Tarefas
+                </a>
+            </div>
+        </div>
     </div>
 </div>
