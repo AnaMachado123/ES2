@@ -1,0 +1,30 @@
+@page
+@model front.Pages.PerfilVisualizarModel
+@{
+    ViewData["Title"] = "Ver Perfil";
+    Layout = "_Layout";
+}
+
+<div class="max-w-2xl mx-auto mt-10 bg-white rounded-2xl shadow-lg p-6">
+    <h2 class="text-2xl font-semibold mb-6 text-center text-green-900">Informações do Perfil</h2>
+
+    <div class="space-y-4">
+        <div>
+            <span class="text-sm font-medium text-gray-600">Nome</span>
+            <div class="text-lg font-semibold text-gray-900">@Model.Utilizador.Nome</div>
+        </div>
+        <div>
+            <span class="text-sm font-medium text-gray-600">Email</span>
+            <div class="text-lg font-semibold text-gray-900">@Model.Utilizador.Email</div>
+        </div>
+        <div>
+            <span class="text-sm font-medium text-gray-600">Carga Horária Diária</span>
+            <div class="text-lg font-semibold text-gray-900">@Model.Utilizador.CargaHorariaDiaria horas</div>
+        </div>
+    </div>
+
+    <div class="flex justify-between pt-6">
+        <a asp-page="/PerfilEditar" class="bg-green-900 text-white px-4 py-2 rounded hover:bg-green-800">Editar</a>
+        <a asp-page="/Home" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">Voltar</a>
+    </div>
+</div>

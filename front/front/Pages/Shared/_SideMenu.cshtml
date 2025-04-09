@@ -1,0 +1,64 @@
+@{
+    var active = ViewData["ActivePage"] as string;
+}
+
+<div class="h-screen w-64 bg-green-900 bg-opacity-98 backdrop-blur-sm shadow-md flex flex-col justify-between">
+    <div>
+        <!-- Logo -->
+        <div class="px-6 py-5 flex items-center space-x-2 border-b border-green-800">
+            <span class="font-semibold text-lg text-white">Serviços & Clientes</span>
+        </div>
+
+        <!-- Menu -->
+        <nav class="mt-4 flex flex-col gap-2 px-4">
+
+            <a href="/Dashboard"
+               class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium
+                      @(active == "Dashboard" ? "bg-white text-green-900" : "text-white hover:bg-green-800")">
+                <i class="bi bi-house-door-fill"></i> Home
+            </a>
+
+            <a href="/Projetos"
+               class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium
+                      @(active == "Projetos" ? "bg-white text-green-900" : "text-white hover:bg-green-800")">
+                <i class="bi bi-folder-fill"></i> Projetos
+            </a>
+
+            <a href="/Tarefas"
+               class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium
+                      @(active == "Tarefas" ? "bg-white text-green-900" : "text-white hover:bg-green-800")">
+                <i class="bi bi-check2-square"></i> Tarefas
+            </a>
+
+            <a href="/Perfil"
+               class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium
+                      @(active == "Perfil" ? "bg-white text-green-900" : "text-white hover:bg-green-800")">
+                <i class="bi bi-person-fill"></i> Perfil
+            </a>
+
+            <a href="/Lixo"
+               class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium
+                      @(active == "Lixo" ? "bg-white text-green-900" : "text-white hover:bg-green-800")">
+                <i class="bi bi-trash-fill"></i> Lixo
+            </a>
+
+            <a href="/Configuracoes"
+               class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium
+                      @(active == "Configuracoes" ? "bg-white text-green-900" : "text-white hover:bg-green-800")">
+                <i class="bi bi-gear-fill"></i> Definições
+            </a>
+
+            <a href="/Ajuda"
+               class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium
+                      @(active == "Ajuda" ? "bg-white text-green-900" : "text-white hover:bg-green-800")">
+                <i class="bi bi-question-circle-fill"></i> Ajuda
+            </a>
+
+        </nav>
+    </div>
+
+    <!-- Rodapé -->
+    <div class="text-xs text-center text-white py-4 border-t border-green-800 px-2">
+        &copy; 2025 - Gestão de Serviços
+    </div>
+</div>

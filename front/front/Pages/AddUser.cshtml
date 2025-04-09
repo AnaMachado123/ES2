@@ -1,0 +1,63 @@
+﻿@page "/adduser"
+@model front.Pages.AddUserModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Utilizadores Info</title>
+  <!-- Include Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+  <div class=" bg-white bg-opacity-90 p-8 rounded 2xl shadow-lg  w-full max-w-md ">
+    <h1 class="text-2xl font-bold text-green-800 mb-4">Adicionar Utilizador</h1>
+    <div class="mb-4">
+      <label for="nome" class="block text-gray-700">Nome</label>
+      <input id="nome" type="text" placeholder="Nome"
+             class="mt-1 block w-full border border-gray-300 rounded p-2" />
+    </div>
+    <div class="mb-4">
+      <label for="email" class="block text-gray-700">Email</label>
+      <input id="email" type="email" placeholder="Email"
+             class="mt-1 block w-full border border-gray-300 rounded p-2" />
+    </div>
+    <div class="mb-4">
+      <label for="password" class="block text-gray-700">Password</label>
+      <input id="password" type="password" placeholder="Password"
+             class="mt-1 block w-full border border-gray-300 rounded p-2" />
+    </div>
+    <button id="submitBtn" class="w-full bg-green-700 text-white py-2 px-4 rounded hover:bg-green-700">
+      Adicionar
+    </button>
+  </div>
+
+  <script>
+    document.getElementById('submitBtn').addEventListener('click', function () {
+      const nome = document.getElementById('nome').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+      const data = { nome, email, password };
+
+      fetch('http://localhost:5085/api/utilizador/adicionar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (response.ok) {
+          alert('Utilizador adicionado com sucesso!');
+        } else {
+          alert('Erro ao adicionar o utilizador.');
+        }
+      })
+      .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro na requisição.');
+      });
+    });
+  </script>
+</body>
+</html>
