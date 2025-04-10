@@ -1,0 +1,32 @@
+@page "{id:int}"
+@model front.Pages.Projetos.VerModel
+@{
+    ViewData["Title"] = "Detalhes do Projeto";
+    ViewData["ActivePage"] = "Projetos";
+}
+
+<div class="min-h-screen bg-[url('/images/background.png')] bg-cover bg-center flex items-center justify-center p-10">
+    <div class="bg-white bg-opacity-95 p-10 rounded-2xl shadow-xl w-full max-w-3xl">
+        <h1 class="text-3xl font-bold text-green-800 mb-6">Detalhes do Projeto</h1>
+
+        <div class="space-y-6 text-gray-800">
+            <div>
+                <h2 class="text-lg font-semibold">Nome do Projeto:</h2>
+                <p class="text-xl">@Model.Projeto.Nome</p>
+            </div>
+            <div>
+                <h2 class="text-lg font-semibold">Cliente:</h2>
+                <p class="text-xl">@Model.Projeto.Cliente</p>
+            </div>
+            <div>
+                <h2 class="text-lg font-semibold">Estado:</h2>
+                <p class="text-xl">@Model.Projeto.Estado</p>
+            </div>
+        </div>
+
+        <div class="flex justify-between mt-8">
+            <a href="/Projetos" class="bg-gray-300 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-400">Voltar</a>
+            <a href="/Projetos/Editar?id=@Model.Projeto.Id" class="bg-yellow-500 text-white px-6 py-2 rounded-lg hover:bg-yellow-600">Editar</a>
+        </div>
+    </div>
+</div>

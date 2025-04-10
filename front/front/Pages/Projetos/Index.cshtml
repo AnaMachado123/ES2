@@ -1,7 +1,8 @@
 @page
-@model front.Pages.ProjetosModel
+@model front.Pages.Projetos.IndexModel
 @{
     ViewData["Title"] = "Projetos";
+    ViewData["ActivePage"] = "Projetos";
 }
 
 <div class="min-h-screen bg-[url('/images/background.png')] bg-cover bg-center p-10">
@@ -19,9 +20,9 @@
                 </div>
 
                 <div class="flex justify-between mt-6 text-sm">
-                    <a href="/Projetos/Ver/@projeto.Id" class="text-blue-600 hover:underline">Ver</a>
-                    <a href="/Projetos/Editar/@projeto.Id" class="text-yellow-600 hover:underline">Editar</a>
-                    <a href="/Projetos/Apagar/@projeto.Id" class="text-red-600 hover:underline">Apagar</a>
+                    <a asp-page="/Projetos/Ver" asp-route-id="@projeto.Id" class="text-blue-600 hover:underline">Ver</a>
+                    <a asp-page="/Projetos/Editar" asp-route-id="@projeto.Id" class="text-yellow-600 hover:underline">Editar</a>
+                    <a asp-page="/Projetos/Apagar" asp-route-id="@projeto.Id" class="text-red-600 hover:underline">Apagar</a>
                 </div>
             </div>
         }
