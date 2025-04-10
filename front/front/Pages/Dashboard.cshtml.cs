@@ -18,9 +18,9 @@ namespace front.Pages
 
             Projetos = new List<Projeto>
             {
-                new Projeto { Id = 1, Nome = "Gestão de Redes", Cliente = "Ana Machado", Status = "Em curso" },
-                new Projeto { Id = 2, Nome = "Website IPVC", Cliente = "Carlos Silva", Status = "Pendente" },
-                new Projeto { Id = 3, Nome = "API Financeira", Cliente = "Ana Machado", Status = "Concluído" }
+                new Projeto { Id = 1, Nome = "Gestão de Redes", Cliente = "Eduarda Gomes", Status = "Em curso" },
+                new Projeto { Id = 2, Nome = "Website IPVC", Cliente = "Adriana Meira", Status = "Pendente" },
+                new Projeto { Id = 3, Nome = "API Financeira", Cliente = "Diana Matos", Status = "Concluído" }
             };
         }
     }
