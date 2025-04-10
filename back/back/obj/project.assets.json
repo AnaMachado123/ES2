@@ -3430,24 +3430,26 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Eduarda Gomes\\.nuget\\packages\\": {}
+    "C:\\Users\\Admin\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Eduarda Gomes\\OneDrive\\Desktop\\ES2\\sprint1\\esfinal\\esfinal\\back\\back\\back.csproj",
+      "projectUniqueName": "C:\\Users\\Admin\\Desktop\\UNI\\2ºANO\\2_SEMESTRE\\EngSoftII\\trabalhoPratico\\esfinal\\ES2\\back\\back\\back.csproj",
       "projectName": "back",
-      "projectPath": "C:\\Users\\Eduarda Gomes\\OneDrive\\Desktop\\ES2\\sprint1\\esfinal\\esfinal\\back\\back\\back.csproj",
-      "packagesPath": "C:\\Users\\Eduarda Gomes\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Eduarda Gomes\\OneDrive\\Desktop\\ES2\\sprint1\\esfinal\\esfinal\\back\\back\\obj\\",
+      "projectPath": "C:\\Users\\Admin\\Desktop\\UNI\\2ºANO\\2_SEMESTRE\\EngSoftII\\trabalhoPratico\\esfinal\\ES2\\back\\back\\back.csproj",
+      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Admin\\Desktop\\UNI\\2ºANO\\2_SEMESTRE\\EngSoftII\\trabalhoPratico\\esfinal\\ES2\\back\\back\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Eduarda Gomes\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
