@@ -6,30 +6,26 @@
 }
 
 <div class="min-h-screen flex items-center justify-center bg-cover bg-center" style="background-image: url('/images/background.png');">
-    <!-- Container do formulário ajustado para ser um pouco menor -->
-    <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-lg w-full max-w-4xl h-auto">
-        
-        <!-- Foto de perfil com funcionalidade de selecionar imagem -->
-        <div class="flex justify-center mb-6 relative">
-            <!-- Imagem de perfil -->
-            <img id="perfil-img" src="/images/efault-profile.jpg" class="w-28 h-28 rounded-full border-4 border-green-900 cursor-pointer" onclick="document.getElementById('image-picker').click();" />
-            <!-- Galeria de imagens (escondida por padrão) -->
-            <div id="image-gallery" class="absolute top-10 bg-white border p-4 rounded-lg shadow-md grid grid-cols-4 gap-2 hidden">
-                <!-- Exemplo de imagens predefinidas -->
-                <img src="/images/mulher.jpg" class="w-14 h-14 rounded-full cursor-pointer" onclick="selectImage('/images/mulher.jpg')" />
-                <img src="/images/homem.jpg" class="w-14 h-14 rounded-full cursor-pointer" onclick="selectImage('/images/homem.jpg')" />
-                <img src="/images/mulher2.jpg" class="w-14 h-14 rounded-full cursor-pointer" onclick="selectImage('/images/mulher2.jpg')" />
-                <img src="/images/homem2.jpg" class="w-14 h-14 rounded-full cursor-pointer" onclick="selectImage('/images/homem2.jpg')" />
-                <img src="/images/mulher3.jpg" class="w-14 h-14 rounded-full cursor-pointer" onclick="selectImage('/images/mulher3.jpg')" />
-                <img src="/images/homem3.jpg" class="w-14 h-14 rounded-full cursor-pointer" onclick="selectImage('/images/homem3.jpg')" />
+    <div class="bg-white bg-opacity-90 p-10 rounded-2xl shadow-lg w-full max-w-4xl">
+        <form method="post">
+            <!-- Foto de Perfil -->
+            <div class="flex justify-center mb-6 relative">
+                <img id="perfil-img" src="/images/efault-profile.jpg" class="w-28 h-28 rounded-full border-4 border-green-900 cursor-pointer" onclick="document.getElementById('image-picker').click();" />
+
+                <div id="image-gallery" class="absolute top-10 bg-white border p-4 rounded-lg shadow-md grid grid-cols-4 gap-2 hidden z-10">
+                    <img src="/images/mulher.jpg" class="w-14 h-14 rounded-full cursor-pointer" onclick="selectImage('/images/mulher.jpg')" />
+                    <img src="/images/homem.jpg" class="w-14 h-14 rounded-full cursor-pointer" onclick="selectImage('/images/homem.jpg')" />
+                    <img src="/images/mulher2.jpg" class="w-14 h-14 rounded-full cursor-pointer" onclick="selectImage('/images/mulher2.jpg')" />
+                    <img src="/images/homem2.jpg" class="w-14 h-14 rounded-full cursor-pointer" onclick="selectImage('/images/homem2.jpg')" />
+                    <img src="/images/mulher3.jpg" class="w-14 h-14 rounded-full cursor-pointer" onclick="selectImage('/images/mulher3.jpg')" />
+                    <img src="/images/homem3.jpg" class="w-14 h-14 rounded-full cursor-pointer" onclick="selectImage('/images/homem3.jpg')" />
+                </div>
             </div>
-        </div>
 
-        <h2 class="text-2xl font-semibold mb-6 text-center text-green-900">Editar Perfil</h2>
+            <h2 class="text-2xl font-semibold mb-6 text-center text-green-900">Editar Perfill</h2>
 
-        <!-- Seção de Informações Pessoais -->
-        <div class="space-y-6">
-            <h3 class="text-xl font-semibold text-green-900">Informações Pessoais</h3>
+            <div class="space-y-6">
+                <h3 class="text-xl font-semibold text-green-900">Informações Pessoais</h3>
 
             <div class="flex justify-between">
                 <label asp-for="Utilizador.Nome" class="block text-sm font-medium text-gray-700 w-1/3">Nome</label>
@@ -51,19 +47,12 @@
             <button type="submit" class="bg-green-900 text-white px-6 py-2 rounded-lg hover:bg-green-800">Guardar</button>
             <a asp-page="/PerfilVisualizar" class="bg-gray-300 text-gray-800 px-6 py-2 rounded-xl hover:bg-gray-400">Cancelar</a>
         </div>
-
-        <div class="flex justify-between pt-4">
-            <button type="submit" class="bg-green-900 text-white px-4 py-2 rounded hover:bg-green-800">Guardar</button>
-            <a asp-page="/Dashboard" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">Cancelar</a>
-
-        </div>
+    </form>
 </div>
 
-<!-- Hidden file input for selecting image (used when clicking on profile image) -->
 <input id="image-picker" type="file" class="hidden" accept="image/*" onchange="previewImage(event)" />
 
 <script>
-    // Função para selecionar a imagem ao clicar na galeria
     function selectImage(imageSrc) {
         document.getElementById('perfil-img').src = imageSrc;
         document.getElementById('image-gallery').classList.add('hidden'); // Oculta a galeria após a seleção
@@ -83,7 +72,6 @@
         }
     });
 
-    // Função para fazer upload de uma imagem
     function previewImage(event) {
         const file = event.target.files[0];
         const reader = new FileReader();
