@@ -1,120 +1,78 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using back.Models;
+using BackendTesteESII.Data;
+using BackendTesteESII.Models;
 
-namespace back.Controllers
+namespace BackendTesteESII.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class UtilizadorController : ControllerBase
 {
+    private readonly GestaoServicosClientesContext _context;
 
-    public class UtilizadorRequest {
-        public string Nome { get; set; } = null!;
-
-        public string Password { get; set; } = null!;
-
-        public string Email { get; set; } = null!;
+    public UtilizadorController(GestaoServicosClientesContext context)
+    {
+        _context = context;
     }
 
-    [Route("api/utilizador")]
-    [ApiController]
-    public class UtilizadorController : ControllerBase
+    // GET: api/utilizador
+    [HttpGet]
+    public ActionResult<IEnumerable<Utilizador>> GetUtilizadores()
     {
-        private readonly GestaoServicosClientesContext _context;
+        return Ok(_context.Utilizadores.ToList());
+    }
 
-        public UtilizadorController(GestaoServicosClientesContext context)
-        {
-            _context = context;
-        }
+    // GET: api/utilizador/5
+    [HttpGet("{id}")]
+    public ActionResult<Utilizador> GetUtilizador(int id)
+    {
+        var utilizador = _context.Utilizadores.Find(id);
+        if (utilizador == null)
+            return NotFound();
 
-        // GET: api/Utilizador
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Utilizador>>> GetUtilizadors()
-        {
-            return await _context.Utilizadors.ToListAsync();
-        }
+        return Ok(utilizador);
+    }
 
-        // GET: api/Utilizador/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Utilizador>> GetUtilizador(int id)
-        {
-            var utilizador = await _context.Utilizadors.FindAsync(id);
-            if (utilizador == null)
-            {
-                return NotFound();
-            }
-            return utilizador;
-        }
+    // POST: api/utilizador
+    [HttpPost]
+    public ActionResult<Utilizador> PostUtilizador(Utilizador utilizador)
+    {
+        _context.Utilizadores.Add(utilizador);
+        _context.SaveChanges();
 
-        // POST: api/Utilizador/adicionar
-        [HttpPost("adicionar")]
-        public async Task<ActionResult<Utilizador>> PostUtilizador(UtilizadorRequest utilizador)
-        {
-            // Map the properties from the UtilizadorRequest to the new Utilizador entity
-            Utilizador utilizadorVdd = new Utilizador
-            {
-                Nome = utilizador.Nome,
-                Password = utilizador.Password,
-                Email = utilizador.Email,
-            };
+        return CreatedAtAction(nameof(GetUtilizador), new { id = utilizador.Id }, utilizador);
+    }
 
-            _context.Utilizadors.Add(utilizadorVdd);
-            await _context.SaveChangesAsync();
+    // PUT: api/utilizador/5
+    [HttpPut("{id}")]
+    public IActionResult PutUtilizador(int id, Utilizador utilizador)
+    {
+        if (id != utilizador.Id)
+            return BadRequest();
 
-            // Return the newly created entity using its generated Id
-            return CreatedAtAction(nameof(GetUtilizador), new { id = utilizadorVdd.Id }, utilizadorVdd);
-        }
+        var u = _context.Utilizadores.Find(id);
+        if (u == null)
+            return NotFound();
 
+        u.Nome = utilizador.Nome;
+        u.Email = utilizador.Email;
+        u.Password = utilizador.Password;
+        u.HorasDia = utilizador.HorasDia;
 
-        // PUT: api/Utilizador/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUtilizador(int id, Utilizador utilizador)
-        {
-            if (id != utilizador.Id)
-            {
-                return BadRequest();
-            }
+        _context.SaveChanges();
+        return NoContent();
+    }
 
-            _context.Entry(utilizador).State = EntityState.Modified;
+    // DELETE: api/utilizador/5
+    [HttpDelete("{id}")]
+    public IActionResult DeleteUtilizador(int id)
+    {
+        var utilizador = _context.Utilizadores.Find(id);
+        if (utilizador == null)
+            return NotFound();
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UtilizadorExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // DELETE: api/Utilizador/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUtilizador(int id)
-        {
-            var utilizador = await _context.Utilizadors.FindAsync(id);
-            if (utilizador == null)
-            {
-                return NotFound();
-            }
-
-            _context.Utilizadors.Remove(utilizador);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool UtilizadorExists(int id)
-        {
-            return _context.Utilizadors.Any(e => e.Id == id);
-        }
+        _context.Utilizadores.Remove(utilizador);
+        _context.SaveChanges();
+        return NoContent();
     }
 }
