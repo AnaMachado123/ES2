@@ -12,19 +12,24 @@ namespace front.Pages
 
         public void OnGet()
         {
-            // Dados ainda não estão a ser buscados do backend
-            TotalProjetos = 0;
-            TarefasPendentes = 0;
-            TotalClientes = 0;
-            Projetos = new List<Projeto>();
-        }
+            TotalProjetos = 3;
+            TarefasPendentes = 4;
+            TotalClientes = 2;
 
-        public class Projeto
-        {
-            public int Id { get; set; }
-            public string? Nome { get; set; }
-            public string? Cliente { get; set; }
-            public string? Status { get; set; }
+            Projetos = new List<Projeto>
+            {
+                new Projeto { Id = 1, Nome = "Gestão de Redes", Cliente = "Ana Machado", Status = "Em curso" },
+                new Projeto { Id = 2, Nome = "Website IPVC", Cliente = "Carlos Silva", Status = "Pendente" },
+                new Projeto { Id = 3, Nome = "API Financeira", Cliente = "Ana Machado", Status = "Concluído" }
+            };
         }
+    }
+
+    public class Projeto
+    {
+        public int Id { get; set; }
+        public string? Nome { get; set; }
+        public string? Cliente { get; set; }
+        public string? Status { get; set; }
     }
 }
