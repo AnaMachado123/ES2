@@ -1,23 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace back.Models;
+namespace BackendTesteESII.Models;
 
-public partial class Convite
+[Table("convite")]
+public class Convite
 {
+    [Key]
+    [Column("id")]
     public int Id { get; set; }
 
-    public string? Status { get; set; }
+    [Required]
+    [Column("utilizador_id")]
+    public int UtilizadorId { get; set; }
 
-    public DateOnly? Dataenvio { get; set; }
+    [Required]
+    [Column("projeto_id")]
+    public int ProjetoId { get; set; }
 
-    public DateOnly? Dataresposta { get; set; }
-
-    public int? Utilizadorid { get; set; }
-
-    public int? Projetoid { get; set; }
-
-    public virtual Projeto1? Projeto { get; set; }
-
-    public virtual Utilizador? Utilizador { get; set; }
+    [Required]
+    [Column("estado")]
+    [StringLength(50)]
+    public string Estado { get; set; } = string.Empty;
 }

@@ -1,31 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace back.Models;
+namespace BackendTesteESII.Models;
 
-public partial class Tarefa
+[Table("tarefa")]
+public class Tarefa
 {
+    [Key]
+    [Column("id")]
     public int Id { get; set; }
 
-    public string Descricao { get; set; } = null!;
+    [Required]
+    [Column("descricao")]
+    [StringLength(300)]
+    public string Descricao { get; set; } = string.Empty;
 
-    public DateOnly? Datainicio { get; set; }
+    [Required]
+    [Column("data_inicio")]
+    public DateTime DataInicio { get; set; }
 
-    public DateOnly? Datafim { get; set; }
+    [Required]
+    [Column("data_fim")]
+    public DateTime DataFim { get; set; }
 
-    public decimal? Preco { get; set; }
+    [Required]
+    [Column("status")]
+    [StringLength(50)]
+    public string Status { get; set; } = string.Empty;
 
-    public string? Status { get; set; }
+    [Required]
+    [Column("projeto_id")]
+    public int ProjetoId { get; set; }
 
-    public int? Projetoid { get; set; }
+    [Required]
+    [Column("utilizador_id")]
+    public int UtilizadorId { get; set; }
 
-    public int? Utilizadorid { get; set; }
-
-    public int? Relatorioprojid { get; set; }
-
-    public virtual Projeto1? Projeto { get; set; }
-
-    public virtual Relatorioproj? Relatorioproj { get; set; }
-
-    public virtual Utilizador? Utilizador { get; set; }
+    [Required]
+    [Column("horas_gastas")]
+    public int HorasGastas { get; set; }
 }

@@ -1,15 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace back.Models;
+namespace BackendTesteESII.Models;
 
-public partial class Projeto
+[Table("projeto")]
+public class Projeto
 {
+    [Key]
+    [Column("id")]
     public int Id { get; set; }
 
-    public string Nome { get; set; } = null!;
+    [Required]
+    [Column("nome")]
+    [StringLength(100)]
+    public string Nome { get; set; } = string.Empty;
 
-    public string Cliente { get; set; } = null!;
+    [Required]
+    [Column("descricao")]
+    [StringLength(500)]
+    public string Descricao { get; set; } = string.Empty;
 
-    public decimal PrecoHora { get; set; }
+    [Required]
+    [Column("data_inicio")]
+    public DateTime DataInicio { get; set; }
+
+    [Required]
+    [Column("data_fim")]
+    public DateTime DataFim { get; set; }
+
+    [Required]
+    [Column("cliente_id")]
+    public int ClienteId { get; set; }
+
+    [Required]
+    [Column("horas_trabalho")]
+    public int HorasTrabalho { get; set; }
+
+    [Required]
+    [Column("utilizador_id")]
+    public int UtilizadorId { get; set; }
+
+    [Required]
+    [Column("estado")]
+    [StringLength(50)]
+    public string Estado { get; set; } = string.Empty;
+
+    public ICollection<UtilizadorProjeto> UtilizadorProjetos { get; set; } = new List<UtilizadorProjeto>();
+
 }

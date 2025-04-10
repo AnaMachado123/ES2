@@ -3,24 +3,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BackendTesteESII.Models;
 
-[Table("relatorio")]
-public class Relatorio
+[Table("relatorio_projeto")]
+public class RelatorioProjeto
 {
     [Key]
     [Column("id")]
     public int Id { get; set; }
 
     [Required]
-    [Column("utilizador_id")]
-    public int UtilizadorId { get; set; }
+    [Column("projeto_id")]
+    public int ProjetoId { get; set; }
 
     [Required]
-    [Column("mes")]
-    public int Mes { get; set; }
-
-    [Required]
-    [Column("ano")]
-    public int Ano { get; set; }
+    [Column("cliente_id")]
+    public int ClienteId { get; set; }
 
     [Required]
     [Column("total_horas")]

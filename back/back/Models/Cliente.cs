@@ -1,19 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace back.Models;
+namespace BackendTesteESII.Models;
 
-public partial class Cliente
+[Table("cliente")]
+public class Cliente
 {
+    [Key]
+    [Column("id")]
     public int Id { get; set; }
 
-    public string Nome { get; set; } = null!;
+    [Required]
+    [Column("nome")]
+    [StringLength(100)]
+    public string Nome { get; set; } = string.Empty;
 
-    public string Email { get; set; } = null!;
+    [Required]
+    [Column("email")]
+    [StringLength(100)]
+    [EmailAddress]
+    public string Email { get; set; } = string.Empty;
 
-    public string? Telefone { get; set; }
+    [Required]
+    [Column("telefone")]
+    [StringLength(20)]
+    public string Telefone { get; set; } = string.Empty;
 
-    public virtual ICollection<Projeto1> Projeto1s { get; set; } = new List<Projeto1>();
-
-    public virtual ICollection<Relatorioproj> Relatorioprojs { get; set; } = new List<Relatorioproj>();
 }
