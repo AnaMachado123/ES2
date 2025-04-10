@@ -4,36 +4,8 @@
     ViewData["Title"] = "Editar Projeto";
 }
 
-<style>
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .fade-in-up {
-        animation: fadeInUp 0.7s ease-out;
-    }
-
-    .glass-card {
-        background-color: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-    }
-
-    .hover-glow:hover {
-        box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
-        transition: box-shadow 0.3s ease-in-out;
-    }
-</style>
-
 <div class="min-h-screen bg-[url('/images/background.png')] bg-cover bg-center p-10 flex items-center justify-center">
-    <div class="glass-card fade-in-up p-10 rounded-2xl shadow-xl w-full max-w-4xl">
-
+    <div class="bg-white bg-opacity-95 p-10 rounded-2xl shadow-xl w-full max-w-4xl">
         <h1 class="text-3xl font-bold text-green-800 mb-8">Editar Projeto</h1>
 
         <form method="post">
@@ -87,13 +59,8 @@
             </div>
 
             <div class="flex justify-between">
-                <a asp-page="/Projetos/Index"
-                   class="px-6 py-2 rounded-xl bg-gray-300 hover:bg-gray-400 hover-glow">Cancelar</a>
-
-                <button type="submit"
-                        class="px-6 py-2 bg-yellow-500 text-white rounded-xl hover:bg-yellow-600 hover-glow">
-                    Guardar Alterações
-                </button>
+                <a asp-page="/Projetos/Index" class="px-6 py-2 rounded-xl bg-gray-300 hover:bg-gray-400">Cancelar</a>
+                <button type="submit" class="px-6 py-2 bg-yellow-500 text-white rounded-xl hover:bg-yellow-600">Guardar Alterações</button>
             </div>
         </form>
     </div>
@@ -101,11 +68,11 @@
 
 <script>
     function toggleDataFim(select) {
-        const dataFimContainer = document.getElementById('data-fim-container');
-        if (select.value === 'Concluído') {
-            dataFimContainer.classList.remove('hidden');
+        const dataFim = document.getElementById('data-fim-container');
+        if (select.value === "Concluído") {
+            dataFim.classList.remove("hidden");
         } else {
-            dataFimContainer.classList.add('hidden');
+            dataFim.classList.add("hidden");
         }
     }
 
