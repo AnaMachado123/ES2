@@ -21,7 +21,7 @@ namespace front.Pages
 
         public void OnGet()
         {
-            // Página carregada normalmente
+            // Carregamento inicial
         }
 
         public IActionResult OnPost()
@@ -32,24 +32,11 @@ namespace front.Pages
                 return Page();
             }
 
-            // Aqui no futuro vais chamar a API via HttpClient ou usar serviço para guardar os dados
-            // Exemplo simulado:
-            Console.WriteLine($"Projeto: {Nome}, Preço/Hora: {Precohora}, Cliente: {Clienteid}, Utilizador: {Utilizadorid}");
+            // Aqui futuramente vais guardar na base de dados (API/backend)
+            Console.WriteLine($"Projeto Criado: {Nome}, Preço/Hora: {Precohora}, ClienteID: {Clienteid}, UtilizadorID: {Utilizadorid}");
 
-            // (Opcional) Pega as tarefas do form
-            var form = Request.Form;
-            var tarefas = new List<string>();
-            foreach (var key in form.Keys)
-            {
-                if (key.Contains("descricao"))
-                {
-                    tarefas.Add(form[key]);
-                }
-            }
-
-            Mensagem = "Projeto criado com sucesso!";
-
-            return Page(); // Renderiza de novo a página com a mensagem
+            TempData["MensagemSucesso"] = $"Projeto \"{Nome}\" criado com sucesso!";
+            return RedirectToPage("/Projetos/Index");
         }
     }
 }
