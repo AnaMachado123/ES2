@@ -5,28 +5,50 @@
     ViewData["ActivePage"] = "Projetos";
 }
 
-<div class="min-h-screen bg-[url('/images/background.png')] bg-cover bg-center flex items-center justify-center p-10">
-    <div class="bg-white bg-opacity-95 p-10 rounded-2xl shadow-xl w-full max-w-3xl">
-        <h1 class="text-3xl font-bold text-green-800 mb-6">Detalhes do Projeto</h1>
+<div class="min-h-screen bg-[url('/images/background.png')] bg-cover bg-center p-10 flex items-center justify-center">
+    <div class="bg-white bg-opacity-90 p-10 rounded-2xl shadow-xl w-full max-w-3xl">
+        <h2 class="text-3xl font-bold text-green-800 mb-8">📋 Detalhes do Projeto</h2>
 
-        <div class="space-y-6 text-gray-800">
-            <div>
-                <h2 class="text-lg font-semibold">Nome do Projeto:</h2>
-                <p class="text-xl">@Model.Projeto.Nome</p>
-            </div>
-            <div>
-                <h2 class="text-lg font-semibold">Cliente:</h2>
-                <p class="text-xl">@Model.Projeto.Cliente</p>
-            </div>
-            <div>
-                <h2 class="text-lg font-semibold">Estado:</h2>
-                <p class="text-xl">@Model.Projeto.Estado</p>
-            </div>
+        <div class="space-y-4 text-gray-800 text-base">
+            <p>
+                <strong class="text-green-900">Nome do Projeto:</strong> @Model.Projeto.Nome
+            </p>
+            <p>
+                <strong class="text-green-900">Cliente:</strong> @Model.Projeto.Cliente
+            </p>
+            <p>
+                <strong class="text-green-900">Estado:</strong> @Model.Projeto.Estado
+            </p>
+            <p>
+                <strong class="text-green-900">Descrição:</strong> @Model.Projeto.Descricao
+            </p>
+            <p>
+                <strong class="text-green-900">Data de Início:</strong> @Model.Projeto.DataInicio.ToString("dd/MM/yyyy")
+            </p>
+            <p>
+                <strong class="text-green-900">Data de Fim:</strong> 
+                @(Model.Projeto.Estado == "Concluído" ? 
+                    Model.Projeto.DataFim.ToString("dd/MM/yyyy") : 
+                    "---")
+            </p>
+            <p>
+                <strong class="text-green-900">Horas de Trabalho:</strong> @Model.Projeto.HorasTrabalho h
+            </p>
+            <p>
+                <strong class="text-green-900">Utilizador ID:</strong> @Model.Projeto.UtilizadorId
+            </p>
+            <p>
+                <strong class="text-green-900">Cliente ID:</strong> @Model.Projeto.ClienteId
+            </p>
         </div>
 
-        <div class="flex justify-between mt-8">
-            <a href="/Projetos" class="bg-gray-300 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-400">Voltar</a>
-            <a href="/Projetos/Editar?id=@Model.Projeto.Id" class="bg-yellow-500 text-white px-6 py-2 rounded-lg hover:bg-yellow-600">Editar</a>
+        <div class="flex justify-between mt-10">
+            <a href="/Projetos" class="bg-gray-300 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-400 transition">
+                Voltar
+            </a>
+            <a href="/Projetos/Editar/@Model.Projeto.Id" class="bg-yellow-400 text-white px-6 py-2 rounded-lg hover:bg-yellow-500 transition">
+                Editar
+            </a>
         </div>
     </div>
 </div>
