@@ -8,6 +8,14 @@
 <div class="min-h-screen bg-[url('/images/background.png')] bg-cover bg-center p-10">
     <h1 class="text-3xl font-bold text-green-800 mb-8">Projetos</h1>
 
+    <!-- Mensagem de sucesso -->
+    @if (TempData["MensagemSucesso"] != null)
+    {
+        <div class="bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded-lg mb-6 shadow-md transition duration-300">
+            @TempData["MensagemSucesso"]
+        </div>
+    }
+
     <!-- Grid de projetos -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @foreach (var projeto in Model.Projetos)
@@ -28,7 +36,7 @@
         }
     </div>
 
-    <!-- Botão de adicionar -->
+    <!-- Botão de adicionar projeto -->
     <div class="flex justify-end mt-8">
         <a href="/Projetos/Novo" class="bg-green-700 text-white px-6 py-3 rounded-lg hover:bg-green-800 flex items-center gap-2">
             <span class="text-2xl">+</span> <span>Novo Projeto</span>
