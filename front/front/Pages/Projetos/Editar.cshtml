@@ -2,57 +2,116 @@
 @model front.Pages.Projetos.EditarModel
 @{
     ViewData["Title"] = "Editar Projeto";
-    ViewData["ActivePage"] = "Projetos";
 }
 
-<div class="min-h-screen bg-[url('/images/background.png')] bg-cover bg-center flex items-center justify-center p-10">
-    <div class="bg-white bg-opacity-90 p-10 rounded-2xl shadow-xl w-full max-w-2xl">
-        <h2 class="text-3xl font-bold text-green-800 mb-8">✏️ Editar Projeto</h2>
+<style>
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .fade-in-up {
+        animation: fadeInUp 0.7s ease-out;
+    }
+
+    .glass-card {
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+    }
+
+    .hover-glow:hover {
+        box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+        transition: box-shadow 0.3s ease-in-out;
+    }
+</style>
+
+<div class="min-h-screen bg-[url('/images/background.png')] bg-cover bg-center p-10 flex items-center justify-center">
+    <div class="glass-card fade-in-up p-10 rounded-2xl shadow-xl w-full max-w-4xl">
+
+        <h1 class="text-3xl font-bold text-green-800 mb-8">Editar Projeto</h1>
 
         <form method="post">
-            <div class="space-y-4">
+            <input type="hidden" asp-for="Projeto.Id" />
+
+            <div class="mb-4">
+                <label asp-for="Projeto.Nome" class="block font-semibold text-gray-700">Nome do Projeto</label>
+                <input asp-for="Projeto.Nome" class="w-full mt-1 p-3 rounded-xl border-gray-300 shadow-sm" />
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Projeto.Descricao" class="block font-semibold text-gray-700">Descrição</label>
+                <textarea asp-for="Projeto.Descricao" rows="5" class="w-full mt-1 p-3 rounded-xl border-gray-300 shadow-sm"></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                 <div>
-                    <label asp-for="Projeto.Nome" class="block text-sm font-medium text-gray-700">Nome do Projeto</label>
-                    <input asp-for="Projeto.Nome" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+                    <label asp-for="Projeto.ClienteId" class="block font-semibold text-gray-700">Cliente ID</label>
+                    <input asp-for="Projeto.ClienteId" class="w-full mt-1 p-3 rounded-xl border-gray-300 shadow-sm" />
                 </div>
-
                 <div>
-                    <label asp-for="Projeto.Descricao" class="block text-sm font-medium text-gray-700">Descrição</label>
-                    <textarea asp-for="Projeto.Descricao" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" rows="4"></textarea>
-                </div>
-
-                <div>
-                    <label asp-for="Projeto.DataInicio" class="block text-sm font-medium text-gray-700">Data de Início</label>
-                    <input asp-for="Projeto.DataInicio" type="date" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
-                </div>
-
-                <div>
-                    <label asp-for="Projeto.Estado" class="block text-sm font-medium text-gray-700">Estado</label>
-                    <select asp-for="Projeto.Estado" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
-                        <option>Concluído</option>
-                        <option>Em Curso</option>
-                        <option>A iniciar</option>
-                        <option>Em desenvolvimento</option>
-                    </select>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label asp-for="Projeto.ClienteId" class="block text-sm font-medium text-gray-700">Cliente ID</label>
-                        <input asp-for="Projeto.ClienteId" type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
-                    </div>
-
-                    <div>
-                        <label asp-for="Projeto.UtilizadorId" class="block text-sm font-medium text-gray-700">Utilizador ID</label>
-                        <input asp-for="Projeto.UtilizadorId" type="number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
-                    </div>
+                    <label asp-for="Projeto.UtilizadorId" class="block font-semibold text-gray-700">Utilizador ID</label>
+                    <input asp-for="Projeto.UtilizadorId" class="w-full mt-1 p-3 rounded-xl border-gray-300 shadow-sm" />
                 </div>
             </div>
 
-            <div class="flex justify-between mt-8">
-                <a href="/Projetos" class="bg-gray-300 text-gray-800 px-6 py-2 rounded hover:bg-gray-400">Cancelar</a>
-                <button type="submit" class="bg-green-700 text-white px-6 py-2 rounded hover:bg-green-800">Guardar</button>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                <div>
+                    <label asp-for="Projeto.DataInicio" class="block font-semibold text-gray-700">Data de Início</label>
+                    <input asp-for="Projeto.DataInicio" type="date" class="w-full mt-1 p-3 rounded-xl border-gray-300 shadow-sm" />
+                </div>
+
+                <div>
+                    <label asp-for="Projeto.Estado" class="block font-semibold text-gray-700">Estado</label>
+                    <select asp-for="Projeto.Estado" class="w-full mt-1 p-3 rounded-xl border-gray-300 shadow-sm" onchange="toggleDataFim(this)">
+                        <option>Em Curso</option>
+                        <option>Pendente</option>
+                        <option>Concluído</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="data-fim-container" class="mb-4 hidden">
+                <label asp-for="Projeto.DataFim" class="block font-semibold text-gray-700">Data de Fim</label>
+                <input asp-for="Projeto.DataFim" type="date" class="w-full mt-1 p-3 rounded-xl border-gray-300 shadow-sm" />
+            </div>
+
+            <div class="mb-6">
+                <label asp-for="Projeto.HorasTrabalho" class="block font-semibold text-gray-700">Horas de Trabalho</label>
+                <input asp-for="Projeto.HorasTrabalho" type="number" class="w-full mt-1 p-3 rounded-xl border-gray-300 shadow-sm" />
+            </div>
+
+            <div class="flex justify-between">
+                <a asp-page="/Projetos/Index"
+                   class="px-6 py-2 rounded-xl bg-gray-300 hover:bg-gray-400 hover-glow">Cancelar</a>
+
+                <button type="submit"
+                        class="px-6 py-2 bg-yellow-500 text-white rounded-xl hover:bg-yellow-600 hover-glow">
+                    Guardar Alterações
+                </button>
             </div>
         </form>
     </div>
 </div>
+
+<script>
+    function toggleDataFim(select) {
+        const dataFimContainer = document.getElementById('data-fim-container');
+        if (select.value === 'Concluído') {
+            dataFimContainer.classList.remove('hidden');
+        } else {
+            dataFimContainer.classList.add('hidden');
+        }
+    }
+
+    // Executar ao carregar a página
+    window.onload = function () {
+        const estadoSelect = document.querySelector("select[name='Projeto.Estado']");
+        toggleDataFim(estadoSelect);
+    }
+</script>

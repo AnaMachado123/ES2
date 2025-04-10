@@ -6,45 +6,53 @@ namespace front.Pages.Projetos
     public class EditarModel : PageModel
     {
         [BindProperty]
-        public ProjetoEditavel Projeto { get; set; }
+        public ProjetoModel Projeto { get; set; } = new();
 
-        public void OnGet(int id)
+        public IActionResult OnGet(int id)
         {
-            // Simula buscar dados do projeto (por enquanto estático)
-            Projeto = new ProjetoEditavel
+            // Simulação de busca do projeto (poderia vir da base de dados)
+            Projeto = new ProjetoModel
             {
                 Id = id,
                 Nome = "Gestão de Redes",
-                Descricao = "Sistema de Gestão de Redes desenvolvido para monitorizar, administrar e otimizar a infraestrutura de rede de uma organização. Permite acompanhar o desempenho de dispositivos, gerir permissões de acesso, detetar falhas em tempo real e gerar relatórios detalhados. A solução oferece integração com dashboards interativos, suporte a protocolos de segurança e funcionalidades de manutenção preventiva, garantindo maior fiabilidade, eficiência e segurança em ambientes empresariais ou académicos.",
-                DataInicio = new DateTime(2025, 1, 15),
-                Estado = "Em Curso",
+                Descricao = "Sistema de Gestão de Redes desenvolvido...",
                 ClienteId = 101,
-                UtilizadorId = 99
+                UtilizadorId = 99,
+                Estado = "Em Curso",
+                DataInicio = new DateTime(2025, 1, 15),
+                // DataFim só virá se for concluído
+                HorasTrabalho = 140
             };
+
+            return Page();
         }
 
         public IActionResult OnPost()
         {
-            if (!ModelState.IsValid)
+            if (Projeto.Estado == "Concluído" && Projeto.DataFim == null)
             {
-                return Page();
+                ModelState.AddModelError("Projeto.DataFim", "A data de fim é obrigatória se o estado for 'Concluído'.");
             }
 
-            // Simular salvamento
-            // Aqui você colocaria lógica para salvar no banco
+            if (!ModelState.IsValid)
+                return Page();
 
-            return RedirectToPage("/Projetos/Ver", new { id = Projeto.Id });
+            // Aqui salvavas na base de dados ou enviavas para o backend
+
+            return RedirectToPage("/Projetos/Index");
         }
 
-        public class ProjetoEditavel
+        public class ProjetoModel
         {
             public int Id { get; set; }
-            public string Nome { get; set; }
-            public string Descricao { get; set; }
-            public DateTime DataInicio { get; set; }
-            public string Estado { get; set; }
+            public string Nome { get; set; } = string.Empty;
+            public string Descricao { get; set; } = string.Empty;
             public int ClienteId { get; set; }
             public int UtilizadorId { get; set; }
+            public string Estado { get; set; } = string.Empty;
+            public DateTime DataInicio { get; set; }
+            public DateTime? DataFim { get; set; }  // Opcional
+            public int HorasTrabalho { get; set; }
         }
     }
 }
