@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendTesteESII.Migrations
 {
     [DbContext(typeof(GestaoServicosClientesContext))]
-    [Migration("20250410160542_CriarTabelaTarefa")]
-    partial class CriarTabelaTarefa
+    [Migration("20250410160623_CriarTabelaRelatorio")]
+    partial class CriarTabelaRelatorio
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,6 +55,34 @@ namespace BackendTesteESII.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("cliente");
+                });
+
+            modelBuilder.Entity("BackendTesteESII.Models.Convite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("estado");
+
+                    b.Property<int>("ProjetoId")
+                        .HasColumnType("integer")
+                        .HasColumnName("projeto_id");
+
+                    b.Property<int>("UtilizadorId")
+                        .HasColumnType("integer")
+                        .HasColumnName("utilizador_id");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("convite");
                 });
 
             modelBuilder.Entity("BackendTesteESII.Models.Projeto", b =>
@@ -107,6 +135,86 @@ namespace BackendTesteESII.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("projeto");
+                });
+
+            modelBuilder.Entity("BackendTesteESII.Models.Relatorio", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Ano")
+                        .HasColumnType("integer")
+                        .HasColumnName("ano");
+
+                    b.Property<int>("Mes")
+                        .HasColumnType("integer")
+                        .HasColumnName("mes");
+
+                    b.Property<int>("TotalHoras")
+                        .HasColumnType("integer")
+                        .HasColumnName("total_horas");
+
+                    b.Property<decimal>("TotalPreco")
+                        .HasColumnType("numeric")
+                        .HasColumnName("total_preco");
+
+                    b.Property<int>("UtilizadorId")
+                        .HasColumnType("integer")
+                        .HasColumnName("utilizador_id");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("relatorio");
+                });
+
+            modelBuilder.Entity("BackendTesteESII.Models.Tarefa", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DataFim")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("data_fim");
+
+                    b.Property<DateTime>("DataInicio")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("data_inicio");
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)")
+                        .HasColumnName("descricao");
+
+                    b.Property<int>("HorasGastas")
+                        .HasColumnType("integer")
+                        .HasColumnName("horas_gastas");
+
+                    b.Property<int>("ProjetoId")
+                        .HasColumnType("integer")
+                        .HasColumnName("projeto_id");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("status");
+
+                    b.Property<int>("UtilizadorId")
+                        .HasColumnType("integer")
+                        .HasColumnName("utilizador_id");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tarefa");
                 });
 
             modelBuilder.Entity("BackendTesteESII.Models.Utilizador", b =>

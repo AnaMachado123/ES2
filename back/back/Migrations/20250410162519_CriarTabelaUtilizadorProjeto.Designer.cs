@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendTesteESII.Migrations
 {
     [DbContext(typeof(GestaoServicosClientesContext))]
-    [Migration("20250410161359_CriarTabelaConvite")]
-    partial class CriarTabelaConvite
+    [Migration("20250410162519_CriarTabelaUtilizadorProjeto")]
+    partial class CriarTabelaUtilizadorProjeto
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -137,6 +137,70 @@ namespace BackendTesteESII.Migrations
                     b.ToTable("projeto");
                 });
 
+            modelBuilder.Entity("BackendTesteESII.Models.Relatorio", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Ano")
+                        .HasColumnType("integer")
+                        .HasColumnName("ano");
+
+                    b.Property<int>("Mes")
+                        .HasColumnType("integer")
+                        .HasColumnName("mes");
+
+                    b.Property<int>("TotalHoras")
+                        .HasColumnType("integer")
+                        .HasColumnName("total_horas");
+
+                    b.Property<decimal>("TotalPreco")
+                        .HasColumnType("numeric")
+                        .HasColumnName("total_preco");
+
+                    b.Property<int>("UtilizadorId")
+                        .HasColumnType("integer")
+                        .HasColumnName("utilizador_id");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("relatorio");
+                });
+
+            modelBuilder.Entity("BackendTesteESII.Models.RelatorioProjeto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClienteId")
+                        .HasColumnType("integer")
+                        .HasColumnName("cliente_id");
+
+                    b.Property<int>("ProjetoId")
+                        .HasColumnType("integer")
+                        .HasColumnName("projeto_id");
+
+                    b.Property<int>("TotalHoras")
+                        .HasColumnType("integer")
+                        .HasColumnName("total_horas");
+
+                    b.Property<decimal>("TotalPreco")
+                        .HasColumnType("numeric")
+                        .HasColumnName("total_preco");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("relatorio_projeto");
+                });
+
             modelBuilder.Entity("BackendTesteESII.Models.Tarefa", b =>
                 {
                     b.Property<int>("Id")
@@ -217,6 +281,52 @@ namespace BackendTesteESII.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("utilizador");
+                });
+
+            modelBuilder.Entity("BackendTesteESII.Models.UtilizadorProjeto", b =>
+                {
+                    b.Property<int>("UtilizadorId")
+                        .HasColumnType("integer")
+                        .HasColumnName("utilizador_id");
+
+                    b.Property<int>("ProjetoId")
+                        .HasColumnType("integer")
+                        .HasColumnName("projeto_id");
+
+                    b.HasKey("UtilizadorId", "ProjetoId");
+
+                    b.HasIndex("ProjetoId");
+
+                    b.ToTable("utilizador_projeto");
+                });
+
+            modelBuilder.Entity("BackendTesteESII.Models.UtilizadorProjeto", b =>
+                {
+                    b.HasOne("BackendTesteESII.Models.Projeto", "Projeto")
+                        .WithMany("UtilizadorProjetos")
+                        .HasForeignKey("ProjetoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BackendTesteESII.Models.Utilizador", "Utilizador")
+                        .WithMany("UtilizadorProjetos")
+                        .HasForeignKey("UtilizadorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Projeto");
+
+                    b.Navigation("Utilizador");
+                });
+
+            modelBuilder.Entity("BackendTesteESII.Models.Projeto", b =>
+                {
+                    b.Navigation("UtilizadorProjetos");
+                });
+
+            modelBuilder.Entity("BackendTesteESII.Models.Utilizador", b =>
+                {
+                    b.Navigation("UtilizadorProjetos");
                 });
 #pragma warning restore 612, 618
         }

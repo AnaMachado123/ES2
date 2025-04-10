@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendTesteESII.Migrations
 {
     [DbContext(typeof(GestaoServicosClientesContext))]
-    [Migration("20250410161547_CriarTabelaRelatorio")]
-    partial class CriarTabelaRelatorio
+    [Migration("20250410155808_CriarTabelaConvite")]
+    partial class CriarTabelaConvite
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -135,40 +135,6 @@ namespace BackendTesteESII.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("projeto");
-                });
-
-            modelBuilder.Entity("BackendTesteESII.Models.Relatorio", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Ano")
-                        .HasColumnType("integer")
-                        .HasColumnName("ano");
-
-                    b.Property<int>("Mes")
-                        .HasColumnType("integer")
-                        .HasColumnName("mes");
-
-                    b.Property<int>("TotalHoras")
-                        .HasColumnType("integer")
-                        .HasColumnName("total_horas");
-
-                    b.Property<decimal>("TotalPreco")
-                        .HasColumnType("numeric")
-                        .HasColumnName("total_preco");
-
-                    b.Property<int>("UtilizadorId")
-                        .HasColumnType("integer")
-                        .HasColumnName("utilizador_id");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("relatorio");
                 });
 
             modelBuilder.Entity("BackendTesteESII.Models.Tarefa", b =>

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendTesteESII.Migrations
 {
     [DbContext(typeof(GestaoServicosClientesContext))]
-    [Migration("20250410162421_CriarTabelaUtilizadorProjeto")]
-    partial class CriarTabelaUtilizadorProjeto
+    [Migration("20250410161501_CriarTabelaRelatorioProjeto")]
+    partial class CriarTabelaRelatorioProjeto
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -281,52 +281,6 @@ namespace BackendTesteESII.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("utilizador");
-                });
-
-            modelBuilder.Entity("BackendTesteESII.Models.UtilizadorProjeto", b =>
-                {
-                    b.Property<int>("UtilizadorId")
-                        .HasColumnType("integer")
-                        .HasColumnName("utilizador_id");
-
-                    b.Property<int>("ProjetoId")
-                        .HasColumnType("integer")
-                        .HasColumnName("projeto_id");
-
-                    b.HasKey("UtilizadorId", "ProjetoId");
-
-                    b.HasIndex("ProjetoId");
-
-                    b.ToTable("utilizador_projeto");
-                });
-
-            modelBuilder.Entity("BackendTesteESII.Models.UtilizadorProjeto", b =>
-                {
-                    b.HasOne("BackendTesteESII.Models.Projeto", "Projeto")
-                        .WithMany("UtilizadorProjetos")
-                        .HasForeignKey("ProjetoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BackendTesteESII.Models.Utilizador", "Utilizador")
-                        .WithMany("UtilizadorProjetos")
-                        .HasForeignKey("UtilizadorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Projeto");
-
-                    b.Navigation("Utilizador");
-                });
-
-            modelBuilder.Entity("BackendTesteESII.Models.Projeto", b =>
-                {
-                    b.Navigation("UtilizadorProjetos");
-                });
-
-            modelBuilder.Entity("BackendTesteESII.Models.Utilizador", b =>
-                {
-                    b.Navigation("UtilizadorProjetos");
                 });
 #pragma warning restore 612, 618
         }

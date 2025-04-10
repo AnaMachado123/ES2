@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendTesteESII.Migrations
 {
     [DbContext(typeof(GestaoServicosClientesContext))]
-    [Migration("20250410160113_CriarTabelaUtilizador")]
+    [Migration("20250410141132_CriarTabelaUtilizador")]
     partial class CriarTabelaUtilizador
     {
         /// <inheritdoc />
@@ -107,42 +107,6 @@ namespace BackendTesteESII.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("projeto");
-                });
-
-            modelBuilder.Entity("BackendTesteESII.Models.Utilizador", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("email");
-
-                    b.Property<int>("HorasDia")
-                        .HasColumnType("integer")
-                        .HasColumnName("horas_dia");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("nome");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("password");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("utilizador");
                 });
 #pragma warning restore 612, 618
         }

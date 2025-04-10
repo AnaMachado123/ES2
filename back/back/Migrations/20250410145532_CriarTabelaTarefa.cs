@@ -7,26 +7,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendTesteESII.Migrations
 {
     /// <inheritdoc />
-    public partial class CriarTabelaConvite : Migration
+    public partial class CriarTabelaTarefa : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "convite",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    utilizador_id = table.Column<int>(type: "integer", nullable: false),
-                    projeto_id = table.Column<int>(type: "integer", nullable: false),
-                    estado = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_convite", x => x.id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "tarefa",
                 columns: table => new
@@ -50,9 +35,6 @@ namespace BackendTesteESII.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "convite");
-
             migrationBuilder.DropTable(
                 name: "tarefa");
         }
