@@ -248,3 +248,14 @@ C:\Users\Eduarda Gomes\OneDrive\Desktop\ES2\sprint1\esfinal\esfinal\back\back\ob
 C:\Users\Eduarda Gomes\OneDrive\Desktop\ES2\sprint1\esfinal\esfinal\back\back\obj\Debug\net9.0\back.pdb
 C:\Users\Eduarda Gomes\OneDrive\Desktop\ES2\sprint1\esfinal\esfinal\back\back\obj\Debug\net9.0\back.genruntimeconfig.cache
 C:\Users\Eduarda Gomes\OneDrive\Desktop\ES2\sprint1\esfinal\esfinal\back\back\obj\Debug\net9.0\ref\back.dll
+C:\Users\Admin\Desktop\UNI\2ºANO\2_SEMESTRE\EngSoftII\trabalhoPratico\esfinal\ES2\back\back\obj\Debug\net9.0\back.csproj.AssemblyReference.cache
+C:\Users\Admin\Desktop\UNI\2ºANO\2_SEMESTRE\EngSoftII\trabalhoPratico\esfinal\ES2\back\back\obj\Debug\net9.0\back.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\Desktop\UNI\2ºANO\2_SEMESTRE\EngSoftII\trabalhoPratico\esfinal\ES2\back\back\obj\Debug\net9.0\back.AssemblyInfoInputs.cache
+C:\Users\Admin\Desktop\UNI\2ºANO\2_SEMESTRE\EngSoftII\trabalhoPratico\esfinal\ES2\back\back\obj\Debug\net9.0\back.AssemblyInfo.cs
+C:\Users\Admin\Desktop\UNI\2ºANO\2_SEMESTRE\EngSoftII\trabalhoPratico\esfinal\ES2\back\back\obj\Debug\net9.0\back.csproj.CoreCompileInputs.cache
+C:\Users\Admin\Desktop\UNI\2ºANO\2_SEMESTRE\EngSoftII\trabalhoPratico\esfinal\ES2\back\back\obj\Debug\net9.0\back.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Admin\Desktop\UNI\2ºANO\2_SEMESTRE\EngSoftII\trabalhoPratico\esfinal\ES2\back\back\obj\Debug\net9.0\back.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Admin\Desktop\UNI\2ºANO\2_SEMESTRE\EngSoftII\trabalhoPratico\esfinal\ES2\back\back\obj\Debug\net9.0\back.sourcelink.json
+C:\Users\Admin\Desktop\UNI\2ºANO\2_SEMESTRE\EngSoftII\trabalhoPratico\esfinal\ES2\back\back\obj\Debug\net9.0\back.dll
+C:\Users\Admin\Desktop\UNI\2ºANO\2_SEMESTRE\EngSoftII\trabalhoPratico\esfinal\ES2\back\back\obj\Debug\net9.0\refint\back.dll
+C:\Users\Admin\Desktop\UNI\2ºANO\2_SEMESTRE\EngSoftII\trabalhoPratico\esfinal\ES2\back\back\obj\Debug\net9.0\back.pdb
