@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using BackendTesteESII.Data;
 using BackendTesteESII.Models;
+using BackendTesteESII.Models.DTOs;
 
 namespace BackendTesteESII.Controllers;
 
@@ -36,12 +37,24 @@ public class ProjetoController : ControllerBase
 
     // POST: api/projeto
     [HttpPost]
-    public ActionResult<Projeto> PostProjeto(Projeto projeto)
+    public ActionResult<Projeto> PostProjeto(ProjetoCreateDTO dto)
     {
-        _context.Projetos.Add(projeto);
+        var novo = new Projeto
+        {
+            Nome = dto.Nome,
+            Descricao = dto.Descricao,
+            DataInicio = dto.DataInicio,
+            DataFim = dto.DataFim,
+            ClienteId = dto.ClienteId,
+            HorasTrabalho = dto.HorasTrabalho,
+            UtilizadorId = dto.UtilizadorId,
+            Estado = dto.Estado
+        };
+
+        _context.Projetos.Add(novo);
         _context.SaveChanges();
 
-        return CreatedAtAction(nameof(GetProjeto), new { id = projeto.Id }, projeto);
+        return CreatedAtAction(nameof(GetProjeto), new { id = novo.Id }, novo);
     }
 
     // PUT: api/projeto/{id}
