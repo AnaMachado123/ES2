@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BackendTesteESII.Models.DTOs;
+namespace BackendTesteESII.Models;
 
 [Table("convite")]
 public class Convite
