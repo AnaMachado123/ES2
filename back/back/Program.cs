@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using BackendTesteESII.Data;
 using BackendTesteESII.Models;
+using BackendTesteESII.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -14,6 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IRelatorioService, RelatorioService>();
+
 
 builder.Services.AddDbContext<GestaoServicosClientesContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
