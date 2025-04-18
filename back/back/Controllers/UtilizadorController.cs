@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using BackendTesteESII.Data;
 using BackendTesteESII.Models;
+using BackendTesteESII.Models.DTOs;
 
 namespace BackendTesteESII.Controllers;
 
@@ -35,13 +36,23 @@ public class UtilizadorController : ControllerBase
 
     // POST: api/utilizador
     [HttpPost]
-    public ActionResult<Utilizador> PostUtilizador(Utilizador utilizador)
+    public ActionResult<Utilizador> PostUtilizador(UtilizadorCreateDTO dto)
     {
-        _context.Utilizadores.Add(utilizador);
+        var novo = new Utilizador
+        {
+            Nome = dto.Nome,
+            Email = dto.Email,
+            Password = dto.Password,
+            HorasDia = 8,         // valor por defeito
+            IsAdmin = false       // por segurança
+        };
+
+        _context.Utilizadores.Add(novo);
         _context.SaveChanges();
 
-        return CreatedAtAction(nameof(GetUtilizador), new { id = utilizador.Id }, utilizador);
+        return CreatedAtAction(nameof(GetUtilizador), new { id = novo.Id }, novo);
     }
+
 
     // PUT: api/utilizador/5
     [HttpPut("{id}")]
