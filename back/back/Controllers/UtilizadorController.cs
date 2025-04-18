@@ -3,87 +3,87 @@ using BackendTesteESII.Data;
 using BackendTesteESII.Models;
 using BackendTesteESII.Models.DTOs;
 
-namespace BackendTesteESII.Controllers;
-
-[Route("api/[controller]")]
-[ApiController]
-public class UtilizadorController : ControllerBase
+namespace BackendTesteESII.Controllers
 {
-    private readonly GestaoServicosClientesContext _context;
-
-    public UtilizadorController(GestaoServicosClientesContext context)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class UtilizadorController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly GestaoServicosClientesContext _context;
 
-    // GET: api/utilizador
-    [HttpGet]
-    public ActionResult<IEnumerable<Utilizador>> GetUtilizadores()
-    {
-        return Ok(_context.Utilizadores.ToList());
-    }
-
-    // GET: api/utilizador/5
-    [HttpGet("{id}")]
-    public ActionResult<Utilizador> GetUtilizador(int id)
-    {
-        var utilizador = _context.Utilizadores.Find(id);
-        if (utilizador == null)
-            return NotFound();
-
-        return Ok(utilizador);
-    }
-
-    // POST: api/utilizador
-    [HttpPost]
-    public ActionResult<Utilizador> PostUtilizador(UtilizadorCreateDTO dto)
-    {
-        var novo = new Utilizador
+        public UtilizadorController(GestaoServicosClientesContext context)
         {
-            Nome = dto.Nome,
-            Email = dto.Email,
-            Password = dto.Password,
-            HorasDia = 8,         // valor por defeito
-            IsAdmin = false       // por segurança
-        };
+            _context = context;
+        }
 
-        _context.Utilizadores.Add(novo);
-        _context.SaveChanges();
+        // GET: api/utilizador
+        [HttpGet]
+        public ActionResult<IEnumerable<Utilizador>> GetUtilizadores()
+        {
+            return Ok(_context.Utilizadores.ToList());
+        }
 
-        return CreatedAtAction(nameof(GetUtilizador), new { id = novo.Id }, novo);
-    }
+        // GET: api/utilizador/5
+        [HttpGet("{id}")]
+        public ActionResult<Utilizador> GetUtilizador(int id)
+        {
+            var utilizador = _context.Utilizadores.Find(id);
+            if (utilizador == null)
+                return NotFound();
 
+            return Ok(utilizador);
+        }
 
-    // PUT: api/utilizador/5
-    [HttpPut("{id}")]
-    public IActionResult PutUtilizador(int id, Utilizador utilizador)
-    {
-        if (id != utilizador.Id)
-            return BadRequest();
+        // POST: api/utilizador
+        [HttpPost]
+        public ActionResult<Utilizador> PostUtilizador(UtilizadorCreateDTO dto)
+        {
+            // Usando a fábrica para criar o utilizador de acordo com o tipo fornecido
+            var novo = UtilizadorFactory.CriarUtilizador(dto.Tipo);
 
-        var u = _context.Utilizadores.Find(id);
-        if (u == null)
-            return NotFound();
+            novo.Nome = dto.Nome;
+            novo.Email = dto.Email;
+            novo.Password = dto.Password;
+            novo.HorasDia = 8;         // valor por defeito
+            novo.IsAdmin = false;      // por segurança (ainda que possa ser alterado dependendo do tipo)
 
-        u.Nome = utilizador.Nome;
-        u.Email = utilizador.Email;
-        u.Password = utilizador.Password;
-        u.HorasDia = utilizador.HorasDia;
+            _context.Utilizadores.Add(novo);
+            _context.SaveChanges();
 
-        _context.SaveChanges();
-        return NoContent();
-    }
+            return CreatedAtAction(nameof(GetUtilizador), new { id = novo.Id }, novo);
+        }
 
-    // DELETE: api/utilizador/5
-    [HttpDelete("{id}")]
-    public IActionResult DeleteUtilizador(int id)
-    {
-        var utilizador = _context.Utilizadores.Find(id);
-        if (utilizador == null)
-            return NotFound();
+        // PUT: api/utilizador/5
+        [HttpPut("{id}")]
+        public IActionResult PutUtilizador(int id, Utilizador utilizador)
+        {
+            if (id != utilizador.Id)
+                return BadRequest();
 
-        _context.Utilizadores.Remove(utilizador);
-        _context.SaveChanges();
-        return NoContent();
+            var u = _context.Utilizadores.Find(id);
+            if (u == null)
+                return NotFound();
+
+            u.Nome = utilizador.Nome;
+            u.Email = utilizador.Email;
+            u.Password = utilizador.Password;
+            u.HorasDia = utilizador.HorasDia;
+
+            _context.SaveChanges();
+            return NoContent();
+        }
+
+        // DELETE: api/utilizador/5
+        [HttpDelete("{id}")]
+        public IActionResult DeleteUtilizador(int id)
+        {
+            var utilizador = _context.Utilizadores.Find(id);
+            if (utilizador == null)
+                return NotFound();
+
+            _context.Utilizadores.Remove(utilizador);
+            _context.SaveChanges();
+            return NoContent();
+        }
     }
 }
