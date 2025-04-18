@@ -19,14 +19,20 @@
         <h2 class="text-2xl font-bold text-green-800 mb-6 text-center">Bem-vindo(a)</h2>
 
         <form method="post" class="space-y-4">
+            @* ✅ Mensagens de erro vindas do backend *@
+            <partial name="_ValidationScriptsPartial" />
+            <div asp-validation-summary="All" class="text-red-600 text-sm mb-4"></div>
+
             <div>
-                <label for="email" class="block text-gray-700 font-semibold">Email</label>
-                <input asp-for="Email" type="email" id="email" class="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-green-600 focus:border-green-600 outline-none" />
+                <label asp-for="Email" class="block text-gray-700 font-semibold">Email</label>
+                <input asp-for="Email" type="email" id="email"
+                       class="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-green-600 focus:border-green-600 outline-none" />
             </div>
 
             <div>
-                <label for="password" class="block text-gray-700 font-semibold">Password</label>
-                <input asp-for="Password" type="password" id="password" class="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-green-600 focus:border-green-600 outline-none" />
+                <label asp-for="Password" class="block text-gray-700 font-semibold">Password</label>
+                <input asp-for="Password" type="password" id="password"
+                       class="w-full px-4 py-2 rounded-xl border border-gray-300 focus:ring-green-600 focus:border-green-600 outline-none" />
             </div>
 
             <button type="submit" class="w-full py-2 px-4 bg-green-700 text-white rounded-xl font-semibold hover:bg-green-800 transition">Entrar</button>

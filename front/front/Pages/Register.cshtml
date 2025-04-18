@@ -9,6 +9,10 @@
         <h2 class="text-2xl font-bold text-green-800 text-center mb-6">Criar Conta</h2>
 
         <form method="post" class="space-y-6">
+            <!-- Validação -->
+            <partial name="_ValidationScriptsPartial" />
+            <div asp-validation-summary="All" class="text-red-600 text-sm mb-4"></div>
+
             <div>
                 <label asp-for="Nome" class="block text-sm font-semibold text-gray-700">Nome</label>
                 <input asp-for="Nome" type="text" required
