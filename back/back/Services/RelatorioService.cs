@@ -14,7 +14,9 @@ namespace BackendTesteESII.Services
             => _context.Relatorios.ToList();
 
         public Relatorio GetById(int id)
-            => _context.Relatorios.Find(id);
+        {
+            return _context.Relatorios.Find(id);
+        }
 
         public Relatorio Create(Relatorio relatorio)
         {
