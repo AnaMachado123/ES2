@@ -41,5 +41,10 @@ namespace BackendTesteESII.Models
         {
             Console.WriteLine($"{Nome} ({Email}) - {HorasDia} horas/dia");
         }
+        public virtual bool PodeGerirUtilizadores()
+        {
+            return false; 
+        }
+
     }
 }
