@@ -14,7 +14,11 @@ namespace BackendTesteESII.Services
             => _context.Relatorios.ToList();
 
         public Relatorio GetById(int id)
-            => _context.Relatorios.Find(id);
+        {
+#pragma warning disable CS8603 // Possible null reference return.
+            return _context.Relatorios.Find(id);
+#pragma warning restore CS8603 // Possible null reference return.
+        }
 
         public Relatorio Create(Relatorio relatorio)
         {
