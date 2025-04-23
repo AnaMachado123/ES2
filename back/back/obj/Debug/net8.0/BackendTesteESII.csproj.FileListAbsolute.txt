@@ -115,3 +115,14 @@ C:\Users\Utilizador\OneDrive\Desktop\ES2\esfinal\back\back\obj\Debug\net8.0\refi
 C:\Users\Utilizador\OneDrive\Desktop\ES2\esfinal\back\back\obj\Debug\net8.0\BackendTesteESII.pdb
 C:\Users\Utilizador\OneDrive\Desktop\ES2\esfinal\back\back\obj\Debug\net8.0\BackendTesteESII.genruntimeconfig.cache
 C:\Users\Utilizador\OneDrive\Desktop\ES2\esfinal\back\back\obj\Debug\net8.0\ref\BackendTesteESII.dll
+C:\Users\Eduarda Gomes\OneDrive\Desktop\ES2\sprint1\esfinal\esfinal\back\back\obj\Debug\net8.0\BackendTesteESII.csproj.AssemblyReference.cache
+C:\Users\Eduarda Gomes\OneDrive\Desktop\ES2\sprint1\esfinal\esfinal\back\back\obj\Debug\net8.0\BackendTesteESII.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Eduarda Gomes\OneDrive\Desktop\ES2\sprint1\esfinal\esfinal\back\back\obj\Debug\net8.0\BackendTesteESII.AssemblyInfoInputs.cache
+C:\Users\Eduarda Gomes\OneDrive\Desktop\ES2\sprint1\esfinal\esfinal\back\back\obj\Debug\net8.0\BackendTesteESII.AssemblyInfo.cs
+C:\Users\Eduarda Gomes\OneDrive\Desktop\ES2\sprint1\esfinal\esfinal\back\back\obj\Debug\net8.0\BackendTesteESII.csproj.CoreCompileInputs.cache
+C:\Users\Eduarda Gomes\OneDrive\Desktop\ES2\sprint1\esfinal\esfinal\back\back\obj\Debug\net8.0\BackendTesteESII.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Eduarda Gomes\OneDrive\Desktop\ES2\sprint1\esfinal\esfinal\back\back\obj\Debug\net8.0\BackendTesteESII.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Eduarda Gomes\OneDrive\Desktop\ES2\sprint1\esfinal\esfinal\back\back\obj\Debug\net8.0\BackendTesteESII.sourcelink.json
+C:\Users\Eduarda Gomes\OneDrive\Desktop\ES2\sprint1\esfinal\esfinal\back\back\obj\Debug\net8.0\BackendTesteESII.dll
+C:\Users\Eduarda Gomes\OneDrive\Desktop\ES2\sprint1\esfinal\esfinal\back\back\obj\Debug\net8.0\refint\BackendTesteESII.dll
+C:\Users\Eduarda Gomes\OneDrive\Desktop\ES2\sprint1\esfinal\esfinal\back\back\obj\Debug\net8.0\BackendTesteESII.pdb
