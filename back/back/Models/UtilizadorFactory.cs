@@ -2,18 +2,31 @@ namespace BackendTesteESII.Models
 {
     public static class UtilizadorFactory
     {
-        public static Utilizador CriarUtilizador(string tipo)
-        {
-            if (tipo.Equals("admin", StringComparison.OrdinalIgnoreCase))
-            {
-                return new AdminUtilizador();
-            }
-            else if (tipo.Equals("regular", StringComparison.OrdinalIgnoreCase))
-            {
-                return new RegularUtilizador();
-            }
+        public static Utilizador Criar(Utilizador baseU)
 
-            throw new ArgumentException("Tipo de utilizador desconhecido.");
+    {
+            if (baseU.IsAdmin)
+        {
+                return new AdminUtilizador
+            {
+                Id = baseU.Id,
+                Nome = baseU.Nome,
+                Email = baseU.Email,
+                Password = baseU.Password,
+                HorasDia = baseU.HorasDia,
+                IsAdmin = true
+            };
+        }
+
+            return new RegularUtilizador
+            {
+                Id = baseU.Id,
+                Nome = baseU.Nome,
+                Email = baseU.Email,
+                Password = baseU.Password,
+                HorasDia = baseU.HorasDia,
+                IsAdmin = false
+            };
         }
     }
 }

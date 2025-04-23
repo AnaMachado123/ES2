@@ -6,5 +6,10 @@ namespace BackendTesteESII.Models
         {
             Console.WriteLine($"Admin: {Nome} ({Email}) - {HorasDia} horas/dia");
         }
+        public override bool PodeGerirUtilizadores()
+        {
+            return true;
+        }
+
     }
 }

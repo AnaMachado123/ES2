@@ -38,14 +38,14 @@ namespace BackendTesteESII.Controllers
         [HttpPost]
         public ActionResult<Utilizador> PostUtilizador(UtilizadorCreateDTO dto)
         {
-            // Usa a fábrica para criar o utilizador de acordo com o tipo fornecido
+            // Usando a fábrica para criar o utilizador de acordo com o tipo fornecido
             var novo = UtilizadorFactory.CriarUtilizador(dto.Tipo);
 
             novo.Nome = dto.Nome;
             novo.Email = dto.Email;
             novo.Password = dto.Password;
-            novo.HorasDia = 8;         
-            novo.IsAdmin = false;    
+            novo.HorasDia = 8;         // valor por defeito
+            novo.IsAdmin = false;      // por segurança (ainda que possa ser alterado dependendo do tipo)
 
             _context.Utilizadores.Add(novo);
             _context.SaveChanges();
@@ -84,6 +84,23 @@ namespace BackendTesteESII.Controllers
             _context.Utilizadores.Remove(utilizador);
             _context.SaveChanges();
             return NoContent();
+        }
+
+        // GET: api/utilizador/verificar-permissao/5
+        [HttpGet("verificar-permissao/{id}")]
+        public IActionResult VerificarPermissao(int id)
+        {
+            var userFromDb = _context.Utilizadores.FirstOrDefault(u => u.Id == id);
+            if (userFromDb == null)
+                return NotFound("Utilizador não encontrado.");
+
+            // Usa a Factory com base no IsAdmin
+            var utilizador = UtilizadorFactory.Criar(userFromDb);
+
+            if (utilizador.PodeGerirUtilizadores())
+                return Ok("Este utilizador tem permissão para realizar a gestão de outros utilizadores.");
+            else
+                return Ok("Este utilizador NÃO tem permissão para  realizar a gestão de outros utilizadores.");
         }
     }
 }
