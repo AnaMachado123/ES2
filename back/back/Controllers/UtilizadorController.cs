@@ -34,18 +34,19 @@ namespace BackendTesteESII.Controllers
             return Ok(utilizador);
         }
 
-
+        // POST: api/utilizador
         [HttpPost]
         public ActionResult<Utilizador> PostUtilizador(UtilizadorCreateDTO dto)
         {
-            // Usando a fábrica para criar o utilizador de acordo com o tipo fornecido
-            var novo = UtilizadorFactory.CriarUtilizador(dto.Tipo);
-
-            novo.Nome = dto.Nome;
-            novo.Email = dto.Email;
-            novo.Password = dto.Password;
-            novo.HorasDia = 8;         // valor por defeito
-            novo.IsAdmin = false;      // por segurança (ainda que possa ser alterado dependendo do tipo)
+            // Cria o utilizador base com os dados do DTO
+            var novo = new Utilizador
+            {
+                Nome = dto.Nome,
+                Email = dto.Email,
+                Password = dto.Password,
+                HorasDia = 8,
+                IsAdmin = dto.Tipo.Equals("admin", StringComparison.OrdinalIgnoreCase)
+            };
 
             _context.Utilizadores.Add(novo);
             _context.SaveChanges();
@@ -53,7 +54,7 @@ namespace BackendTesteESII.Controllers
             return CreatedAtAction(nameof(GetUtilizador), new { id = novo.Id }, novo);
         }
 
-      
+        // PUT: api/utilizador/5
         [HttpPut("{id}")]
         public IActionResult PutUtilizador(int id, Utilizador utilizador)
         {
