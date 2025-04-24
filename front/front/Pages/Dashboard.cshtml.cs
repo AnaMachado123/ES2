@@ -1,9 +1,12 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Http;
 
 namespace front.Pages
 {
     public class DashboardModel : PageModel
     {
+        public string TipoUtilizador { get; set; } = "regular"; // Default para segurança
+
         public int TotalProjetos { get; set; }
         public int TarefasPendentes { get; set; }
         public int TotalClientes { get; set; }
@@ -12,6 +15,9 @@ namespace front.Pages
 
         public void OnGet()
         {
+            // Obter tipo de utilizador guardado na sessão
+            TipoUtilizador = HttpContext.Session.GetString("Tipo") ?? "regular";
+
             TotalProjetos = 3;
             TarefasPendentes = 4;
             TotalClientes = 2;
