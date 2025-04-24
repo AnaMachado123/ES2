@@ -16,6 +16,17 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IRelatorioService, RelatorioService>();
+builder.Services.AddScoped<IClienteService, ClienteService>();
+builder.Services.AddScoped<IProjetoService, ProjetoService>();
+builder.Services.AddScoped<ITarefaService, TarefaService>();
+builder.Services.AddScoped<IUtilizadorService, UtilizadorService>();
+builder.Services.AddScoped<IConviteService, ConviteService>();
+builder.Services.AddScoped<IRelatorioProjetoService, RelatorioProjetoService>();
+builder.Services.AddScoped<ILoginService, LoginService>();
+
+
+
+
 
 
 builder.Services.AddDbContext<GestaoServicosClientesContext>(options =>
