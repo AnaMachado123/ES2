@@ -18,6 +18,8 @@ public class GestaoServicosClientesContext : DbContext
     public DbSet<Relatorio> Relatorios { get; set; }
     public DbSet<RelatorioProjeto> RelatoriosProjeto { get; set; }
     public DbSet<UtilizadorProjeto> UtilizadoresProjeto { get; set; }
+    public DbSet<RelatorioProjeto> RelatorioProjetos { get; set; }
+
 
 
 

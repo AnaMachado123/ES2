@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using BackendTesteESII.Data;
 using BackendTesteESII.Models;
 using BackendTesteESII.Models.DTOs;
+using BackendTesteESII.Services; // 👈 Importa o namespace do serviço
 
 namespace BackendTesteESII.Controllers;
 
@@ -9,90 +9,42 @@ namespace BackendTesteESII.Controllers;
 [ApiController]
 public class ProjetoController : ControllerBase
 {
-    private readonly GestaoServicosClientesContext _context;
+    private readonly IProjetoService _service;
 
-    public ProjetoController(GestaoServicosClientesContext context)
+    public ProjetoController(IProjetoService service)
     {
-        _context = context;
+        _service = service;
     }
 
-    // GET: api/projeto
     [HttpGet]
-    public ActionResult<IEnumerable<Projeto>> GetProjetos()
-    {
-        return Ok(_context.Projetos.ToList());
-    }
+    public IActionResult GetProjetos() => Ok(_service.GetAll());
 
-    // GET: api/projeto/{id}
     [HttpGet("{id}")]
-    public ActionResult<Projeto> GetProjeto(int id)
+    public IActionResult GetProjeto(int id)
     {
-        var projeto = _context.Projetos.Find(id);
-
-        if (projeto == null)
-            return NotFound();
-
-        return Ok(projeto);
+        var projeto = _service.GetById(id);
+        return projeto == null ? NotFound() : Ok(projeto);
     }
 
-    // POST: api/projeto
     [HttpPost]
-    public ActionResult<Projeto> PostProjeto(ProjetoCreateDTO dto)
+    public IActionResult PostProjeto(ProjetoCreateDTO dto)
     {
-        var novo = new Projeto
-        {
-            Nome = dto.Nome,
-            Descricao = dto.Descricao,
-            DataInicio = dto.DataInicio,
-            DataFim = dto.DataFim,
-            ClienteId = dto.ClienteId,
-            HorasTrabalho = dto.HorasTrabalho,
-            UtilizadorId = dto.UtilizadorId,
-            Estado = dto.Estado
-        };
-
-        _context.Projetos.Add(novo);
-        _context.SaveChanges();
-
-        return CreatedAtAction(nameof(GetProjeto), new { id = novo.Id }, novo);
+        var criado = _service.Create(dto);
+        return CreatedAtAction(nameof(GetProjeto), new { id = criado.Id }, criado);
     }
 
-    // PUT: api/projeto/{id}
     [HttpPut("{id}")]
     public IActionResult PutProjeto(int id, Projeto projeto)
     {
-        if (id != projeto.Id)
-            return BadRequest();
-
-        var projetoExistente = _context.Projetos.Find(id);
-        if (projetoExistente == null)
-            return NotFound();
-
-        projetoExistente.Nome = projeto.Nome;
-        projetoExistente.Descricao = projeto.Descricao;
-        projetoExistente.DataInicio = projeto.DataInicio;
-        projetoExistente.DataFim = projeto.DataFim;
-        projetoExistente.ClienteId = projeto.ClienteId;
-        projetoExistente.HorasTrabalho = projeto.HorasTrabalho;
-        projetoExistente.UtilizadorId = projeto.UtilizadorId;
-        projetoExistente.Estado = projeto.Estado;
-
-        _context.SaveChanges();
-
+        if (id != projeto.Id) return BadRequest();
+        if (!_service.Update(id, projeto)) return NotFound();
         return NoContent();
     }
 
-    // DELETE: api/projeto/{id}
     [HttpDelete("{id}")]
     public IActionResult DeleteProjeto(int id)
     {
-        var projeto = _context.Projetos.Find(id);
-        if (projeto == null)
-            return NotFound();
-
-        _context.Projetos.Remove(projeto);
-        _context.SaveChanges();
-
+        if (!_service.Delete(id)) return NotFound();
         return NoContent();
     }
 }

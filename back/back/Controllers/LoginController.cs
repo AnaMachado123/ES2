@@ -1,10 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using BackendTesteESII.Data;
 using BackendTesteESII.Models;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using BackendTesteESII.Services;
 
 namespace BackendTesteESII.Controllers;
 
@@ -12,45 +8,21 @@ namespace BackendTesteESII.Controllers;
 [ApiController]
 public class LoginController : ControllerBase
 {
-    private readonly GestaoServicosClientesContext _context;
-    private readonly IConfiguration _configuration;
+    private readonly ILoginService _loginService;
 
-    public LoginController(GestaoServicosClientesContext context, IConfiguration configuration)
+    public LoginController(ILoginService loginService)
     {
-        _context = context;
-        _configuration = configuration;
+        _loginService = loginService;
     }
 
     [HttpPost]
     public IActionResult Login([FromBody] LoginRequest request)
     {
-        var utilizador = _context.Utilizadores.FirstOrDefault(u =>
-            u.Email == request.Email && u.Password == request.Password);
+        var token = _loginService.Autenticar(request);
 
-        if (utilizador == null)
+        if (token == null)
             return Unauthorized("Credenciais inválidas.");
 
-        var claims = new[]
-        {
-            new Claim(ClaimTypes.NameIdentifier, utilizador.Id.ToString()),
-            new Claim(ClaimTypes.Name, utilizador.Nome),
-            new Claim(ClaimTypes.Email, utilizador.Email),
-            new Claim(ClaimTypes.Role, utilizador.IsAdmin ? "Admin" : "User")
-        };
-
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-        var token = new JwtSecurityToken(
-            issuer: _configuration["Jwt:Issuer"],
-            audience: _configuration["Jwt:Audience"],
-            claims: claims,
-            expires: DateTime.UtcNow.AddHours(2),
-            signingCredentials: creds
-        );
-
-        var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-
-        return Ok(new { token = tokenString });
+        return Ok(new { token });
     }
 }

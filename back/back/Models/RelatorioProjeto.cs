@@ -25,4 +25,5 @@ public class RelatorioProjeto
     [Required]
     [Column("total_preco")]
     public decimal TotalPreco { get; set; }
+
 }
