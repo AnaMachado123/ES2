@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using BackendTesteESII.Data;
 using BackendTesteESII.Models;
+using BackendTesteESII.Services;
 
 namespace BackendTesteESII.Controllers;
 
@@ -8,65 +8,42 @@ namespace BackendTesteESII.Controllers;
 [ApiController]
 public class ConviteController : ControllerBase
 {
-    private readonly GestaoServicosClientesContext _context;
+    private readonly IConviteService _service;
 
-    public ConviteController(GestaoServicosClientesContext context)
+    public ConviteController(IConviteService service)
     {
-        _context = context;
+        _service = service;
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Convite>> GetConvites()
-    {
-        return Ok(_context.Convites.ToList());
-    }
+    public IActionResult GetConvites() => Ok(_service.GetAll());
 
     [HttpGet("{id}")]
-    public ActionResult<Convite> GetConvite(int id)
+    public IActionResult GetConvite(int id)
     {
-        var convite = _context.Convites.Find(id);
-        if (convite == null)
-            return NotFound();
-
-        return Ok(convite);
+        var convite = _service.GetById(id);
+        return convite == null ? NotFound() : Ok(convite);
     }
 
     [HttpPost]
-    public ActionResult<Convite> PostConvite(Convite convite)
+    public IActionResult PostConvite(Convite convite)
     {
-        _context.Convites.Add(convite);
-        _context.SaveChanges();
-
-        return CreatedAtAction(nameof(GetConvite), new { id = convite.Id }, convite);
+        var criado = _service.Create(convite);
+        return CreatedAtAction(nameof(GetConvite), new { id = criado.Id }, criado);
     }
 
     [HttpPut("{id}")]
     public IActionResult PutConvite(int id, Convite convite)
     {
-        if (id != convite.Id)
-            return BadRequest();
-
-        var existente = _context.Convites.Find(id);
-        if (existente == null)
-            return NotFound();
-
-        existente.UtilizadorId = convite.UtilizadorId;
-        existente.ProjetoId = convite.ProjetoId;
-        existente.Estado = convite.Estado;
-
-        _context.SaveChanges();
+        if (id != convite.Id) return BadRequest();
+        if (!_service.Update(id, convite)) return NotFound();
         return NoContent();
     }
 
     [HttpDelete("{id}")]
     public IActionResult DeleteConvite(int id)
     {
-        var convite = _context.Convites.Find(id);
-        if (convite == null)
-            return NotFound();
-
-        _context.Convites.Remove(convite);
-        _context.SaveChanges();
+        if (!_service.Delete(id)) return NotFound();
         return NoContent();
     }
 }

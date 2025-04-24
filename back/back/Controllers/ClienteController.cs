@@ -1,79 +1,50 @@
 using Microsoft.AspNetCore.Mvc;
 using BackendTesteESII.Data;
 using BackendTesteESII.Models;
+using BackendTesteESII.Services;
 
 namespace BackendTesteESII.Controllers;
 
-[Route("api/[controller]")]
 [ApiController]
+[Route("api/[controller]")]
 public class ClienteController : ControllerBase
 {
-    private readonly GestaoServicosClientesContext _context;
+    private readonly IClienteService _service;
 
-    public ClienteController(GestaoServicosClientesContext context)
+    public ClienteController(IClienteService service)
     {
-        _context = context;
+        _service = service;
     }
 
-    // GET: api/cliente
     [HttpGet]
-    public ActionResult<IEnumerable<Cliente>> GetClientes()
-    {
-        return Ok(_context.Clientes.ToList());
-    }
+    public IActionResult GetClientes() => Ok(_service.GetAll());
 
-    // GET: api/cliente/5
     [HttpGet("{id}")]
-    public ActionResult<Cliente> GetCliente(int id)
+    public IActionResult GetCliente(int id)
     {
-        var cliente = _context.Clientes.Find(id);
-
-        if (cliente == null)
-            return NotFound();
-
-        return Ok(cliente);
+        var cliente = _service.GetById(id);
+        return cliente == null ? NotFound() : Ok(cliente);
     }
 
-    // POST: api/cliente
     [HttpPost]
-    public ActionResult<Cliente> PostCliente(Cliente cliente)
+    public IActionResult PostCliente(Cliente cliente)
     {
-        _context.Clientes.Add(cliente);
-        _context.SaveChanges();
-
-        return CreatedAtAction(nameof(GetCliente), new { id = cliente.Id }, cliente);
+        var criado = _service.Create(cliente);
+        return CreatedAtAction(nameof(GetCliente), new { id = criado.Id }, criado);
     }
 
-    // PUT: api/cliente/5
     [HttpPut("{id}")]
     public IActionResult PutCliente(int id, Cliente cliente)
     {
-        if (id != cliente.Id)
-            return BadRequest();
-
-        var clienteExistente = _context.Clientes.Find(id);
-        if (clienteExistente == null)
-            return NotFound();
-
-        clienteExistente.Nome = cliente.Nome;
-        clienteExistente.Email = cliente.Email;
-        clienteExistente.Telefone = cliente.Telefone;
-        _context.SaveChanges();
-
+        if (id != cliente.Id) return BadRequest();
+        if (!_service.Update(id, cliente)) return NotFound();
         return NoContent();
     }
 
-    // DELETE: api/cliente/5
     [HttpDelete("{id}")]
     public IActionResult DeleteCliente(int id)
     {
-        var cliente = _context.Clientes.Find(id);
-        if (cliente == null)
-            return NotFound();
-
-        _context.Clientes.Remove(cliente);
-        _context.SaveChanges();
-
+        if (!_service.Delete(id)) return NotFound();
         return NoContent();
     }
 }
