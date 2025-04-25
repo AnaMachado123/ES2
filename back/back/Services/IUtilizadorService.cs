@@ -14,7 +14,7 @@ namespace BackendTesteESII.Services
         string? VerificarPermissao(int id);
         Utilizador Create(UtilizadorCreateDTO dto);
         Utilizador? GetById(int id);
-
+        bool RecuperarPassword(string email);
 
 
     }

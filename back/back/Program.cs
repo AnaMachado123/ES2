@@ -23,6 +23,7 @@ builder.Services.AddScoped<IUtilizadorService, UtilizadorService>();
 builder.Services.AddScoped<IConviteService, ConviteService>();
 builder.Services.AddScoped<IRelatorioProjetoService, RelatorioProjetoService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 
 
