@@ -19,21 +19,31 @@ namespace BackendTesteESII.Services
 
         public Projeto Create(ProjetoCreateDTO dto)
         {
-            var novo = new Projeto
+            var novoProjeto = new Projeto
             {
                 Nome = dto.Nome,
                 Descricao = dto.Descricao,
-                DataInicio = dto.DataInicio,
-                DataFim = dto.DataFim,
+                DataInicio = dto.DataInicio.ToUniversalTime(),
+                DataFim = dto.DataFim.ToUniversalTime(),
                 ClienteId = dto.ClienteId,
                 HorasTrabalho = dto.HorasTrabalho,
                 UtilizadorId = dto.UtilizadorId,
-                Estado = dto.Estado
+                Estado = dto.Estado,
+                Tarefas = dto.Tarefas.Select(t => new Tarefa
+                {
+                    Descricao = t.Descricao,
+                    DataInicio = t.DataInicio.ToUniversalTime(),
+                    DataFim = t.DataFim.ToUniversalTime(),
+                    Status = t.Status,
+                    HorasGastas = t.HorasGastas,
+                    UtilizadorId = t.UtilizadorId
+                }).ToList()
             };
 
-            _context.Projetos.Add(novo);
+            _context.Projetos.Add(novoProjeto);
             _context.SaveChanges();
-            return novo;
+
+            return novoProjeto;
         }
 
         public bool Update(int id, Projeto projeto)
@@ -43,8 +53,8 @@ namespace BackendTesteESII.Services
 
             existente.Nome = projeto.Nome;
             existente.Descricao = projeto.Descricao;
-            existente.DataInicio = projeto.DataInicio;
-            existente.DataFim = projeto.DataFim;
+            existente.DataInicio = projeto.DataInicio.ToUniversalTime();
+            existente.DataFim = projeto.DataFim.ToUniversalTime();
             existente.ClienteId = projeto.ClienteId;
             existente.HorasTrabalho = projeto.HorasTrabalho;
             existente.UtilizadorId = projeto.UtilizadorId;
