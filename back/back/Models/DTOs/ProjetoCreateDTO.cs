@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BackendTesteESII.Models;
+
+namespace BackendTesteESII.Models.DTOs;
 
 public class ProjetoCreateDTO
 {
@@ -13,4 +13,6 @@ public class ProjetoCreateDTO
     public int HorasTrabalho { get; set; }
     public int UtilizadorId { get; set; }
     public string Estado { get; set; } = string.Empty;
+
+    public List<TarefaCreateDTO> Tarefas { get; set; } = new();
 }
