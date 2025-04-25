@@ -1,28 +1,64 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace front.Pages.Projetos
 {
     public class ApagarModel : PageModel
     {
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        public ApagarModel(IHttpClientFactory httpClientFactory)
+        {
+            _httpClientFactory = httpClientFactory;
+        }
+
         [BindProperty]
         public ProjetoInfo Projeto { get; set; } = new();
 
-        public void OnGet(int id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            // Simula busca do projeto pelo ID
-            Projeto = new ProjetoInfo
+            var client = _httpClientFactory.CreateClient("Backend");
+            var response = await client.GetAsync($"api/Projeto/{id}");
+
+            if (!response.IsSuccessStatusCode)
             {
-                Id = id,
-                Nome = "Projeto de Exemplo",
-                Cliente = "Ana Machado",
-                Estado = "Concluído"
-            };
+                TempData["MensagemSucesso"] = "Erro ao buscar o projeto.";
+                return RedirectToPage("/Projetos/Index");
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var projeto = JsonSerializer.Deserialize<ProjetoInfo>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            if (projeto == null)
+            {
+                TempData["MensagemSucesso"] = "Projeto não encontrado.";
+                return RedirectToPage("/Projetos/Index");
+            }
+
+            Projeto = projeto;
+            return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
-            TempData["MensagemSucesso"] = $"Projeto \"{Projeto.Nome}\" foi apagado com sucesso.";
+            var client = _httpClientFactory.CreateClient("Backend");
+            var response = await client.DeleteAsync($"api/Projeto/{Projeto.Id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["MensagemSucesso"] = $"Projeto \"{Projeto.Nome}\" foi apagado com sucesso.";
+            }
+            else
+            {
+                TempData["MensagemSucesso"] = "Erro ao apagar o projeto.";
+            }
+
             return RedirectToPage("/Projetos/Index");
         }
 
