@@ -1,0 +1,65 @@
+@page
+@model front.Pages.TarefasModel
+@{
+    ViewData["Title"] = "Tarefas";
+    ViewData["ActivePage"] = "Tarefas";
+
+    var tarefasEmCurso = new[]
+    {
+        new { Titulo = "Configurar Router", Descricao = "Setup inicial de rede", Inicio = "09:00", Projeto = "Gestão de Redes" },
+        new { Titulo = "Design UI", Descricao = "Protótipos em Figma", Inicio = "10:30", Projeto = "Website IPVC" },
+        new { Titulo = "API Integração", Descricao = "Integração com gateway externa", Inicio = "11:45", Projeto = "API Financeira" }
+    };
+
+    var tarefasConcluidas = new[]
+    {
+        new { Titulo = "Login Auth", Descricao = "Autenticação com JWT", Fim = "16:00", Projeto = "Website IPVC" },
+        new { Titulo = "Base de Dados", Descricao = "Criação EF Core", Fim = "15:00", Projeto = "API Financeira" }
+    };
+}
+
+<div class="min-h-screen bg-[url('/images/background.png')] bg-cover p-6">
+    <div class="max-w-6xl mx-auto bg-white bg-opacity-90 rounded-2xl shadow-xl p-10 space-y-12">
+        <h1 class="text-3xl font-extrabold text-green-800">As Minhas Tarefas</h1>
+
+        <!-- Tarefas em Curso -->
+        <div>
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-yellow-700">Tarefas em Curso</h2>
+                <a href="/TarefasEmCurso" class="text-sm text-green-700 hover:underline font-medium">Ver todas</a>
+            </div>
+
+            <div class="space-y-4">
+                @foreach (var tarefa in tarefasEmCurso)
+                {
+                    <div class="bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded shadow-sm">
+                        <h3 class="font-semibold text-yellow-800">@tarefa.Titulo</h3>
+                        <p class="text-sm text-yellow-700">@tarefa.Descricao</p>
+                        <p class="text-xs italic text-yellow-600">Projeto: @tarefa.Projeto</p>
+                        <span class="text-xs text-yellow-600">Início: @tarefa.Inicio</span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Tarefas Finalizadas -->
+        <div>
+            <div class="flex justify-between items-center mb-4 mt-10">
+                <h2 class="text-xl font-bold text-green-700">Tarefas Finalizadas</h2>
+                <a href="/TarefasFinalizadas" class="text-sm text-green-700 hover:underline font-medium">Ver todas</a>
+            </div>
+
+            <div class="space-y-4">
+                @foreach (var tarefa in tarefasConcluidas)
+                {
+                    <div class="bg-green-100 border-l-4 border-green-500 p-4 rounded shadow-sm">
+                        <h3 class="font-semibold text-green-800">@tarefa.Titulo</h3>
+                        <p class="text-sm text-green-700">@tarefa.Descricao</p>
+                        <p class="text-xs italic text-green-700">Projeto: @tarefa.Projeto</p>
+                        <span class="text-xs text-green-600">Concluído às @tarefa.Fim</span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

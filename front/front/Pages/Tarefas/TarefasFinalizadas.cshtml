@@ -1,0 +1,36 @@
+@page "/TarefasFinalizadas"
+@model front.Pages.Tarefas.TarefasFinalizadasModel
+@{
+    ViewData["Title"] = "Tarefas Finalizadas";
+
+    var tarefas = new[]
+    {
+        new { Titulo = "Login Auth", Descricao = "Autenticação com JWT", Fim = "16:00", Projeto = "Website IPVC" },
+        new { Titulo = "Base de Dados", Descricao = "Criação EF Core", Fim = "15:00", Projeto = "API Financeira" },
+        new { Titulo = "Relatório PDF", Descricao = "Exportar mensal", Fim = "14:00", Projeto = "Gestão de Redes" }
+    };
+}
+
+<div class="min-h-screen bg-[url('/images/background.png')] bg-cover p-10">
+    <div class="max-w-5xl mx-auto bg-white bg-opacity-90 rounded-xl p-8 shadow-lg">
+        <h1 class="text-2xl font-bold text-green-700 mb-6">Todas as Tarefas Finalizadas</h1>
+
+        @foreach (var tarefa in tarefas)
+        {
+            <div class="bg-green-100 border-l-4 border-green-600 p-5 mb-6 rounded-xl shadow-sm">
+                <div class="flex justify-between items-start mb-1">
+                    <div>
+                        <h3 class="text-lg font-semibold text-green-900">@tarefa.Titulo</h3>
+                        <p class="text-sm text-green-800">@tarefa.Descricao</p>
+                        <p class="text-xs italic text-green-700">Projeto: @tarefa.Projeto</p>
+                    </div>
+                    <span class="text-xs text-green-800">Concluído às: @tarefa.Fim</span>
+                </div>
+
+                <div class="flex justify-end mt-3">
+                    <a href="#" class="text-green-700 text-sm font-medium bg-white border border-green-600 px-4 py-1 rounded-full hover:bg-green-100 transition">Ver Detalhes</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
