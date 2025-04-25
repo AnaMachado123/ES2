@@ -1,15 +1,16 @@
 using BackendTesteESII.Data;
+using BackendTesteESII.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BackendTesteESII.Models.Strategies;
 
-public class RelatorioMensalStrategy : IRelatorioStrategy
+public class RelatorioMensalStrategy : IRelatorioStrategy<List<Relatorio>>
 {
-    public string GerarRelatorio(GestaoServicosClientesContext context, int mes)
+    public List<Relatorio> GerarRelatorio(GestaoServicosClientesContext context, int utilizadorId, int mes, int ano)
     {
-        var total = context.Relatorios
-            .Where(r => r.Mes == mes)
-            .Count();
-
-        return $"Relatório Mensal: foram encontrados {total} registos para o mês {mes}.";
+        return context.Relatorios
+            .Where(r => r.UtilizadorId == utilizadorId && r.Mes == mes && r.Ano == ano)
+            .ToList();
     }
 }

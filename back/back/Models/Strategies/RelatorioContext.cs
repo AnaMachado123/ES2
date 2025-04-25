@@ -2,17 +2,17 @@ using BackendTesteESII.Data;
 
 namespace BackendTesteESII.Models.Strategies;
 
-public class RelatorioContext
+public class RelatorioContext<T>
 {
-    private IRelatorioStrategy _strategy;
+    private IRelatorioStrategy<T> _strategy;
 
-    public RelatorioContext(IRelatorioStrategy strategy)
+    public RelatorioContext(IRelatorioStrategy<T> strategy)
     {
         _strategy = strategy;
     }
 
-    public string Executar(GestaoServicosClientesContext context, int parametro)
+    public T Executar(GestaoServicosClientesContext context, int utilizadorId, int mes, int ano)
     {
-        return _strategy.GerarRelatorio(context, parametro);
+        return _strategy.GerarRelatorio(context, utilizadorId, mes, ano);
     }
 }

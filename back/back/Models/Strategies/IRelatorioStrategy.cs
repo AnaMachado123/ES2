@@ -2,7 +2,7 @@ using BackendTesteESII.Data;
 
 namespace BackendTesteESII.Models.Strategies;
 
-public interface IRelatorioStrategy
+public interface IRelatorioStrategy<T>
 {
-    string GerarRelatorio(GestaoServicosClientesContext context, int parametro);
+    T GerarRelatorio(GestaoServicosClientesContext context, int utilizadorId, int mes, int ano);
 }

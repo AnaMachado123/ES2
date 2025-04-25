@@ -1,0 +1,63 @@
+@page
+@model RelatorioMensalModel
+@{
+    ViewData["Title"] = "Relatório Mensal";
+}
+
+<div class="min-h-screen bg-[url('/images/background.png')] bg-cover bg-fixed bg-no-repeat py-10">
+
+<div class="max-w-3xl mx-auto mt-10 bg-white rounded-lg shadow-md p-8 space-y-6">
+
+    <h2 class="text-2xl font-bold text-green-800 mb-4">Consultar Relatório Mensal</h2>
+
+    <!-- Formulário -->
+    <form method="post" class="flex flex-wrap gap-4 items-end">
+        <div>
+            <label for="Mes" class="block text-sm font-medium text-gray-700">Mês:</label>
+            <input type="number" id="Mes" name="Mes" min="1" max="12" required
+                   class="mt-1 block w-40 text-lg rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" />
+        </div>
+
+        <div>
+            <label for="Ano" class="block text-sm font-medium text-gray-700">Ano:</label>
+            <input type="number" id="Ano" name="Ano" min="2000" required
+                   class="mt-1 block w-44 text-lg rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500" />
+        </div>
+
+        <button type="submit"
+                class="inline-flex items-center px-4 py-2 text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 transition">
+            Consultar
+        </button>
+    </form>
+
+    <!-- Resultado -->
+    @if (Model.Relatorios != null && Model.Relatorios.Any())
+    {
+        var relatorio = Model.Relatorios.First(); <!-- Mostrar só o primeiro, pois deve vir único -->
+
+        <div class="mt-8 border-t pt-6 space-y-2 text-gray-800">
+            <h3 class="text-xl font-semibold text-green-700">Relatório nº @relatorio.Id</h3>
+
+            <p><strong>Mês:</strong> @relatorio.Mes</p>
+            <p><strong>Ano:</strong> @relatorio.Ano</p>
+
+            <!-- Nome do projeto (placeholder por agora) -->
+            <p><strong>Projeto:</strong> Nome do Projeto aqui</p>
+
+            <a asp-page="/RelatorioMensalDetalhes" asp-route-id="@relatorio.Id"
+               class="text-green-700 hover:underline">
+               Ver detalhes...
+            </a>
+        </div>
+    }
+    else if (Model.Mes != 0 && Model.Ano != 0)
+    {
+        <p class="text-red-600 mt-4">Nenhum relatório encontrado para o mês e ano selecionados.</p>
+    }
+
+    <div class="mt-10">
+        <a href="/PerfilVisualizar" class="text-green-700 hover:underline">← Voltar ao Perfil</a>
+    </div>
+</div>
+
+</div>
