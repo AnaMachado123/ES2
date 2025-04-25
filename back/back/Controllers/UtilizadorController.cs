@@ -63,5 +63,14 @@ namespace BackendTesteESII.Controllers
                 ? NotFound("Utilizador não encontrado.")
                 : Ok(mensagem);
         }
+
+
+        [HttpPost("recuperar")]
+        public IActionResult RecuperarPassword([FromBody] string email)
+        {
+            var sucesso = _service.RecuperarPassword(email);
+            return sucesso ? Ok("Email enviado com sucesso.") : NotFound("Utilizador não encontrado.");
+        }
+
     }
 }

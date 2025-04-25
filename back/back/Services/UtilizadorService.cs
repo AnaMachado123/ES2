@@ -8,10 +8,12 @@ namespace BackendTesteESII.Services
     public class UtilizadorService : IUtilizadorService
     {
         private readonly GestaoServicosClientesContext _context;
+        private readonly IEmailService _emailService;
 
-        public UtilizadorService(GestaoServicosClientesContext context)
+        public UtilizadorService(GestaoServicosClientesContext context, IEmailService emailService)
         {
             _context = context;
+            _emailService = emailService;
         }
 
         public IEnumerable<Utilizador> GetAll() => _context.Utilizadores.ToList();
@@ -70,5 +72,23 @@ namespace BackendTesteESII.Services
                 ? "Este utilizador tem permissão para realizar a gestão de outros utilizadores."
                 : "Este utilizador NÃO tem permissão para realizar a gestão de outros utilizadores.";
         }
+
+
+        public bool RecuperarPassword(string email)
+        {
+            var utilizador = _context.Utilizadores.FirstOrDefault(u => u.Email == email);
+            if (utilizador == null) return false;
+
+            var novaPassword = Guid.NewGuid().ToString().Substring(0, 8); // exemplo
+            utilizador.Password = novaPassword;
+
+            _context.SaveChanges();
+
+            _emailService.EnviarEmail(email, "Recuperação de Password", $"A sua nova password é: {novaPassword}");
+            return true;
+        }
+
+
+
     }
 }
