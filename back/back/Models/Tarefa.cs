@@ -32,6 +32,10 @@ public class Tarefa
     [Column("projeto_id")]
     public int ProjetoId { get; set; }
 
+    // 🔗 Relacionamento com Projeto (1 Projeto tem muitas Tarefas)
+    [ForeignKey("ProjetoId")]
+    public Projeto Projeto { get; set; } = null!;
+
     [Required]
     [Column("utilizador_id")]
     public int UtilizadorId { get; set; }

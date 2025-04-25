@@ -46,5 +46,7 @@ public class Projeto
     public string Estado { get; set; } = string.Empty;
 
     public ICollection<UtilizadorProjeto> UtilizadorProjetos { get; set; } = new List<UtilizadorProjeto>();
+    public ICollection<Tarefa> Tarefas { get; set; } = new List<Tarefa>();
+
 
 }
