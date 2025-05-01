@@ -3,6 +3,7 @@ using System;
 using BackendTesteESII.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendTesteESII.Migrations
 {
     [DbContext(typeof(GestaoServicosClientesContext))]
-    partial class GestaoServicosClientesContextModelSnapshot : ModelSnapshot
+    [Migration("20250425141623_AtualizaModelo")]
+    partial class AtualizaModelo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -241,8 +244,6 @@ namespace BackendTesteESII.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProjetoId");
-
                     b.ToTable("tarefa");
                 });
 
@@ -300,17 +301,6 @@ namespace BackendTesteESII.Migrations
                     b.ToTable("utilizador_projeto");
                 });
 
-            modelBuilder.Entity("BackendTesteESII.Models.Tarefa", b =>
-                {
-                    b.HasOne("BackendTesteESII.Models.Projeto", "Projeto")
-                        .WithMany("Tarefas")
-                        .HasForeignKey("ProjetoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Projeto");
-                });
-
             modelBuilder.Entity("BackendTesteESII.Models.UtilizadorProjeto", b =>
                 {
                     b.HasOne("BackendTesteESII.Models.Projeto", "Projeto")
@@ -332,8 +322,6 @@ namespace BackendTesteESII.Migrations
 
             modelBuilder.Entity("BackendTesteESII.Models.Projeto", b =>
                 {
-                    b.Navigation("Tarefas");
-
                     b.Navigation("UtilizadorProjetos");
                 });
 

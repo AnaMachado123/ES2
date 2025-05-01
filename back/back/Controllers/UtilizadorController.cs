@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using BackendTesteESII.Models;
 using BackendTesteESII.Models.DTOs;
 using BackendTesteESII.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace BackendTesteESII.Controllers
 {
@@ -26,13 +29,38 @@ namespace BackendTesteESII.Controllers
             return utilizador == null ? NotFound() : Ok(utilizador);
         }
 
+        // POST com controlo de permissões de criação
         [HttpPost]
         public IActionResult PostUtilizador(UtilizadorCreateDTO dto)
         {
+            var user = HttpContext.User;
+
+            // Validar o tipo como string
+            var tipo = dto.Tipo?.Trim();
+
+            if (string.IsNullOrWhiteSpace(tipo) ||
+                (tipo != "User" && tipo != "UserManager" && tipo != "Admin"))
+            {
+                return BadRequest("Tipo de utilizador inválido.");
+            }
+
+            if (!(user.Identity?.IsAuthenticated ?? false))
+            {
+                if (tipo != "User")
+                    return Forbid("Sem autenticação, só é permitido criar utilizadores do tipo 'User'.");
+            }
+            else
+            {
+                if (user.IsInRole("User"))
+                    return Forbid("Utilizadores do tipo 'User' não podem criar novos utilizadores.");
+
+                if (user.IsInRole("UserManager") && tipo == "Admin")
+                    return Forbid("User Managers não podem criar Admins.");
+            }
+
             var novo = _service.Create(dto);
             return CreatedAtAction(nameof(GetUtilizador), new { id = novo.Id }, novo);
         }
-
 
         [HttpPut("{id}")]
         public IActionResult PutUtilizador(int id, Utilizador utilizador)

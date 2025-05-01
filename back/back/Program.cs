@@ -1,4 +1,3 @@
-
 using Microsoft.EntityFrameworkCore;
 using BackendTesteESII.Data;
 using BackendTesteESII.Models;
@@ -6,15 +5,51 @@ using BackendTesteESII.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.OpenApi.Models;
 using System.Text;
-
-
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.SetMinimumLevel(LogLevel.Warning);
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+// ✅ Swagger com botão Authorize
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Insira o token JWT no formato: Bearer {seu_token_aqui}"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
+
 builder.Services.AddScoped<IRelatorioService, RelatorioService>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IProjetoService, ProjetoService>();
@@ -25,13 +60,10 @@ builder.Services.AddScoped<IRelatorioProjetoService, RelatorioProjetoService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 
-
-
-
-
-
 builder.Services.AddDbContext<GestaoServicosClientesContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+           .ConfigureWarnings(w => w.Ignore(RelationalEventId.CommandExecuting))
+);
 
 builder.Services.AddCors(options =>
 {
@@ -43,6 +75,7 @@ builder.Services.AddCors(options =>
     });
 });
 
+// ✅ Autenticação JWT
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
@@ -58,6 +91,7 @@ builder.Services.AddAuthentication("Bearer")
         };
     });
 
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -78,19 +112,38 @@ using (var scope = app.Services.CreateScope())
     var context = scope.ServiceProvider.GetRequiredService<GestaoServicosClientesContext>();
     context.Database.Migrate();
 
-    // SEED DO ADMIN
-    if (!context.Utilizadores.Any())
+    // ✅ SEED DO ADMIN com IsAdmin garantido
+    var admin = context.Utilizadores.FirstOrDefault(u => u.Email == "admin@admin.com");
+
+    if (admin == null)
     {
-        var admin = new Utilizador
+        admin = new Utilizador
         {
             Nome = "Admin",
             Email = "admin@admin.com",
-            Password = "admin123",
             HorasDia = 8,
+            Tipo = "Admin",
             IsAdmin = true
         };
 
+        var hasher = new PasswordHasher<Utilizador>();
+        admin.Password = hasher.HashPassword(admin, "admin123");
+
         context.Utilizadores.Add(admin);
+        context.SaveChanges();
+    }
+    else
+    {
+        var hasher = new PasswordHasher<Utilizador>();
+        var result = hasher.VerifyHashedPassword(admin, admin.Password, "admin123");
+
+        if (result == PasswordVerificationResult.Failed)
+        {
+            admin.Password = hasher.HashPassword(admin, "admin123");
+        }
+
+        admin.Tipo = "Admin";
+        admin.IsAdmin = true;
         context.SaveChanges();
     }
 }

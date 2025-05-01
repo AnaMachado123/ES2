@@ -1,7 +1,7 @@
 using BackendTesteESII.Data;
 using BackendTesteESII.Models;
 using BackendTesteESII.Models.DTOs;
-
+using Microsoft.AspNetCore.Identity;
 
 namespace BackendTesteESII.Services
 {
@@ -26,9 +26,9 @@ namespace BackendTesteESII.Services
             {
                 Nome = dto.Nome,
                 Email = dto.Email,
-                Password = dto.Password,
+                Password = new PasswordHasher<Utilizador>().HashPassword(null!, dto.Password),
                 HorasDia = 8,
-                IsAdmin = dto.Tipo.Equals("admin", StringComparison.OrdinalIgnoreCase)
+                Tipo = dto.Tipo  
             };
 
             _context.Utilizadores.Add(novo);
@@ -45,7 +45,7 @@ namespace BackendTesteESII.Services
             existente.Email = utilizador.Email;
             existente.Password = utilizador.Password;
             existente.HorasDia = utilizador.HorasDia;
-            existente.IsAdmin = utilizador.IsAdmin;
+            existente.Tipo = utilizador.Tipo;
 
             _context.SaveChanges();
             return true;
@@ -66,11 +66,10 @@ namespace BackendTesteESII.Services
             var userFromDb = _context.Utilizadores.FirstOrDefault(u => u.Id == id);
             if (userFromDb == null) return null;
 
-            var utilizador = UtilizadorFactory.Criar(userFromDb);
+            if (userFromDb.Tipo == "Admin" || userFromDb.Tipo == "UserManager")
+                return userFromDb.Tipo;
 
-            return utilizador.PodeGerirUtilizadores()
-                ? "Este utilizador tem permissão para realizar a gestão de outros utilizadores."
-                : "Este utilizador NÃO tem permissão para realizar a gestão de outros utilizadores.";
+            return null;
         }
 
 
