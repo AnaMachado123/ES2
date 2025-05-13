@@ -6,81 +6,80 @@
     var tipo = Model.TipoUtilizador.ToLower(); // regular, manager, admin
 }
 
-<div class="flex">
-    <!-- Sidebar -->
-    <partial name="_SideMenu" />
+<!-- FUNDO aplicado como plano de fundo total -->
+<div class="fixed inset-0 w-full h-full bg-[url('/images/background.png')] bg-cover bg-center -z-10"></div>
 
-    <!-- Conteúdo principal -->
-    <div class="flex-grow p-6 bg-[url('/images/background.png')] bg-cover min-h-screen">
+<!-- CONTEÚDO por cima do fundo -->
+<div class="relative min-h-screen w-full p-6 z-10">
 
-        <h1 class="text-3xl font-bold text-green-700 mb-2">Bem-vindo, Ana Machado!</h1>
-        <p class="text-gray-600 mb-6">Email: ana@email.com</p>
+    <h1 class="text-3xl font-bold text-green-700 mb-2">Bem-vinda, Ana Machado!</h1>
+    <p class="text-gray-600 mb-6">Email: ana@email.com</p>
 
-        <!-- Resumo -->
-        <div class="grid grid-cols-1 md:grid-cols-@((tipo == "regular") ? 2 : 3) gap-6 mb-10">
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-lg font-semibold text-gray-700 mb-2">Projetos Ativos</h2>
-                <p class="text-2xl font-bold text-green-800">@Model.TotalProjetos</p>
-            </div>
-
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-lg font-semibold text-gray-700 mb-2">Tarefas Pendentes</h2>
-                <p class="text-2xl font-bold text-gray-600">@Model.TarefasPendentes</p>
-            </div>
-
-            @if (tipo != "regular")
-            {
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <h2 class="text-lg font-semibold text-gray-700 mb-2">Clientes</h2>
-                    <p class="text-2xl font-bold text-green-600">@Model.TotalClientes</p>
-                </div>
-            }
+    <!-- Resumo -->
+    <div class="grid grid-cols-1 md:grid-cols-@((tipo == "regular") ? 2 : 3) gap-6 mb-10">
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-lg font-semibold text-gray-700 mb-2">Projetos Ativos</h2>
+            <p class="text-2xl font-bold text-green-800">@Model.TotalProjetos</p>
         </div>
 
-        <!-- Projetos Recentes -->
-        <div class="bg-white rounded-lg shadow-md p-6 mb-10">
-            <h2 class="text-xl font-bold text-green-700 mb-4">Projetos Recentes</h2>
-            @if (Model.Projetos != null && Model.Projetos.Any())
-            {
-                <table class="w-full table-auto text-left">
-                    <thead>
-                        <tr class="text-gray-600 border-b">
-                            <th class="pb-2">Nome</th>
-                            <th class="pb-2">Cliente</th>
-                            <th class="pb-2">Estado</th>
-                            <th class="pb-2">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var projeto in Model.Projetos)
-                        {
-                            <tr class="border-t">
-                                <td class="py-2">@projeto.Nome</td>
-                                <td class="py-2">@projeto.Cliente</td>
-                                <td class="py-2 text-gray-700">@projeto.Status</td>
-                                <td class="py-2">
-                                    <a href="/Project/Details/@projeto.Id" class="text-blue-600 hover:underline">Ver</a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
-            else
-            {
-                <p class="text-gray-500">Nenhum projeto encontrado.</p>
-            }
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-lg font-semibold text-gray-700 mb-2">Tarefas Pendentes</h2>
+            <p class="text-2xl font-bold text-gray-600">@Model.TarefasPendentes</p>
         </div>
 
-        <!-- Botão adicionar projeto (apenas Manager/Admin) -->
-        @if (tipo == "manager" || tipo == "admin")
+        @if (tipo != "regular")
         {
-            <div class="flex justify-end">
-                <a href="/AddProject" class="bg-green-700 text-white font-medium px-6 py-3 rounded-xl hover:bg-green-900 flex items-center justify-center gap-2">
-                    <span class="text-2xl text-white">+</span>
-                    <span>Novo Projeto</span>
-                </a>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-lg font-semibold text-gray-700 mb-2">Clientes</h2>
+                <p class="text-2xl font-bold text-green-600">@Model.TotalClientes</p>
             </div>
         }
     </div>
+
+    <!-- Projetos Recentes -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-10">
+        <h2 class="text-xl font-bold text-green-700 mb-4">Projetos Recentes</h2>
+        @if (Model.Projetos != null && Model.Projetos.Any())
+        {
+            <table class="w-full table-auto text-left">
+                <thead>
+                    <tr class="text-gray-600 border-b">
+                        <th class="pb-2">Nome</th>
+                        <th class="pb-2">Cliente</th>
+                        <th class="pb-2">Estado</th>
+                        <th class="pb-2">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var projeto in Model.Projetos)
+                    {
+                        <tr class="border-t">
+                            <td class="py-2">@projeto.Nome</td>
+                            <td class="py-2">@projeto.Cliente</td>
+                            <td class="py-2 text-gray-700">@projeto.Status</td>
+                            <td class="py-2">
+                                <a href="/Project/Details/@projeto.Id" class="text-blue-600 hover:underline">Ver</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="text-gray-500">Nenhum projeto encontrado.</p>
+        }
+    </div>
+
+    <!-- Botão adicionar projeto (apenas Manager/Admin) -->
+    @if (tipo == "manager" || tipo == "admin")
+    {
+        <div class="flex justify-end">
+            <a href="/AddProject" class="bg-green-700 text-white font-medium px-6 py-3 rounded-xl hover:bg-green-900 flex items-center justify-center gap-2">
+                <span class="text-2xl text-white">+</span>
+                <span>Novo Projeto</span>
+            </a>
+        </div>
+    }
+
 </div>

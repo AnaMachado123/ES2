@@ -5,43 +5,67 @@
     ViewData["ActivePage"] = "Projetos";
 }
 
-<div class="min-h-screen bg-[url('/images/background.png')] bg-cover bg-center p-10 flex items-center justify-center">
-    <div class="bg-white bg-opacity-90 p-10 rounded-2xl shadow-xl w-full max-w-3xl">
-        <h2 class="text-3xl font-bold text-green-800 mb-8">📋 Detalhes do Projeto</h2>
+<!-- Fundo -->
+<div class="fixed inset-0 w-full h-full bg-[url('/images/background.png')] bg-cover bg-center -z-10"></div>
 
-        <div class="space-y-4 text-gray-800 text-base">
-            <p>
-                <strong class="text-green-900">Nome do Projeto:</strong> @Model.Projeto.Nome
-            </p>
-            <p>
-                <strong class="text-green-900">Cliente:</strong> @Model.Projeto.Cliente
-            </p>
-            <p>
-                <strong class="text-green-900">Estado:</strong> @Model.Projeto.Estado
-            </p>
-            <p>
-                <strong class="text-green-900">Descrição:</strong> @Model.Projeto.Descricao
-            </p>
-            <p>
-                <strong class="text-green-900">Data de Início:</strong> @Model.Projeto.DataInicio.ToString("dd/MM/yyyy")
-            </p>
-            <p>
-                <strong class="text-green-900">Data de Fim:</strong> 
-                @(Model.Projeto.Estado == "Concluído" ? 
-                    Model.Projeto.DataFim.ToString("dd/MM/yyyy") : 
-                    "---")
-            </p>
-            <p>
-                <strong class="text-green-900">Horas de Trabalho:</strong> @Model.Projeto.HorasTrabalho h
-            </p>
-            <p>
-                <strong class="text-green-900">Utilizador ID:</strong> @Model.Projeto.UtilizadorId
-            </p>
-            <p>
-                <strong class="text-green-900">Cliente ID:</strong> @Model.Projeto.ClienteId
-            </p>
+<!-- Conteúdo -->
+<div class="relative min-h-screen w-full p-10 z-10 flex items-center justify-center">
+    <div class="bg-white bg-opacity-90 p-10 rounded-2xl shadow-xl w-full max-w-4xl space-y-8">
+        <h2 class="text-3xl font-bold text-green-800 text-center">📋 Detalhes do Projeto</h2>
+
+        <!-- Grelha de dados -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-800 text-base">
+            <div>
+                <label class="block text-sm font-semibold text-green-900">Nome do Projeto</label>
+                <div class="bg-gray-100 rounded-xl px-4 py-2">@Model.Projeto.Nome</div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-green-900">Estado</label>
+                <div class="bg-gray-100 rounded-xl px-4 py-2">@Model.Projeto.Estado</div>
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block text-sm font-semibold text-green-900">Descrição</label>
+                <div class="bg-gray-100 rounded-xl px-4 py-2 whitespace-pre-line">@Model.Projeto.Descricao</div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-green-900">Cliente</label>
+                <div class="bg-gray-100 rounded-xl px-4 py-2">@Model.Projeto.Cliente</div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-green-900">Cliente ID</label>
+                <div class="bg-gray-100 rounded-xl px-4 py-2">@Model.Projeto.ClienteId</div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-green-900">Utilizador ID</label>
+                <div class="bg-gray-100 rounded-xl px-4 py-2">@Model.Projeto.UtilizadorId</div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-green-900">Data de Início</label>
+                <div class="bg-gray-100 rounded-xl px-4 py-2">@Model.Projeto.DataInicio.ToString("dd/MM/yyyy")</div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold text-green-900">Data de Fim</label>
+                <div class="bg-gray-100 rounded-xl px-4 py-2">
+                    @(Model.Projeto.Estado == "Concluído" && Model.Projeto.DataFim.HasValue 
+                        ? Model.Projeto.DataFim.Value.ToString("dd/MM/yyyy") 
+                        : "---")
+                </div>
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block text-sm font-semibold text-green-900">Horas de Trabalho</label>
+                <div class="bg-gray-100 rounded-xl px-4 py-2">@Model.Projeto.HorasTrabalho h</div>
+            </div>
         </div>
 
+        <!-- Botões -->
         <div class="flex justify-between mt-10">
             <a href="/Projetos" class="bg-gray-300 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-400 transition">
                 Voltar

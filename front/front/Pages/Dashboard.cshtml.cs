@@ -23,13 +23,6 @@ namespace front.Pages
         {
             TipoUtilizador = HttpContext.Session.GetString("Tipo") ?? "regular";
 
-            var exemplos = new List<Projeto>
-            {
-                new Projeto { Id = 1, Nome = "Gestão de Redes", Cliente = "Eduarda Gomes", Status = "Em curso" },
-                new Projeto { Id = 2, Nome = "Website IPVC", Cliente = "Adriana Meira", Status = "Pendente" },
-                new Projeto { Id = 3, Nome = "API Financeira", Cliente = "Diana Matos", Status = "Concluído" }
-            };
-
             try
             {
                 var client = _httpClientFactory.CreateClient("Backend");
@@ -45,26 +38,17 @@ namespace front.Pages
 
                     if (projetosApi != null)
                     {
-                        Projetos = projetosApi.Concat(exemplos).ToList(); // 👈 API first
+                        Projetos = projetosApi;
                     }
-                    else
-                    {
-                        Projetos = exemplos;
-                    }
-                }
-                else
-                {
-                    Projetos = exemplos;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Erro ao carregar projetos: {ex.Message}");
-                Projetos = exemplos;
             }
 
             TotalProjetos = Projetos.Count;
-            TarefasPendentes = Projetos.Count(p => p.Status == "Pendente"); // Exemplo básico
+            TarefasPendentes = Projetos.Count(p => p.Status == "Pendente");
             TotalClientes = Projetos.Select(p => p.Cliente).Distinct().Count();
         }
 

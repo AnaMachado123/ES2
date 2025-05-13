@@ -4,12 +4,15 @@
     ViewData["Title"] = "Escolher Perfil";
 }
 
-<div class="min-h-screen bg-[url('/images/background.png')] bg-cover bg-center flex items-center justify-center px-6 py-20">
-    <div class="max-w-7xl w-full bg-white bg-opacity-90 rounded-2xl shadow-xl p-10 space-y-12">
+<!-- FUNDO aplicado como plano de fundo total -->
+<div class="fixed inset-0 w-full h-full bg-[url('/images/background.png')] bg-cover bg-center -z-10"></div>
 
-        <!-- TOPO: Texto + Imagem lado a lado -->
+<!-- CONTEÚDO da página por cima do fundo -->
+<div class="relative min-h-screen w-full p-10 z-10">
+    <div class="max-w-7xl w-full bg-white bg-opacity-90 rounded-2xl shadow-xl p-10 space-y-12 mx-auto">
+
+        <!-- TOPO: Texto + Ilustração -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-            <!-- Texto dentro de um card verde -->
             <div>
                 <div class="bg-green-700 text-white px-6 py-6 rounded-xl shadow space-y-3 text-center">
                     <h2 class="text-3xl md:text-4xl font-extrabold">
@@ -21,8 +24,6 @@
                     </p>
                 </div>
             </div>
-
-            <!-- Imagem -->
             <div class="text-center">
                 <img src="/images/perfil-illustration.png"
                      alt="Ilustração de escolha de perfil"
@@ -30,7 +31,7 @@
             </div>
         </div>
 
-        <!-- LINHA DE BAIXO: Cards com efeito -->
+        <!-- CARDS de escolha -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 
             <!-- Utilizador Normal -->
@@ -41,7 +42,6 @@
                 <p class="text-sm text-gray-600 group-hover:text-white mb-4">
                     Participa em projetos atribuídos por outros. Pode gerir as suas tarefas e consultar os projetos onde está envolvido.
                 </p>
-                <!-- ⬇ trocado regular → User -->
                 <a href="/Register?tipo=User"
                    class="bg-white text-green-700 py-2 px-6 rounded-full font-semibold group-hover:bg-white group-hover:text-green-800 transition">
                     Criar como Utilizador
@@ -56,7 +56,6 @@
                 <p class="text-sm text-gray-600 group-hover:text-white mb-4">
                     Pode criar e gerir projetos, atribuir utilizadores, e acompanhar o progresso geral das tarefas da equipa.
                 </p>
-                <!-- ⬇ trocado manager → UserManager -->
                 <a href="/Register?tipo=UserManager"
                    class="bg-white text-green-700 py-2 px-6 rounded-full font-semibold group-hover:bg-white group-hover:text-green-800 transition">
                     Criar como Gestor
@@ -71,7 +70,6 @@
                 <p class="text-sm text-gray-600 group-hover:text-white mb-4">
                     Acede a todas as funcionalidades do sistema. Pode criar, editar e remover utilizadores, gerir permissões e supervisionar toda a plataforma.
                 </p>
-                <!-- admin já estava correcto -->
                 <a href="/Register?tipo=Admin"
                    class="bg-white text-green-700 py-2 px-6 rounded-full font-semibold group-hover:bg-white group-hover:text-green-800 transition">
                     Criar como Admin

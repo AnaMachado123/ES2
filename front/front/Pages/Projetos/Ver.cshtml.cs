@@ -1,41 +1,60 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Net.Http;
+using System.Text.Json;
 
 namespace front.Pages.Projetos
 {
     public class VerModel : PageModel
     {
-        [BindProperty]
-        public ProjetoInfo Projeto { get; set; }
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public void OnGet(int id)
+        public VerModel(IHttpClientFactory httpClientFactory)
         {
-            Projeto = new ProjetoInfo
+            _httpClientFactory = httpClientFactory;
+        }
+
+        [BindProperty]
+        public ProjetoInfo Projeto { get; set; } = new();
+
+        public async Task<IActionResult> OnGetAsync(int id)
+        {
+            var client = _httpClientFactory.CreateClient("Backend");
+
+            var response = await client.GetAsync($"api/Projeto/{id}");
+
+            if (!response.IsSuccessStatusCode)
             {
-                Id = id,
-                Nome = "Gestão de Redes",
-                Cliente = "Eduarda Gomes",
-                ClienteId = 101,
-                UtilizadorId = 99,
-                Estado = "Em Curso",
-                Descricao = "Sistema de Gestão de Redes desenvolvido para monitorizar, administrar e otimizar a infraestrutura de rede de uma organização. Permite acompanhar o desempenho de dispositivos, gerir permissões de acesso, detetar falhas em tempo real e gerar relatórios detalhados. A solução oferece integração com dashboards interativos, suporte a protocolos de segurança e funcionalidades de manutenção preventiva, garantindo maior fiabilidade, eficiência e segurança em ambientes empresariais ou académicos.",
-                DataInicio = new DateTime(2025, 1, 15),
-                DataFim = new DateTime(2025, 3, 1),
-                HorasTrabalho = 140
-            };
+                return NotFound();
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            var projetoApi = JsonSerializer.Deserialize<ProjetoInfo>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            if (projetoApi == null)
+            {
+                return NotFound();
+            }
+
+            Projeto = projetoApi;
+            return Page();
         }
 
         public class ProjetoInfo
         {
             public int Id { get; set; }
-            public string Nome { get; set; }
-            public string Cliente { get; set; }
+            public string Nome { get; set; } = string.Empty;
+            public string Cliente { get; set; } = string.Empty;
             public int ClienteId { get; set; }
             public int UtilizadorId { get; set; }
-            public string Estado { get; set; }
-            public string Descricao { get; set; }
+            public string Estado { get; set; } = string.Empty;
+            public string Descricao { get; set; } = string.Empty;
             public DateTime DataInicio { get; set; }
-            public DateTime DataFim { get; set; }
+            public DateTime? DataFim { get; set; } // ✅ agora nullable
             public int HorasTrabalho { get; set; }
         }
     }

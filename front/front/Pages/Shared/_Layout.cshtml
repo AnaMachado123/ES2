@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Http
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,95 +11,115 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
-    @* Página atual *@
-    @{
-        var paginaAtual = Context.Request.Path.Value?.ToLower();
+@{
+    var paginaAtual = Context.Request.Path.Value?.ToLower();
+    var usaMenuFixo =
+        paginaAtual != "/login" &&
+        paginaAtual != "/register" &&
+        paginaAtual != "/" &&
+        paginaAtual != "/escolherperfil";
+}
+
+<header class="z-30 relative @(usaMenuFixo ? "pl-64" : "")">
+    <nav class="bg-green-900 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a class="text-white font-semibold text-xl" asp-area="" asp-page="/Home">
+                Gestão de Serviços para Clientes
+            </a>
+
+            <div class="flex items-center space-x-4 relative">
+                <a class="text-white hover:text-gray-300" asp-area="" asp-page="/Privacy">Privacy</a>
+
+                @if (usaMenuFixo)
+                {
+                    <div class="relative">
+                        <button onclick="toggleDropdown()" class="flex items-center space-x-1 text-white hover:text-gray-300 focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                 stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a8.25 8.25 0 1115 0v.75H4.5v-.75z" />
+                            </svg>
+                            <span>Perfil</span>
+                        </button>
+
+                        <div id="dropdownMenu" class="absolute right-0 mt-2 w-40 bg-white rounded shadow-md hidden z-10">
+                            <a href="/PerfilVisualizar" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ver Perfil</a>
+                            <form method="post" action="/Logout">
+                                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                                    Terminar Sessão
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                }
+
+                @if (!usaMenuFixo)
+                {
+                    <a class="bg-white text-green-900 font-medium py-1 px-3 rounded hover:bg-gray-100" asp-page="/Login">Iniciar Sessão</a>
+                    <a class="bg-white text-green-900 font-medium py-1 px-3 rounded hover:bg-gray-100" asp-page="/Register">Registar</a>
+                }
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="flex flex-grow">
+
+    @* SIDEMENU fixo em todas as páginas exceto login, register, home, escolherperfil *@
+    @if (usaMenuFixo)
+    {
+        <div id="menuLateral" class="hidden md:block w-64 bg-green-900 z-10 fixed inset-y-0 left-0 shadow-lg">
+            <partial name="_Sidemenu" />
+        </div>
+
+        <button id="menuToggle" class="fixed top-4 left-4 z-30 bg-green-700 text-white p-2 rounded-lg shadow-md md:hidden">
+            ☰
+        </button>
     }
 
-    <header>
-        <nav class="bg-green-900 p-4">
-            <div class="container mx-auto flex justify-between items-center">
-                <a class="text-white font-semibold text-xl" asp-area="" asp-page="/Home">
-                    Gestão de Serviços para Clientes
-                </a>
+    <main role="main" class="flex-grow pb-3 pr-4 mt-4 transition-all duration-300 @(usaMenuFixo ? "pl-64" : "")">
+        @RenderBody()
+    </main>
+</div>
 
-                <div class="flex items-center space-x-4 relative">
-                    <a class="text-white hover:text-gray-300" asp-area="" asp-page="/Privacy">Privacy</a>
-
-                    @* Mostrar botão de Perfil apenas fora de login/register *@
-                    @if (paginaAtual != "/login" && paginaAtual != "/register")
-                    {
-                        <div class="relative">
-                            <button onclick="toggleDropdown()" class="flex items-center space-x-1 text-white hover:text-gray-300 focus:outline-none">
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                     fill="none" viewBox="0 0 24 24"
-                                     stroke-width="1.5" stroke="currentColor"
-                                     class="w-5 h-5">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                          d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a8.25 8.25 0 1115 0v.75H4.5v-.75z" />
-                                </svg>
-                                <span>Perfil</span>
-                            </button>
-
-                            <div id="dropdownMenu" class="absolute right-0 mt-2 w-40 bg-white rounded shadow-md hidden z-10">
-                                <a href="/PerfilVisualizar" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ver Perfil</a>
-                                <form method="post" action="/Logout">
-                                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
-                                        Terminar Sessão
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    }
-
-                    @* Mostrar botões de sessão só conforme a página atual *@
-                    @if (paginaAtual == "/")
-                    {
-                        <a class="bg-white text-green-900 font-medium py-1 px-3 rounded hover:bg-gray-100" asp-page="/Login">Iniciar Sessão</a>
-                        <a class="bg-white text-green-900 font-medium py-1 px-3 rounded hover:bg-gray-100" asp-page="/Register">Registar</a>
-                    }
-                    else if (paginaAtual == "/login")
-                    {
-                        <a class="bg-white text-green-900 font-medium py-1 px-3 rounded hover:bg-gray-100" asp-page="/Register">Registar</a>
-                    }
-                    else if (paginaAtual == "/register")
-                    {
-                        <a class="bg-white text-green-900 font-medium py-1 px-3 rounded hover:bg-gray-100" asp-page="/Login">Iniciar Sessão</a>
-                    }
-                </div>
-            </div>
-        </nav>
-    </header>
-
-    <div class="flex-grow">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+<footer class="border-t text-center text-sm text-gray-500 py-4 @(usaMenuFixo ? "pl-64" : "")">
+    <div class="container mx-auto">
+        &copy; 2025 - front -
+        <a class="text-green-900 hover:underline" asp-area="" asp-page="/Privacy">Privacy</a>
     </div>
+</footer>
 
-    <footer class="border-t text-center text-sm text-gray-500 py-4">
-        <div class="container mx-auto">
-            &copy; 2025 - front - 
-            <a class="text-green-900 hover:underline" asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
+@await RenderSectionAsync("Scripts", required: false)
 
-    @await RenderSectionAsync("Scripts", required: false)
+<script>
+    function toggleDropdown() {
+        const menu = document.getElementById("dropdownMenu");
+        menu.classList.toggle("hidden");
+    }
 
-    <script>
-        function toggleDropdown() {
-            const menu = document.getElementById("dropdownMenu");
-            menu.classList.toggle("hidden");
+    window.addEventListener('click', function (e) {
+        const menu = document.getElementById("dropdownMenu");
+        const button = document.querySelector("button[onclick='toggleDropdown()']");
+        if (!menu.contains(e.target) && !button.contains(e.target)) {
+            menu.classList.add("hidden");
         }
+    });
 
-        // Fecha o menu se clicar fora
-        window.addEventListener('click', function (e) {
-            const menu = document.getElementById("dropdownMenu");
-            const button = document.querySelector("button[onclick='toggleDropdown()']");
-            if (!menu.contains(e.target) && !button.contains(e.target)) {
-                menu.classList.add("hidden");
+    const toggleBtn = document.getElementById("menuToggle");
+    const sideMenu = document.getElementById("menuLateral");
+
+    if (toggleBtn && sideMenu) {
+        toggleBtn.addEventListener("click", () => {
+            sideMenu.classList.toggle("hidden");
+        });
+
+        document.addEventListener("click", (e) => {
+            if (!sideMenu.contains(e.target) && !toggleBtn.contains(e.target)) {
+                sideMenu.classList.add("hidden");
             }
         });
-    </script>
+    }
+</script>
+
 </body>
 </html>
