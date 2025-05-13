@@ -51,5 +51,9 @@ namespace BackendTesteESII.Services
             _context.SaveChanges();
             return true;
         }
+        public GestaoServicosClientesContext GetContext()
+        {
+            return _context;
+        }
     }
 }
