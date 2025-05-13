@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using BackendTesteESII.Data;
 using BackendTesteESII.Models.DTOs;
-using BackendTesteESII.Services;          // ← garante que tens este using
+using BackendTesteESII.Services;
 using System.Linq;
 
 namespace BackendTesteESII.Controllers
@@ -23,26 +23,21 @@ namespace BackendTesteESII.Controllers
             [FromBody] LoginRequest dto,
             [FromServices] ILoginService loginSvc)
         {
-            /* 1) Autentica-se através do serviço */
+            // 1) Autenticação via serviço
             var token = loginSvc.Autenticar(dto);
             if (token == null)
                 return Unauthorized("Credenciais inválidas.");
 
-            /* 2) Busca o utilizador só para devolver info ao front-end */
+            // 2) Busca do utilizador
             var user = _context.Utilizadores.First(u => u.Email == dto.Email);
 
-            /* 3) Resposta final */
+            // 3) Resposta correta para o frontend (token + dados no mesmo nível)
             return Ok(new
             {
                 token,
-                utilizador = new
-                {
-                    user.Id,
-                    user.Nome,
-                    user.Email,
-                    // normaliza caso ainda exista "UserM" guardado na BD
-                    tipo = user.Tipo == "UserM" ? "UserManager" : user.Tipo
-                }
+                nome = user.Nome,
+                email = user.Email,
+                tipo = user.Tipo == "UserM" ? "UserManager" : user.Tipo
             });
         }
     }

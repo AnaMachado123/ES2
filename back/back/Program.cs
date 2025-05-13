@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +20,7 @@ builder.Logging.SetMinimumLevel(LogLevel.Warning);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// ✅ Swagger com botão Authorize
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
@@ -75,7 +76,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-// ✅ Autenticação JWT
+
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
@@ -112,7 +113,7 @@ using (var scope = app.Services.CreateScope())
     var context = scope.ServiceProvider.GetRequiredService<GestaoServicosClientesContext>();
     context.Database.Migrate();
 
-    // ✅ SEED DO ADMIN com IsAdmin garantido
+
     var admin = context.Utilizadores.FirstOrDefault(u => u.Email == "admin@admin.com");
 
     if (admin == null)
@@ -146,6 +147,11 @@ using (var scope = app.Services.CreateScope())
         admin.IsAdmin = true;
         context.SaveChanges();
     }
+    var claims = new List<Claim>
+{
+    new Claim(ClaimTypes.NameIdentifier, admin.Id.ToString()),
+    new Claim(ClaimTypes.Role, admin.Tipo), 
+};
 }
 
 app.Run();
