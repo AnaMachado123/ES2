@@ -28,12 +28,9 @@ namespace front.Pages
 
         public async Task OnGetAsync(string? modo)
         {
-<<<<<<< Updated upstream
             TipoUtilizador = HttpContext.Session.GetString("Tipo") ?? "regular";
-=======
             ModoVisualizacao = modo ?? "todos";
             var client = _httpClientFactory.CreateClient("Backend");
->>>>>>> Stashed changes
 
             try
             {
@@ -67,42 +64,19 @@ namespace front.Pages
                     });
 
                     if (projetosApi != null)
-<<<<<<< Updated upstream
                     {
                         Projetos = projetosApi;
                     }
-=======
-                        Projetos = projetosApi;
->>>>>>> Stashed changes
                 }
             }
             catch (Exception ex)
             {
-<<<<<<< Updated upstream
                 Console.WriteLine($"Erro ao carregar projetos: {ex.Message}");
             }
 
             TotalProjetos = Projetos.Count;
             TarefasPendentes = Projetos.Count(p => p.Status == "Pendente");
             TotalClientes = Projetos.Select(p => p.Cliente).Distinct().Count();
-=======
-                Console.WriteLine($"Erro: {ex.Message}");
-            }
-
-            // aplicar filtro extra se for admin e tiver escolhido modo "meus"
-            if (RoleUtilizador == "Admin" && ModoVisualizacao == "meus")
-            {
-                Projetos = Projetos.Where(p => p.Cliente == NomeUtilizador).ToList();
-            }
-            else if (RoleUtilizador == "User")
-            {
-                Projetos = Projetos.Where(p => p.Cliente == NomeUtilizador).ToList();
-            }
-
-            TotalProjetos = Projetos.Count;
-            TarefasPendentes = Projetos.Count(p => p.Estado?.ToLower() == "pendente");
-            TotalClientes = Projetos.Select(p => p.Cliente ?? "").Distinct().Count();
->>>>>>> Stashed changes
         }
 
         public class Projeto
