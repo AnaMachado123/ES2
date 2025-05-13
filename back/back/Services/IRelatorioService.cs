@@ -14,5 +14,8 @@ namespace BackendTesteESII.Services
         Relatorio Create(Relatorio relatorio);
         bool Update(int id, Relatorio relatorio);
         bool Delete(int id);
+
+        GestaoServicosClientesContext GetContext();
+
     }
 }

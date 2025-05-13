@@ -1,5 +1,9 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
+
+
 
 namespace BackendTesteESII.Models;
 
@@ -34,7 +38,9 @@ public class Tarefa
 
     // 🔗 Relacionamento com Projeto (1 Projeto tem muitas Tarefas)
     [ForeignKey("ProjetoId")]
-    public Projeto Projeto { get; set; } = null!;
+    [JsonIgnore]
+    public Projeto? Projeto { get; set; }
+
 
     [Required]
     [Column("utilizador_id")]
@@ -43,4 +49,8 @@ public class Tarefa
     [Required]
     [Column("horas_gastas")]
     public int HorasGastas { get; set; }
+
+    [ForeignKey("UtilizadorId")]
+    public Utilizador? Utilizador { get; set; }
+
 }

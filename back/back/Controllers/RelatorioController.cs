@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using BackendTesteESII.Models;
-using BackendTesteESII.Services;   // <— nova referência
+using BackendTesteESII.Services; 
+using BackendTesteESII.Models.Strategies;
+using BackendTesteESII.Models.DTOs;  
 
 namespace BackendTesteESII.Controllers;
 
@@ -48,4 +50,23 @@ public class RelatorioController : ControllerBase
         if (!_service.Delete(id)) return NotFound();
         return NoContent();
     }
+    [HttpGet("mensal")]
+    public IActionResult GetRelatorioMensal([FromQuery] int utilizadorId, [FromQuery] int mes, [FromQuery] int ano)
+    {
+        var strategy = new RelatorioMensalStrategy();
+        var contextStrategy = new RelatorioContext<List<RelatorioMensalDTO>>(strategy);
+        var resultado = contextStrategy.Executar(_service.GetContext(), utilizadorId, mes, ano); // ← ajusta para obter context
+
+            return Ok(resultado);
+    }
+    [HttpGet("projeto")]
+    public IActionResult GetRelatorioProjeto([FromQuery] int projetoId)
+    {
+        var strategy = new RelatorioProjetoStrategy();
+        var contextStrategy = new RelatorioContextProjeto<List<RelatorioProjetoDTO>>(strategy);
+        var resultado = contextStrategy.Executar(_service.GetContext(), projetoId);
+
+        return Ok(resultado);
+    }
+
 }
