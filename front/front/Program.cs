@@ -6,7 +6,7 @@ builder.Services.AddHttpClient("Backend", client =>
     client.BaseAddress = new Uri("http://localhost:5176/");
 });
 builder.Services.AddAuthorization();
-builder.Services.AddSession(); // ✅ suporte a sessões
+builder.Services.AddSession(); 
 
 var app = builder.Build();
 
