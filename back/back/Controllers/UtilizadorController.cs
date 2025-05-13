@@ -5,6 +5,7 @@ using BackendTesteESII.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using BackendTesteESII.Data; 
 
 namespace BackendTesteESII.Controllers
 {
@@ -13,10 +14,12 @@ namespace BackendTesteESII.Controllers
     public class UtilizadorController : ControllerBase
     {
         private readonly IUtilizadorService _service;
+        private readonly GestaoServicosClientesContext _context;
 
-        public UtilizadorController(IUtilizadorService service)
+        public UtilizadorController(IUtilizadorService service, GestaoServicosClientesContext context)
         {
             _service = service;
+            _context = context;
         }
 
         [HttpGet]
@@ -29,20 +32,15 @@ namespace BackendTesteESII.Controllers
             return utilizador == null ? NotFound() : Ok(utilizador);
         }
 
-        // POST com controlo de permissões de criação
         [HttpPost]
         public IActionResult PostUtilizador(UtilizadorCreateDTO dto)
         {
             var user = HttpContext.User;
-
-            // Validar o tipo como string
             var tipo = dto.Tipo?.Trim();
 
             if (string.IsNullOrWhiteSpace(tipo) ||
                 (tipo != "User" && tipo != "UserManager" && tipo != "Admin"))
-            {
                 return BadRequest("Tipo de utilizador inválido.");
-            }
 
             if (!(user.Identity?.IsAuthenticated ?? false))
             {
@@ -92,7 +90,6 @@ namespace BackendTesteESII.Controllers
                 : Ok(mensagem);
         }
 
-
         [HttpPost("recuperar")]
         public IActionResult RecuperarPassword([FromBody] string email)
         {
@@ -100,5 +97,29 @@ namespace BackendTesteESII.Controllers
             return sucesso ? Ok("Email enviado com sucesso.") : NotFound("Utilizador não encontrado.");
         }
 
+       
+        [Authorize]
+        [HttpGet("me")]
+        public IActionResult GetUserInfo()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var utilizador = _context.Utilizadores.FirstOrDefault(u => u.Id.ToString() == userId);
+
+            if (utilizador == null)
+                return NotFound();
+
+            var userInfo = new UserInfoDTO
+            {
+                Nome = utilizador.Nome,
+                Email = utilizador.Email,
+                Role = utilizador.Tipo
+            };
+
+            return Ok(userInfo);
+        }
     }
 }

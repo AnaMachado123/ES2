@@ -1,10 +1,11 @@
-namespace front.Models;
-
-public class ProjetoDTO
+namespace BackendTesteESII.Models.DTOs
 {
-    public int Id { get; set; }
-    public string Nome { get; set; } = string.Empty;
-    public string Descricao { get; set; } = string.Empty;
-    public string Estado { get; set; } = string.Empty;
-    public string Cliente { get; set; } = string.Empty; // ← Nome do cliente
+    public class ProjetoDTO
+    {
+        public int Id { get; set; }
+        public string Nome { get; set; } = string.Empty;
+        public string Descricao { get; set; } = string.Empty;
+        public string Estado { get; set; } = string.Empty;
+        public string Cliente { get; set; } = string.Empty;
+    }
 }

@@ -1,50 +1,54 @@
 using Microsoft.AspNetCore.Mvc;
+using BackendTesteESII.Services;
 using BackendTesteESII.Models;
 using BackendTesteESII.Models.DTOs;
-using BackendTesteESII.Services; // 👈 Importa o namespace do serviço
 
-namespace BackendTesteESII.Controllers;
-
-[Route("api/[controller]")]
-[ApiController]
-public class ProjetoController : ControllerBase
+namespace BackendTesteESII.Controllers
 {
-    private readonly IProjetoService _service;
-
-    public ProjetoController(IProjetoService service)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ProjetoController : ControllerBase
     {
-        _service = service;
-    }
+        private readonly IProjetoService _service;
 
-    [HttpGet]
-    public IActionResult GetProjetos() => Ok(_service.GetAll());
+        public ProjetoController(IProjetoService service)
+        {
+            _service = service;
+        }
 
-    [HttpGet("{id}")]
-    public IActionResult GetProjeto(int id)
-    {
-        var projeto = _service.GetById(id);
-        return projeto == null ? NotFound() : Ok(projeto);
-    }
+        [HttpGet]
+        [HttpGet]
+public IActionResult GetProjetos()
+{
+    return Ok(_service.GetAll()); // ✅ agora devolve nome do cliente
+}
 
-    [HttpPost]
-    public IActionResult PostProjeto(ProjetoCreateDTO dto)
-    {
-        var criado = _service.Create(dto);
-        return CreatedAtAction(nameof(GetProjeto), new { id = criado.Id }, criado);
-    }
+        [HttpGet("{id}")]
+        public IActionResult GetProjeto(int id)
+        {
+            var projeto = _service.GetById(id);
+            return projeto == null ? NotFound() : Ok(projeto);
+        }
 
-    [HttpPut("{id}")]
-    public IActionResult PutProjeto(int id, Projeto projeto)
-    {
-        if (id != projeto.Id) return BadRequest();
-        if (!_service.Update(id, projeto)) return NotFound();
-        return NoContent();
-    }
+        [HttpPost]
+        public IActionResult PostProjeto([FromBody] ProjetoCreateDTO dto)
+        {
+            var novo = _service.Create(dto);
+            return CreatedAtAction(nameof(GetProjeto), new { id = novo.Id }, novo);
+        }
 
-    [HttpDelete("{id}")]
-    public IActionResult DeleteProjeto(int id)
-    {
-        if (!_service.Delete(id)) return NotFound();
-        return NoContent();
+        [HttpPut("{id}")]
+        public IActionResult PutProjeto(int id, Projeto projeto)
+        {
+            if (id != projeto.Id) return BadRequest();
+
+            return _service.Update(id, projeto) ? NoContent() : NotFound();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteProjeto(int id)
+        {
+            return _service.Delete(id) ? NoContent() : NotFound();
+        }
     }
 }

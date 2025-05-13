@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Http;
 
 namespace front.Pages
 {
@@ -36,23 +37,31 @@ namespace front.Pages
             var json = JsonSerializer.Serialize(loginData);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-           var response = await client.PostAsync("api/Login", content);
-
+            var response = await client.PostAsync("api/Login", content);
 
             if (response.IsSuccessStatusCode)
             {
-                // (Opcional) Ler a resposta com os dados do utilizador logado
                 var responseBody = await response.Content.ReadAsStringAsync();
 
                 var utilizador = JsonSerializer.Deserialize<UtilizadorResponse>(responseBody,
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                // Guardar em sessão (exemplo)
                 if (utilizador != null)
                 {
                     HttpContext.Session.SetString("Nome", utilizador.Nome ?? "");
                     HttpContext.Session.SetString("Email", utilizador.Email ?? "");
                     HttpContext.Session.SetString("Tipo", utilizador.Tipo ?? "User");
+
+                    // 🔐 Guardar o token JWT no cookie
+                    if (!string.IsNullOrEmpty(utilizador.Token))
+                    {
+                        HttpContext.Response.Cookies.Append("jwt", utilizador.Token, new CookieOptions
+                        {
+                            HttpOnly = true,
+                            Secure = false, // true se estiveres com HTTPS
+                            SameSite = SameSiteMode.Strict
+                        });
+                    }
                 }
 
                 return RedirectToPage("/Dashboard");
@@ -67,7 +76,8 @@ namespace front.Pages
         {
             public string? Nome { get; set; }
             public string? Email { get; set; }
-            public string? Tipo { get; set; } // pode ser "Admin", "UserManager", etc.
+            public string? Tipo { get; set; }
+            public string? Token { get; set; } 
         }
     }
 }

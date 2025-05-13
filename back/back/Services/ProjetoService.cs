@@ -1,6 +1,8 @@
 using BackendTesteESII.Data;
 using BackendTesteESII.Models;
 using BackendTesteESII.Models.DTOs;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BackendTesteESII.Services
 {
@@ -13,7 +15,23 @@ namespace BackendTesteESII.Services
             _context = context;
         }
 
-        public IEnumerable<Projeto> GetAll() => _context.Projetos.ToList();
+      public List<ProjetoDTO> GetAll()
+{
+    var projetos = _context.Projetos.ToList();
+    var clientes = _context.Clientes.ToDictionary(c => c.Id, c => c.Nome);
+
+    var lista = projetos.Select(p => new ProjetoDTO
+    {
+        Id = p.Id,
+        Nome = p.Nome,
+        Descricao = p.Descricao,
+        Estado = p.Estado,
+        Cliente = clientes.TryGetValue(p.ClienteId, out var nome) ? nome : "Desconhecido"
+    }).ToList();
+
+    return lista;
+}
+
 
         public Projeto GetById(int id) => _context.Projetos.Find(id);
 
