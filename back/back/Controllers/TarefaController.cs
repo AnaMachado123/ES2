@@ -1,17 +1,25 @@
 using Microsoft.AspNetCore.Mvc;
 using BackendTesteESII.Models;
 using BackendTesteESII.Services;
+using Microsoft.EntityFrameworkCore;
+using BackendTesteESII.Data;
+
+
 
 namespace BackendTesteESII.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 public class TarefaController : ControllerBase
+
 {
+
+    private readonly GestaoServicosClientesContext _context;
     private readonly ITarefaService _service;
 
-    public TarefaController(ITarefaService service)
+    public TarefaController(GestaoServicosClientesContext context, ITarefaService service)
     {
+        _context = context;
         _service = service;
     }
 
@@ -46,4 +54,39 @@ public class TarefaController : ControllerBase
         if (!_service.Delete(id)) return NotFound();
         return NoContent();
     }
+    [HttpGet("emcurso")]
+    public IActionResult GetTarefasEmCurso([FromQuery] int utilizadorId)
+    {
+        var tarefas = _context.Tarefas
+            .Where(t => t.UtilizadorId == utilizadorId && t.Status.ToLower() != "finalizada")
+            .ToList();
+
+        return Ok(tarefas);
+    }
+        [HttpPut("{id}/mover")]
+    public IActionResult MoverTarefaParaOutroProjeto(int id, [FromQuery] int novoProjetoId)
+    {
+        var tarefa = _service.GetById(id);
+        if (tarefa == null) return NotFound("Tarefa não encontrada.");
+
+        tarefa.ProjetoId = novoProjetoId;
+
+        if (!_service.Update(id, tarefa)) return BadRequest("Erro ao mover tarefa.");
+
+        return Ok("Tarefa movida com sucesso para o novo projeto.");
+    }
+    [HttpPut("{id}/finalizar")]
+    public IActionResult FinalizarTarefa(int id)
+    {
+        var tarefa = _service.GetById(id);
+        if (tarefa == null) return NotFound("Tarefa não encontrada.");
+
+        tarefa.Status = "finalizada";
+        tarefa.DataFim = DateTime.UtcNow; // ou manter como está se quiseres
+
+        if (!_service.Update(id, tarefa)) return BadRequest("Erro ao finalizar tarefa.");
+
+        return Ok("Tarefa finalizada com sucesso.");
+    }
+
 }
