@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Dashboard";
     ViewData["ActivePage"] = "Dashboard";
+    var tipo = Model.TipoUtilizador.ToLower(); // ✅ Adicionado
 }
 
 <!-- FUNDO FULLSCREEN -->
@@ -11,8 +12,8 @@
 <!-- CONTEÚDO -->
 <div class="relative min-h-screen w-full p-10 z-10">
 
-    <h1 class="text-3xl font-bold text-green-700 mb-2">Bem-vinda, Ana Machado!</h1>
-    <p class="text-gray-600 mb-6">Email: ana@email.com</p>
+    <h1 class="text-3xl font-bold text-green-700 mb-2">Bem-vinda, @Model.NomeUtilizador!</h1>
+    <p class="text-gray-600 mb-6">Email: @Model.EmailUtilizador</p>
 
     <!-- CARDS DE RESUMO -->
     <div class="grid grid-cols-1 md:grid-cols-@((tipo == "regular") ? 2 : 3) gap-6 mb-10">
@@ -32,80 +33,24 @@
                 <h2 class="text-lg font-semibold text-gray-700 mb-2">Clientes</h2>
                 <p class="text-2xl font-bold text-green-600">@Model.TotalClientes</p>
             </div>
-    <!-- Conteúdo principal -->
-    <div class="flex-1 p-8">
-        <h2 class="text-2xl font-semibold mb-4">Bem-vindo(a), @Model.NomeUtilizador!</h2>
-        <p>Email: @Model.EmailUtilizador</p>
-
-        <hr class="my-6" />
-
-        @if (Model.RoleUtilizador == "Admin")
-        {
-            <form method="get" class="mb-6">
-                <label class="font-semibold mr-2">Ver:</label>
-                <select name="modo" onchange="this.form.submit()" class="border rounded px-2 py-1">
-                    <option value="todos" selected="@("todos" == Model.ModoVisualizacao)">Todos os Projetos</option>
-                    <option value="meus" selected="@("meus" == Model.ModoVisualizacao)">Meus Projetos</option>
-                </select>
-            </form>
         }
-
-        <!-- CARDS -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            <div class="bg-green-100 rounded-lg shadow-md p-6">
-                <h2 class="text-lg font-semibold text-green-900 mb-2">
-                    @(Model.RoleUtilizador == "User" ? "Os teus Projetos" :
-                      Model.RoleUtilizador == "UserManager" ? "Projetos da Equipa" :
-                      Model.ModoVisualizacao == "meus" ? "Meus Projetos" : "Projetos Ativos")
-                </h2>
-                <p class="text-2xl font-bold text-green-700">@Model.TotalProjetos</p>
-            </div>
-
-            <div class="bg-yellow-100 rounded-lg shadow-md p-6">
-                <h2 class="text-lg font-semibold text-yellow-900 mb-2">Tarefas Pendentes</h2>
-                <p class="text-2xl font-bold text-yellow-700">@Model.TarefasPendentes</p>
-            </div>
-
-            <div class="bg-blue-100 rounded-lg shadow-md p-6">
-                <h2 class="text-lg font-semibold text-blue-900 mb-2">Clientes</h2>
-                <p class="text-2xl font-bold text-blue-700">
-                    @(Model.RoleUtilizador == "Admin" ? @Model.TotalClientes.ToString() : "-")
-                </p>
-            </div>
-        </div>
-
-        <!-- TABELA DE PROJETOS -->
-        <h3 class="text-xl font-semibold mb-2">Projetos</h3>
-        <div class="overflow-x-auto">
-            <table class="min-w-full bg-white rounded-lg shadow-md overflow-hidden">
-                <thead class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                    <tr>
-                        <th class="py-3 px-6 text-left">Nome</th>
-                        <th class="py-3 px-6 text-left">Cliente</th>
-                        <th class="py-3 px-6 text-left">Estado</th>
-                        <th class="py-3 px-6 text-left">Ações</th>
-                    </tr>
-                </thead>
-                <tbody class="text-gray-700 text-sm font-light">
-                    @foreach (var projeto in Model.Projetos)
-                    {
-                        <tr class="border-b border-gray-200 hover:bg-gray-100">
-                            <td class="py-3 px-6 text-left">@projeto.Nome</td>
-                            <td class="py-3 px-6 text-left">
-                                @(!string.IsNullOrWhiteSpace(projeto.Cliente) ? projeto.Cliente : "Desconhecido")
-                            </td>
-                            <td class="py-3 px-6 text-left">@projeto.Estado</td>
-                            <td class="py-3 px-6 text-left"><a class="text-blue-600 hover:underline" href="#">Ver</a></td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
     </div>
 
-    <!-- TABELA DE PROJETOS RECENTES -->
+    <!-- OPÇÕES DE FILTRO PARA ADMIN -->
+    @if (Model.RoleUtilizador == "Admin")
+    {
+        <form method="get" class="mb-6">
+            <label class="font-semibold mr-2">Ver:</label>
+            <select name="modo" onchange="this.form.submit()" class="border rounded px-2 py-1">
+                <option value="todos" selected="@("todos" == Model.ModoVisualizacao)">Todos os Projetos</option>
+                <option value="meus" selected="@("meus" == Model.ModoVisualizacao)">Meus Projetos</option>
+            </select>
+        </form>
+    }
+
+    <!-- TABELA DE PROJETOS -->
     <div class="bg-white bg-opacity-90 rounded-xl shadow p-6 mb-10">
-        <h2 class="text-xl font-bold text-green-700 mb-4">Projetos Recentes</h2>
+        <h2 class="text-xl font-bold text-green-700 mb-4">Projetos</h2>
 
         @if (Model.Projetos != null && Model.Projetos.Any())
         {
@@ -123,7 +68,7 @@
                     {
                         <tr class="border-t">
                             <td class="py-2">@projeto.Nome</td>
-                            <td class="py-2">ID: @projeto.ClienteId</td> <!-- 👈 ClienteId visível -->
+                            <td class="py-2">@(!string.IsNullOrWhiteSpace(projeto.Cliente) ? projeto.Cliente : $"ID: {projeto.ClienteId}")</td>
                             <td class="py-2 text-gray-700">@projeto.Estado</td>
                             <td class="py-2">
                                 <a href="/Projetos/Ver/@projeto.Id" class="text-blue-600 hover:underline">Ver</a>
@@ -139,7 +84,7 @@
         }
     </div>
 
-    <!-- BOTÃO DE ADICIONAR PROJETO -->
+    <!-- BOTÃO DE ADICIONAR PROJETO (Manager/Admin) -->
     @if (tipo == "manager" || tipo == "admin")
     {
         <div class="flex justify-end">
@@ -150,4 +95,4 @@
         </div>
     }
 
-}
+</div>

@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http;
@@ -19,24 +18,31 @@ namespace front.Pages
         public string NomeUtilizador { get; set; } = "";
         public string EmailUtilizador { get; set; } = "";
         public string RoleUtilizador { get; set; } = "";
+        public string TipoUtilizador { get; set; } = "regular";
         public string ModoVisualizacao { get; set; } = "todos";
 
         public int TotalProjetos { get; set; }
         public int TarefasPendentes { get; set; } = 0;
         public int TotalClientes { get; set; } = 0;
+
         public List<Projeto> Projetos { get; set; } = new();
 
         public async Task OnGetAsync(string? modo)
         {
             TipoUtilizador = HttpContext.Session.GetString("Tipo") ?? "regular";
             ModoVisualizacao = modo ?? "todos";
+
             var client = _httpClientFactory.CreateClient("Backend");
 
             try
             {
                 var token = HttpContext.Request.Cookies["jwt"];
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                if (!string.IsNullOrEmpty(token))
+                {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                }
 
+                // Buscar info do utilizador autenticado
                 var userResponse = await client.GetAsync("api/utilizador/me");
                 if (userResponse.IsSuccessStatusCode)
                 {
@@ -54,6 +60,7 @@ namespace front.Pages
                     }
                 }
 
+                // Buscar projetos
                 var response = await client.GetAsync("api/Projeto");
                 if (response.IsSuccessStatusCode)
                 {
@@ -75,16 +82,23 @@ namespace front.Pages
             }
 
             TotalProjetos = Projetos.Count;
-            TarefasPendentes = Projetos.Count(p => p.Status == "Pendente");
-            TotalClientes = Projetos.Select(p => p.Cliente).Distinct().Count();
+            TarefasPendentes = Projetos.Count(p => p.Estado == "Pendente");
+
+            // Distintos por cliente ID para evitar duplicados quando nomes forem nulos
+            TotalClientes = Projetos.Select(p => p.ClienteId).Distinct().Count();
         }
 
         public class Projeto
         {
             public int Id { get; set; }
             public string? Nome { get; set; }
-            public string? Cliente { get; set; }
-            public string? Estado { get; set; }
+
+            public string? Cliente { get; set; } = ""; // Pode vir nulo
+            public int ClienteId { get; set; }
+
+            public string? Estado { get; set; } = "Indefinido";
+
+            public string? Status => Estado; // Compatibilidade
         }
 
         public class UserInfoDTO
@@ -93,6 +107,5 @@ namespace front.Pages
             public string Email { get; set; } = "";
             public string Role { get; set; } = "";
         }
-
     }
 }
