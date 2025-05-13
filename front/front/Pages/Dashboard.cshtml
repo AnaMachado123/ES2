@@ -6,39 +6,40 @@
     var tipo = Model.TipoUtilizador.ToLower(); // regular, manager, admin
 }
 
-<!-- FUNDO aplicado como plano de fundo total -->
+<!-- FUNDO FULLSCREEN -->
 <div class="fixed inset-0 w-full h-full bg-[url('/images/background.png')] bg-cover bg-center -z-10"></div>
 
-<!-- CONTEÚDO por cima do fundo -->
-<div class="relative min-h-screen w-full p-6 z-10">
+<!-- CONTEÚDO -->
+<div class="relative min-h-screen w-full p-10 z-10">
 
     <h1 class="text-3xl font-bold text-green-700 mb-2">Bem-vinda, Ana Machado!</h1>
     <p class="text-gray-600 mb-6">Email: ana@email.com</p>
 
-    <!-- Resumo -->
+    <!-- CARDS DE RESUMO -->
     <div class="grid grid-cols-1 md:grid-cols-@((tipo == "regular") ? 2 : 3) gap-6 mb-10">
-        <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="bg-white bg-opacity-90 rounded-xl shadow p-6">
             <h2 class="text-lg font-semibold text-gray-700 mb-2">Projetos Ativos</h2>
             <p class="text-2xl font-bold text-green-800">@Model.TotalProjetos</p>
         </div>
 
-        <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="bg-white bg-opacity-90 rounded-xl shadow p-6">
             <h2 class="text-lg font-semibold text-gray-700 mb-2">Tarefas Pendentes</h2>
             <p class="text-2xl font-bold text-gray-600">@Model.TarefasPendentes</p>
         </div>
 
         @if (tipo != "regular")
         {
-            <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="bg-white bg-opacity-90 rounded-xl shadow p-6">
                 <h2 class="text-lg font-semibold text-gray-700 mb-2">Clientes</h2>
                 <p class="text-2xl font-bold text-green-600">@Model.TotalClientes</p>
             </div>
         }
     </div>
 
-    <!-- Projetos Recentes -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-10">
+    <!-- TABELA DE PROJETOS RECENTES -->
+    <div class="bg-white bg-opacity-90 rounded-xl shadow p-6 mb-10">
         <h2 class="text-xl font-bold text-green-700 mb-4">Projetos Recentes</h2>
+
         @if (Model.Projetos != null && Model.Projetos.Any())
         {
             <table class="w-full table-auto text-left">
@@ -55,10 +56,10 @@
                     {
                         <tr class="border-t">
                             <td class="py-2">@projeto.Nome</td>
-                            <td class="py-2">@projeto.Cliente</td>
-                            <td class="py-2 text-gray-700">@projeto.Status</td>
+                            <td class="py-2">ID: @projeto.ClienteId</td> <!-- 👈 ClienteId visível -->
+                            <td class="py-2 text-gray-700">@projeto.Estado</td>
                             <td class="py-2">
-                                <a href="/Project/Details/@projeto.Id" class="text-blue-600 hover:underline">Ver</a>
+                                <a href="/Projetos/Ver/@projeto.Id" class="text-blue-600 hover:underline">Ver</a>
                             </td>
                         </tr>
                     }
@@ -71,12 +72,12 @@
         }
     </div>
 
-    <!-- Botão adicionar projeto (apenas Manager/Admin) -->
+    <!-- BOTÃO DE ADICIONAR PROJETO -->
     @if (tipo == "manager" || tipo == "admin")
     {
         <div class="flex justify-end">
             <a href="/AddProject" class="bg-green-700 text-white font-medium px-6 py-3 rounded-xl hover:bg-green-900 flex items-center justify-center gap-2">
-                <span class="text-2xl text-white">+</span>
+                <span class="text-2xl">+</span>
                 <span>Novo Projeto</span>
             </a>
         </div>

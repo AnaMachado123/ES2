@@ -4,10 +4,19 @@
     ViewData["Title"] = "Gestão de Serviços para Clientes";
 }
 
-<div class="h-screen bg-[url('/images/background.png')] bg-cover bg-center flex flex-col items-center justify-center text-center px-6">
-    <h1 class="text-5xl font-extrabold text-green-900 mb-4">Gestão de Serviços para Clientes</h1>
-    <p class="text-lg text-green-800 mb-2">Organize. Planeje. Conecte-se com os seus clientes de forma eficiente.</p>
-    <a href="/EscolherPerfil" class="bg-green-700 hover:bg-green-800 text-white font-semibold py-3 px-6 rounded-full transition duration-300">
-    Começar Agora
+<!-- FUNDO FULLSCREEN -->
+<div class="fixed inset-0 w-full h-full bg-[url('/images/background.png')] bg-cover bg-center -z-10"></div>
+
+<!-- CONTEÚDO CENTRALIZADO -->
+<div class="relative min-h-screen w-full flex flex-col items-center justify-center text-center px-6 z-10">
+    <h1 class="text-5xl font-extrabold text-green-900 drop-shadow-lg mb-4">
+        Gestão de Serviços para Clientes
+    </h1>
+    <p class="text-lg text-green-800 max-w-2xl mb-6">
+        Organize. Planeie. Conecte-se com os seus clientes de forma eficiente e profissional com o nosso sistema simples e poderoso.
+    </p>
+    <a href="/EscolherPerfil"
+       class="bg-green-700 hover:bg-green-800 text-white font-semibold py-3 px-8 rounded-full shadow-lg transition duration-300">
+        Começar Agora
     </a>
 </div>

@@ -57,7 +57,12 @@ namespace front.Pages
             public int Id { get; set; }
             public string? Nome { get; set; }
             public string? Cliente { get; set; } = "Desconhecido";
-            public string? Status { get; set; } = "Indefinido";
+            public string? Estado { get; set; } = "Indefinido";
+            public int ClienteId { get; set; }
+
+            // Manter compatibilidade com código antigo que usa "Status"
+            public string? Status => Estado;
         }
+
     }
 }
