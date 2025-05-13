@@ -1,33 +1,45 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Net.Http;
+using System.Text.Json;
 
 namespace front.Pages.Projetos
 {
     public class EditarModel : PageModel
     {
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        public EditarModel(IHttpClientFactory httpClientFactory)
+        {
+            _httpClientFactory = httpClientFactory;
+        }
+
         [BindProperty]
         public ProjetoModel Projeto { get; set; } = new();
 
-        public IActionResult OnGet(int id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            // Simulação de busca do projeto (poderia vir da base de dados)
-            Projeto = new ProjetoModel
-            {
-                Id = id,
-                Nome = "Gestão de Redes",
-                Descricao = "Sistema de Gestão de Redes desenvolvido...",
-                ClienteId = 101,
-                UtilizadorId = 99,
-                Estado = "Em Curso",
-                DataInicio = new DateTime(2025, 1, 15),
-                // DataFim só virá se for concluído
-                HorasTrabalho = 140
-            };
+            var client = _httpClientFactory.CreateClient("Backend");
+            var response = await client.GetAsync($"api/Projeto/{id}");
 
+            if (!response.IsSuccessStatusCode)
+                return NotFound();
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            var projeto = JsonSerializer.Deserialize<ProjetoModel>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            if (projeto == null)
+                return NotFound();
+
+            Projeto = projeto;
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             if (Projeto.Estado == "Concluído" && Projeto.DataFim == null)
             {
@@ -37,7 +49,17 @@ namespace front.Pages.Projetos
             if (!ModelState.IsValid)
                 return Page();
 
-            // Aqui salvavas na base de dados ou enviavas para o backend
+            var client = _httpClientFactory.CreateClient("Backend");
+
+            var content = new StringContent(
+                JsonSerializer.Serialize(Projeto),
+                System.Text.Encoding.UTF8,
+                "application/json");
+
+            var response = await client.PutAsync($"api/Projeto/{Projeto.Id}", content);
+
+            if (!response.IsSuccessStatusCode)
+                return Page(); // ou mostrar erro
 
             return RedirectToPage("/Projetos/Index");
         }
@@ -51,7 +73,7 @@ namespace front.Pages.Projetos
             public int UtilizadorId { get; set; }
             public string Estado { get; set; } = string.Empty;
             public DateTime DataInicio { get; set; }
-            public DateTime? DataFim { get; set; }  // Opcional
+            public DateTime? DataFim { get; set; }
             public int HorasTrabalho { get; set; }
         }
     }
