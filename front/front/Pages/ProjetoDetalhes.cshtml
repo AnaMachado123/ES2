@@ -1,0 +1,57 @@
+@page "{id:int}"
+@model front.Pages.ProjetoDetalhesModel
+@{
+    ViewData["Title"] = "Detalhes do Projeto";
+}
+
+<div class="flex">
+    <!-- Sidebar -->
+    <partial name="_SideMenu" />
+
+    <!-- Conteúdo principal com fundo -->
+    <div class="flex-grow p-6 bg-[url('/images/background.png')] bg-cover min-h-screen">
+        <div class="bg-white rounded-xl shadow p-6 max-w-3xl mx-auto">
+            <h2 class="text-2xl font-bold text-green-900 mb-4">@Model.Projeto.Nome</h2>
+
+            <p><strong class="text-green-800">Descrição:</strong> @Model.Projeto.Descricao</p>
+            <p><strong class="text-green-800">Cliente:</strong> @Model.Projeto.NomeCliente</p>
+            <p><strong class="text-green-800">Criador:</strong> @Model.Projeto.NomeCriador</p>
+            <p><strong class="text-green-800">Estado:</strong> @Model.Projeto.Estado</p>
+            <p><strong class="text-green-800">Datas:</strong> @Model.Projeto.DataInicio.ToShortDateString() até @Model.Projeto.DataFim.ToShortDateString()</p>
+            <p><strong class="text-green-800">Horas Planeadas:</strong> @Model.Projeto.HorasTrabalho h</p>
+
+            <hr class="my-4" />
+
+            <h3 class="text-xl font-semibold text-green-900 mb-2"> Histórico de Tarefas</h3>
+
+            @if (Model.Projeto.Tarefas.Any())
+            {
+                <ul class="list-disc pl-5 mt-2 space-y-3">
+                    @foreach (var tarefa in Model.Projeto.Tarefas.OrderByDescending(t => t.DataInicio))
+                    {
+                        <li>
+                            <p class="font-semibold">@tarefa.Descricao</p>
+                            <p class="text-sm text-gray-600">
+                                Criada em <strong>@tarefa.DataInicio.ToShortDateString()</strong> por <em>@tarefa.NomeUtilizador</em><br />
+                                Status: <span class="font-medium">@tarefa.Status</span>,
+                                Horas: @tarefa.HorasGastas h
+                                @if (tarefa.DataFim != DateTime.MinValue)
+                                {
+                                    <span> | Concluída em: @tarefa.DataFim.ToShortDateString()</span>
+                                }
+                            </p>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="text-gray-600 mt-2">Sem tarefas registadas para este projeto.</p>
+            }
+
+            <div class="mt-6">
+                <a asp-page="/Dashboard" class="text-green-700 hover:underline">← Voltar</a>
+            </div>
+        </div>
+    </div>
+</div>

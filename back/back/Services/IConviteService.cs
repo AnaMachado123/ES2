@@ -13,5 +13,10 @@ namespace BackendTesteESII.Services
         Convite Create(Convite convite);
         bool Update(int id, Convite convite);
         bool Delete(int id);
+        Convite CreateComValidacao(int userIdLogado, ConviteCreateDTO dto);
+        bool AceitarConvite(int conviteId);
+        bool RecusarConvite(int conviteId);
+
+
     }
 }

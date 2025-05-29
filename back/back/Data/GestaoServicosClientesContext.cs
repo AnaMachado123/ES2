@@ -19,6 +19,7 @@ public class GestaoServicosClientesContext : DbContext
     public DbSet<RelatorioProjeto> RelatoriosProjeto { get; set; }
     public DbSet<UtilizadorProjeto> UtilizadoresProjeto { get; set; }
     public DbSet<RelatorioProjeto> RelatorioProjetos { get; set; }
+    public DbSet<UtilizadorProjeto> UtilizadorProjetos { get; set; }
 
 
 
@@ -46,26 +47,26 @@ public class GestaoServicosClientesContext : DbContext
 
         modelBuilder.Entity<Tarefa>(entity =>
         {
-        entity.HasKey(e => e.Id);
-        entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
         });
 
         modelBuilder.Entity<Convite>(entity =>
         {
-        entity.HasKey(e => e.Id);
-        entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
         });
 
         modelBuilder.Entity<Relatorio>(entity =>
         {
-        entity.HasKey(e => e.Id);
-        entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
         });
 
         modelBuilder.Entity<RelatorioProjeto>(entity =>
         {
-        entity.HasKey(e => e.Id);
-        entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
         });
 
         modelBuilder.Entity<UtilizadorProjeto>()
@@ -80,7 +81,7 @@ public class GestaoServicosClientesContext : DbContext
             .HasOne(up => up.Projeto)
             .WithMany(p => p.UtilizadorProjetos)
             .HasForeignKey(up => up.ProjetoId);
- 
-        
+
+
     }
 }

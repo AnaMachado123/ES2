@@ -45,5 +45,66 @@ namespace BackendTesteESII.Services
             _context.SaveChanges();
             return true;
         }
+
+        public Convite CreateComValidacao(int userIdLogado, ConviteCreateDTO dto)
+        {
+            var projeto = _context.Projetos.FirstOrDefault(p => p.Id == dto.ProjetoId);
+            if (projeto == null) throw new Exception("Projeto não encontrado.");
+
+            if (projeto.UtilizadorId != userIdLogado)
+                throw new Exception("Apenas o criador do projeto pode convidar.");
+
+            var jaExiste = _context.UtilizadorProjetos.Any(up =>
+                up.ProjetoId == dto.ProjetoId && up.UtilizadorId == dto.UtilizadorId);
+            if (jaExiste)
+                throw new Exception("Utilizador já está no projeto.");
+
+            var convite = new Convite
+            {
+                UtilizadorId = dto.UtilizadorId,
+                ProjetoId = dto.ProjetoId,
+                Estado = "Pendente"
+            };
+
+            _context.Convites.Add(convite);
+            _context.SaveChanges();
+
+            return convite;
+        }
+
+        public bool AceitarConvite(int conviteId)
+        {
+            var convite = _context.Convites.FirstOrDefault(c => c.Id == conviteId);
+            if (convite == null || convite.Estado != "Pendente") return false;
+
+            // Verifica se já está associado
+            var jaExiste = _context.UtilizadorProjetos.Any(up =>
+                up.UtilizadorId == convite.UtilizadorId && up.ProjetoId == convite.ProjetoId);
+            if (jaExiste) return false;
+
+            // Muda estado e associa
+            convite.Estado = "Aceite";
+            _context.UtilizadorProjetos.Add(new UtilizadorProjeto
+            {
+                UtilizadorId = convite.UtilizadorId,
+                ProjetoId = convite.ProjetoId
+            });
+
+            _context.SaveChanges();
+            return true;
+        }
+        
+        public bool RecusarConvite(int conviteId)
+        {
+            var convite = _context.Convites.FirstOrDefault(c => c.Id == conviteId);
+            if (convite == null || convite.Estado != "Pendente") return false;
+
+            convite.Estado = "Recusado";
+            _context.SaveChanges();
+            return true;
+        }
+
+
+
     }
 }

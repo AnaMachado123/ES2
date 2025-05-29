@@ -26,11 +26,22 @@ public class ConviteController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult PostConvite(Convite convite)
+    public IActionResult PostConvite([FromBody] ConviteCreateDTO dto)
     {
+        if (dto == null || dto.UtilizadorId <= 0 || dto.ProjetoId <= 0)
+            return BadRequest("Dados inválidos.");
+
+        var convite = new Convite
+        {
+            UtilizadorId = dto.UtilizadorId,
+            ProjetoId = dto.ProjetoId,
+            Estado = "Pendente"
+        };
+
         var criado = _service.Create(convite);
         return CreatedAtAction(nameof(GetConvite), new { id = criado.Id }, criado);
     }
+
 
     [HttpPut("{id}")]
     public IActionResult PutConvite(int id, Convite convite)
@@ -46,4 +57,46 @@ public class ConviteController : ControllerBase
         if (!_service.Delete(id)) return NotFound();
         return NoContent();
     }
+
+    [HttpPut("{id}/estado")]
+    public IActionResult AtualizarEstado(int id, [FromBody] string novoEstado)
+    {
+        var convite = _service.GetById(id);
+        if (convite == null) return NotFound();
+
+        convite.Estado = novoEstado;
+        _service.Update(id, convite);
+        return Ok(convite);
+    }
+
+    [HttpGet("utilizador/{id}")]
+    public IActionResult GetPorUtilizador(int id)
+    {
+        var convites = _service.GetAll().Where(c => c.UtilizadorId == id);
+        return Ok(convites);
+    }
+
+    [HttpPut("{id}/aceitar")]
+    public IActionResult AceitarConvite(int id)
+    {
+        var sucesso = _service.AceitarConvite(id);
+        if (!sucesso)
+            return BadRequest("Não foi possível aceitar o convite.");
+
+        return Ok("Convite aceite com sucesso.");
+    }
+    
+    [HttpPut("{id}/recusar")]
+    public IActionResult RecusarConvite(int id)
+    {
+        var sucesso = _service.RecusarConvite(id);
+        if (!sucesso)
+            return BadRequest("Não foi possível recusar o convite.");
+    
+        return Ok("Convite recusado com sucesso.");
+    }
+
+
+    
+
 }

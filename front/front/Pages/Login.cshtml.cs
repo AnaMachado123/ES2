@@ -51,6 +51,7 @@ namespace front.Pages
                     HttpContext.Session.SetString("Nome", utilizador.Nome ?? "");
                     HttpContext.Session.SetString("Email", utilizador.Email ?? "");
                     HttpContext.Session.SetString("Tipo", utilizador.Tipo ?? "User");
+                    HttpContext.Session.SetString("UserId", utilizador.Id.ToString());
 
                     // 🔐 Guardar o token JWT no cookie
                     if (!string.IsNullOrEmpty(utilizador.Token))
@@ -74,10 +75,12 @@ namespace front.Pages
         // Classe auxiliar para ler o JSON de resposta
         public class UtilizadorResponse
         {
+            public int Id { get; set; }
             public string? Nome { get; set; }
             public string? Email { get; set; }
             public string? Tipo { get; set; }
-            public string? Token { get; set; } 
+            public string? Token { get; set; }
+        
         }
     }
 }
