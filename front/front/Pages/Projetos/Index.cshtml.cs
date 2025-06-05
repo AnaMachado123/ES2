@@ -20,6 +20,19 @@ namespace front.Pages.Projetos
             try
             {
                 var client = _httpClientFactory.CreateClient("Backend");
+
+                // 🔐 Adicionar JWT ao header Authorization
+                if (Request.Cookies.TryGetValue("jwt", out string? jwt))
+                {
+                    client.DefaultRequestHeaders.Authorization =
+                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+                }
+                else
+                {
+                    Console.WriteLine("Token JWT não encontrado nos cookies.");
+                    return;
+                }
+
                 var response = await client.GetAsync("api/Projeto");
 
                 if (response.IsSuccessStatusCode)
@@ -35,12 +48,17 @@ namespace front.Pages.Projetos
                         Projetos = projetosApi;
                     }
                 }
+                else
+                {
+                    Console.WriteLine($"Erro da API: {response.StatusCode}");
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Erro ao buscar projetos da API: {ex.Message}");
             }
         }
+
 
         public class Projeto
         {

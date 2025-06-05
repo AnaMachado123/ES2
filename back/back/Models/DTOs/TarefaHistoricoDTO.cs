@@ -6,4 +6,6 @@ public class TarefaHistoricoDTO
     public string Status { get; set; } = string.Empty;
     public int HorasGastas { get; set; }
     public string NomeUtilizador { get; set; } = string.Empty;
+    public string Estado { get; set; } = string.Empty;
+
 }

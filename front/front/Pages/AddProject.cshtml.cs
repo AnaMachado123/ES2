@@ -19,30 +19,69 @@ namespace front.Pages
         [BindProperty] public decimal Precohora { get; set; }
         [BindProperty] public string NomeCliente { get; set; } = string.Empty;
         [BindProperty] public string Descricao { get; set; } = string.Empty;
+        [BindProperty] public DateTime DataInicio { get; set; } = DateTime.Today;
+        [BindProperty] public DateTime DataFim { get; set; } = DateTime.Today.AddDays(30);
+        [BindProperty] public int HorasTrabalho { get; set; } = 40;
 
         public List<string> ClientesDisponiveis { get; set; } = new();
         public string? Mensagem { get; set; }
 
-        public void OnGet()
+        public class ClienteDTO
         {
-            // Simulação de dados - pode vir da API no futuro
-            ClientesDisponiveis = new List<string> { "Eduarda Gomes", "Adriana Meira", "Diana Matos" };
+            public int Id { get; set; }
+            public string Nome { get; set; } = "";
+        }
+
+        public async Task OnGetAsync()
+        {
+            var client = _httpClientFactory.CreateClient("Backend");
+
+            if (Request.Cookies.TryGetValue("jwt", out string? jwt))
+            {
+                client.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+            }
+
+            var response = await client.GetAsync("api/Cliente");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var clientes = JsonSerializer.Deserialize<List<ClienteDTO>>(json, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                ClientesDisponiveis = clientes?.Select(c => c.Nome).ToList() ?? new();
+            }
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            // Cliente → ID
-            var mapaClientes = new Dictionary<string, int>
-            {
-                { "Eduarda Gomes", 5 },
-                { "Adriana Meira", 6 },
-                { "Diana Matos", 7 }
-            };
+            var client = _httpClientFactory.CreateClient("Backend");
 
-            if (!mapaClientes.TryGetValue(NomeCliente, out int clienteId))
+            if (!Request.Cookies.TryGetValue("jwt", out string? jwt))
+            {
+                Mensagem = "Token não encontrado. Por favor, faça login novamente.";
+                return RedirectToPage("/Login");
+            }
+
+            client.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+
+            // Obter clienteId real da API
+            var responseClientes = await client.GetAsync("api/Cliente");
+            var jsonClientes = await responseClientes.Content.ReadAsStringAsync();
+            var clientes = JsonSerializer.Deserialize<List<ClienteDTO>>(jsonClientes, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            var cliente = clientes?.FirstOrDefault(c => c.Nome == NomeCliente);
+            if (cliente == null)
             {
                 Mensagem = "Cliente inválido selecionado.";
-                ClientesDisponiveis = mapaClientes.Keys.ToList();
+                ClientesDisponiveis = clientes?.Select(c => c.Nome).ToList() ?? new();
                 return Page();
             }
 
@@ -78,17 +117,16 @@ namespace front.Pages
             var projeto = new
             {
                 nome = Nome,
-                descricao = Descricao, // 👈 agora vem do formulário
-                dataInicio = DateTime.UtcNow,
-                dataFim = DateTime.UtcNow.AddMonths(1),
-                clienteId = clienteId,
-                horasTrabalho = 40,
+                descricao = Descricao,
+                dataInicio = DataInicio,
+                dataFim = DataFim,
+                clienteId = cliente.Id,
+                horasTrabalho = HorasTrabalho,
                 utilizadorId = 0,
                 estado = "Pendente",
                 tarefas = tarefas
             };
 
-            var client = _httpClientFactory.CreateClient("Backend");
             var content = new StringContent(JsonSerializer.Serialize(projeto), Encoding.UTF8, "application/json");
 
             var response = await client.PostAsync("api/Projeto", content);
@@ -99,7 +137,7 @@ namespace front.Pages
             }
 
             Mensagem = "Erro ao criar projeto.";
-            ClientesDisponiveis = mapaClientes.Keys.ToList();
+            ClientesDisponiveis = clientes?.Select(c => c.Nome).ToList() ?? new();
             return Page();
         }
     }

@@ -32,13 +32,22 @@
                     <input asp-for="Precohora" class="mt-1 block w-full rounded-xl border border-gray-300 px-4 py-2 focus:outline-none focus:ring-green-600 focus:border-green-600 shadow-sm" />
                 </div>
 
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-semibold text-gray-700">Descrição do Projeto</label>
-                    <textarea asp-for="Descricao" rows="4" placeholder="Descreve brevemente o projeto..."
-                              class="mt-1 block w-full rounded-xl border border-gray-300 px-4 py-2 resize-none focus:outline-none focus:ring-green-600 focus:border-green-600 shadow-sm"></textarea>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700">Data de Início</label>
+                    <input asp-for="DataInicio" type="date" class="mt-1 block w-full rounded-xl border border-gray-300 px-4 py-2 focus:outline-none focus:ring-green-600 focus:border-green-600 shadow-sm" />
                 </div>
 
-                <div class="md:col-span-2">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700">Data de Fim</label>
+                    <input asp-for="DataFim" type="date" class="mt-1 block w-full rounded-xl border border-gray-300 px-4 py-2 focus:outline-none focus:ring-green-600 focus:border-green-600 shadow-sm" />
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700">Horas de Trabalho</label>
+                    <input asp-for="HorasTrabalho" type="number" class="mt-1 block w-full rounded-xl border border-gray-300 px-4 py-2 focus:outline-none focus:ring-green-600 focus:border-green-600 shadow-sm" />
+                </div>
+
+                <div>
                     <label class="block text-sm font-semibold text-gray-700">Cliente</label>
                     <select asp-for="NomeCliente" class="mt-1 block w-full rounded-xl border border-gray-300 px-4 py-2 focus:outline-none focus:ring-green-600 focus:border-green-600 shadow-sm">
                         @foreach (var cliente in Model.ClientesDisponiveis)
@@ -47,7 +56,14 @@
                         }
                     </select>
                 </div>
+
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-semibold text-gray-700">Descrição do Projeto</label>
+                    <textarea asp-for="Descricao" rows="4" placeholder="Descreve brevemente o projeto..."
+                            class="mt-1 block w-full rounded-xl border border-gray-300 px-4 py-2 resize-none focus:outline-none focus:ring-green-600 focus:border-green-600 shadow-sm"></textarea>
+                </div>
             </div>
+
 
             <hr class="my-4" />
 
