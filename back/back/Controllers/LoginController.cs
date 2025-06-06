@@ -35,6 +35,7 @@ namespace BackendTesteESII.Controllers
             return Ok(new
             {
                 token,
+                id = user.Id, // ✅ incluído para o frontend guardar na sessão
                 nome = user.Nome,
                 email = user.Email,
                 tipo = user.Tipo == "UserM" ? "UserManager" : user.Tipo
