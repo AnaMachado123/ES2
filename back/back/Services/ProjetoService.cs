@@ -3,6 +3,8 @@ using BackendTesteESII.Models;
 using BackendTesteESII.Models.DTOs;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace BackendTesteESII.Services
 {
@@ -81,7 +83,7 @@ namespace BackendTesteESII.Services
             var tarefas = _context.Tarefas
                 .Where(t => t.ProjetoId == projeto.Id)
                 .Select(t => new TarefaHistoricoDTO
-            {
+                {
                     Descricao = t.Descricao,
                     DataInicio = t.DataInicio,
                     DataFim = t.DataFim,
@@ -161,5 +163,38 @@ namespace BackendTesteESII.Services
             _context.SaveChanges();
             return true;
         }
+        
+        public Projeto? GetProjetoComMembros(int projetoId)
+        {
+            return _context.Projetos
+                .Include(p => p.UtilizadorProjetos)
+                    .ThenInclude(up => up.Utilizador)
+                .FirstOrDefault(p => p.Id == projetoId);
+        }
+
+        public bool ConcluirProjeto(int id)
+        {
+            var projeto = _context.Projetos.FirstOrDefault(p => p.Id == id);
+            if (projeto == null) return false;
+
+            projeto.Concluido = true;
+            _context.SaveChanges();
+            return true;
+        }
+
+        public decimal CalcularValorTotalProjeto(int projetoId)
+        {
+            var projeto = _context.Projetos
+                .Include(p => p.Tarefas)
+                .FirstOrDefault(p => p.Id == projetoId);
+
+            if (projeto == null) return 0;
+
+            decimal precoHora = projeto.HorasTrabalho > 0 ? (decimal)projeto.HorasTrabalho : 1;
+            var totalHoras = projeto.Tarefas.Sum(t => t.HorasGastas);
+
+            return precoHora * totalHoras;
+        }
+
     }
 }

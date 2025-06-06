@@ -45,8 +45,9 @@ public class Projeto
     [StringLength(50)]
     public string Estado { get; set; } = string.Empty;
 
+    [Column("concluido")]
+    public bool Concluido { get; set; } = false;
+
     public ICollection<UtilizadorProjeto> UtilizadorProjetos { get; set; } = new List<UtilizadorProjeto>();
     public ICollection<Tarefa> Tarefas { get; set; } = new List<Tarefa>();
-
-
 }

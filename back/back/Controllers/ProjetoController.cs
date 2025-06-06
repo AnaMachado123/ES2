@@ -61,13 +61,45 @@ namespace BackendTesteESII.Controllers
         {
             return _service.Delete(id) ? NoContent() : NotFound();
         }
-        
+
         [HttpGet("{id}/detalhado")]
         public IActionResult GetDetalhado(int id)
         {
             var projeto = _service.GetDetalhadoById(id);
             return projeto == null ? NotFound() : Ok(projeto);
         }
+        
+        [HttpGet("{id}/membros")]
+        public IActionResult GetMembrosDoProjeto(int id)
+        {
+            var projeto = _service.GetProjetoComMembros(id);
+            if (projeto == null) return NotFound();
+
+            var membros = projeto.UtilizadorProjetos
+                .Select(up => new
+                {
+                    up.Utilizador.Id,
+                    up.Utilizador.Nome,
+                    up.Utilizador.Email
+                }).ToList();
+
+            return Ok(membros);
+        }
+
+        [HttpPut("{id}/concluir")]
+        public IActionResult ConcluirProjeto(int id)
+        {
+            var sucesso = _service.ConcluirProjeto(id);
+            return sucesso ? NoContent() : NotFound();
+        }
+
+        [HttpGet("{id}/valor")]
+        public IActionResult GetValorTotalDoProjeto(int id)
+        {
+            var valor = _service.CalcularValorTotalProjeto(id);
+            return Ok(new { ProjetoId = id, ValorTotal = valor });
+        }
+
 
     }
 }
