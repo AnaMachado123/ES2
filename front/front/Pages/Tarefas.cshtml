@@ -3,19 +3,6 @@
 @{
     ViewData["Title"] = "Tarefas";
     ViewData["ActivePage"] = "Tarefas";
-
-    var tarefasEmCurso = new[]
-    {
-        new { Titulo = "Configurar Router", Descricao = "Setup inicial de rede", Inicio = "09:00", Projeto = "Gestão de Redes" },
-        new { Titulo = "Design UI", Descricao = "Protótipos em Figma", Inicio = "10:30", Projeto = "Website IPVC" },
-        new { Titulo = "API Integração", Descricao = "Integração com gateway externa", Inicio = "11:45", Projeto = "API Financeira" }
-    };
-
-    var tarefasConcluidas = new[]
-    {
-        new { Titulo = "Login Auth", Descricao = "Autenticação com JWT", Fim = "16:00", Projeto = "Website IPVC" },
-        new { Titulo = "Base de Dados", Descricao = "Criação EF Core", Fim = "15:00", Projeto = "API Financeira" }
-    };
 }
 
 <!-- FUNDO -->
@@ -34,14 +21,21 @@
             </div>
 
             <div class="space-y-4">
-                @foreach (var tarefa in tarefasEmCurso)
+                @if (Model.TarefasEmCurso.Any())
                 {
-                    <div class="bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded shadow-sm">
-                        <h3 class="font-semibold text-yellow-800">@tarefa.Titulo</h3>
-                        <p class="text-sm text-yellow-700">@tarefa.Descricao</p>
-                        <p class="text-xs italic text-yellow-600">Projeto: @tarefa.Projeto</p>
-                        <span class="text-xs text-yellow-600">Início: @tarefa.Inicio</span>
-                    </div>
+                    foreach (var tarefa in Model.TarefasEmCurso)
+                    {
+                        <div class="bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded shadow-sm">
+                            <h3 class="font-semibold text-yellow-800">@tarefa.Descricao</h3>
+                            <p class="text-sm text-yellow-700">Projeto ID: @tarefa.ProjetoId</p>
+                            <p class="text-xs italic text-yellow-600">Estado: @tarefa.Status</p>
+                            <span class="text-xs text-yellow-600">Início: @tarefa.DataInicio.ToString("dd/MM/yyyy HH:mm")</span>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-sm text-gray-500">Nenhuma tarefa em curso.</p>
                 }
             </div>
         </div>
@@ -54,14 +48,21 @@
             </div>
 
             <div class="space-y-4">
-                @foreach (var tarefa in tarefasConcluidas)
+                @if (Model.TarefasFinalizadas.Any())
                 {
-                    <div class="bg-green-100 border-l-4 border-green-500 p-4 rounded shadow-sm">
-                        <h3 class="font-semibold text-green-800">@tarefa.Titulo</h3>
-                        <p class="text-sm text-green-700">@tarefa.Descricao</p>
-                        <p class="text-xs italic text-green-700">Projeto: @tarefa.Projeto</p>
-                        <span class="text-xs text-green-600">Concluído às @tarefa.Fim</span>
-                    </div>
+                    foreach (var tarefa in Model.TarefasFinalizadas)
+                    {
+                        <div class="bg-green-100 border-l-4 border-green-500 p-4 rounded shadow-sm">
+                            <h3 class="font-semibold text-green-800">@tarefa.Descricao</h3>
+                            <p class="text-sm text-green-700">Projeto ID: @tarefa.ProjetoId</p>
+                            <p class="text-xs italic text-green-700">Estado: @tarefa.Status</p>
+                            <span class="text-xs text-green-600">Concluído em: @tarefa.DataFim?.ToString("dd/MM/yyyy HH:mm")</span>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-sm text-gray-500">Nenhuma tarefa finalizada.</p>
                 }
             </div>
         </div>

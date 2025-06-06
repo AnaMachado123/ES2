@@ -4,6 +4,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Http;
+using System.Text.Json.Serialization;
 
 namespace front.Pages
 {
@@ -43,6 +44,10 @@ namespace front.Pages
             {
                 var responseBody = await response.Content.ReadAsStringAsync();
 
+                Console.WriteLine("==== JSON recebido do backend ====");
+                Console.WriteLine(responseBody); // 🔍 MOSTRA O JSON REAL
+                Console.WriteLine("==================================");
+
                 var utilizador = JsonSerializer.Deserialize<UtilizadorResponse>(responseBody,
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
@@ -51,15 +56,16 @@ namespace front.Pages
                     HttpContext.Session.SetString("Nome", utilizador.Nome ?? "");
                     HttpContext.Session.SetString("Email", utilizador.Email ?? "");
                     HttpContext.Session.SetString("Tipo", utilizador.Tipo ?? "User");
-                    HttpContext.Session.SetString("UserId", utilizador.Id.ToString());
+                    HttpContext.Session.SetInt32("UtilizadorId", utilizador.Id); // ✅ GUARDA ID
 
-                    // 🔐 Guardar o token JWT no cookie
+                    Console.WriteLine("Login OK - ID guardado na sessão: " + utilizador.Id); // 🟢 DEBUG
+
                     if (!string.IsNullOrEmpty(utilizador.Token))
                     {
                         HttpContext.Response.Cookies.Append("jwt", utilizador.Token, new CookieOptions
                         {
                             HttpOnly = true,
-                            Secure = false, // true se estiveres com HTTPS
+                            Secure = false,
                             SameSite = SameSiteMode.Strict
                         });
                     }
@@ -72,15 +78,22 @@ namespace front.Pages
             return Page();
         }
 
-        // Classe auxiliar para ler o JSON de resposta
         public class UtilizadorResponse
         {
+            [JsonPropertyName("id")]
             public int Id { get; set; }
+
+            [JsonPropertyName("nome")]
             public string? Nome { get; set; }
+
+            [JsonPropertyName("email")]
             public string? Email { get; set; }
+
+            [JsonPropertyName("tipo")]
             public string? Tipo { get; set; }
+
+            [JsonPropertyName("token")]
             public string? Token { get; set; }
-        
         }
     }
 }

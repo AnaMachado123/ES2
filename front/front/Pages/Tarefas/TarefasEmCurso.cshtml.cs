@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using front.Models;
 using front.Services;
@@ -15,10 +16,13 @@ namespace front.Pages.Tarefas
             _service = service;
         }
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
-            int utilizadorId = 1; // Substituir por ID dinâmico mais tarde
+            int utilizadorId = HttpContext.Session.GetInt32("UtilizadorId") ?? 0;
+
+
             Tarefas = await _service.GetTarefasEmCursoAsync(utilizadorId);
+            return Page();
         }
     }
 }
