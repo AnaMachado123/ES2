@@ -4,46 +4,48 @@
     ViewData["Title"] = "Editar Projeto";
 }
 
-<!-- FUNDO FULLSCREEN -->
 <div class="fixed inset-0 w-full h-full bg-[url('/images/background.png')] bg-cover bg-center -z-10"></div>
 
-<!-- CONTEÚDO -->
 <div class="relative min-h-screen w-full p-10 z-10 flex items-center justify-center">
-    <div class="bg-white bg-opacity-95 p-10 rounded-2xl shadow-xl w-full max-w-4xl">
-        <h1 class="text-3xl font-bold text-green-800 mb-8">Editar Projeto</h1>
+    <div class="bg-white bg-opacity-95 p-10 rounded-2xl shadow-xl w-full max-w-4xl space-y-6">
+        <h1 class="text-3xl font-bold text-green-800">Editar Projeto</h1>
 
         <form method="post">
             <input type="hidden" asp-for="Projeto.Id" />
 
-            <div class="mb-4">
-                <label asp-for="Projeto.Nome" class="block font-semibold text-gray-700">Nome do Projeto</label>
+            <!-- Nome -->
+            <div>
+                <label asp-for="Projeto.Nome" class="block font-semibold text-gray-700">Nome</label>
                 <input asp-for="Projeto.Nome" class="w-full mt-1 p-3 rounded-xl border-gray-300 shadow-sm" />
             </div>
 
-            <div class="mb-4">
+            <!-- Descrição -->
+            <div>
                 <label asp-for="Projeto.Descricao" class="block font-semibold text-gray-700">Descrição</label>
-                <textarea asp-for="Projeto.Descricao" rows="5" class="w-full mt-1 p-3 rounded-xl border-gray-300 shadow-sm"></textarea>
+                <textarea asp-for="Projeto.Descricao" rows="4" class="w-full mt-1 p-3 rounded-xl border-gray-300 shadow-sm"></textarea>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-                <div>
-                    <label asp-for="Projeto.ClienteId" class="block font-semibold text-gray-700">Cliente ID</label>
-                    <input asp-for="Projeto.ClienteId" class="w-full mt-1 p-3 rounded-xl border-gray-300 shadow-sm" />
-                </div>
-                <div>
-                    <label asp-for="Projeto.UtilizadorId" class="block font-semibold text-gray-700">Utilizador ID</label>
-                    <input asp-for="Projeto.UtilizadorId" class="w-full mt-1 p-3 rounded-xl border-gray-300 shadow-sm" />
-                </div>
+            <!-- Cliente -->
+            <div>
+                <label asp-for="Projeto.ClienteId" class="block font-semibold text-gray-700">Cliente</label>
+                <select asp-for="Projeto.ClienteId" class="w-full mt-1 p-3 rounded-xl border-gray-300 shadow-sm">
+                    @foreach (var cliente in Model.Clientes)
+                    {
+                        <option value="@cliente.Id" selected="@(cliente.Id == Model.Projeto.ClienteId)">
+                            @cliente.Nome
+                        </option>
+                    }
+                </select>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+            <!-- Estado e Datas -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label asp-for="Projeto.DataInicio" class="block font-semibold text-gray-700">Data de Início</label>
+                    <label asp-for="Projeto.DataInicio" class="font-semibold text-gray-700">Data de Início</label>
                     <input asp-for="Projeto.DataInicio" type="date" class="w-full mt-1 p-3 rounded-xl border-gray-300 shadow-sm" />
                 </div>
-
                 <div>
-                    <label asp-for="Projeto.Estado" class="block font-semibold text-gray-700">Estado</label>
+                    <label asp-for="Projeto.Estado" class="font-semibold text-gray-700">Estado</label>
                     <select asp-for="Projeto.Estado" class="w-full mt-1 p-3 rounded-xl border-gray-300 shadow-sm" onchange="toggleDataFim(this)">
                         <option>Em Curso</option>
                         <option>Pendente</option>
@@ -52,19 +54,47 @@
                 </div>
             </div>
 
-            <div id="data-fim-container" class="mb-4 hidden">
-                <label asp-for="Projeto.DataFim" class="block font-semibold text-gray-700">Data de Fim</label>
+            <!-- Data de fim -->
+            <div id="data-fim-container" class="mt-4 hidden">
+                <label asp-for="Projeto.DataFim" class="font-semibold text-gray-700">Data de Fim</label>
                 <input asp-for="Projeto.DataFim" type="date" class="w-full mt-1 p-3 rounded-xl border-gray-300 shadow-sm" />
             </div>
 
-            <div class="mb-6">
-                <label asp-for="Projeto.HorasTrabalho" class="block font-semibold text-gray-700">Horas de Trabalho</label>
+            <!-- Horas -->
+            <div>
+                <label asp-for="Projeto.HorasTrabalho" class="font-semibold text-gray-700">Horas de Trabalho</label>
                 <input asp-for="Projeto.HorasTrabalho" type="number" class="w-full mt-1 p-3 rounded-xl border-gray-300 shadow-sm" />
             </div>
 
-            <div class="flex justify-between">
-                <a asp-page="/Projetos/Index" class="px-6 py-2 rounded-xl bg-gray-300 hover:bg-gray-400">Cancelar</a>
-                <button type="submit" class="px-6 py-2 bg-yellow-500 text-white rounded-xl hover:bg-yellow-600">Guardar Alterações</button>
+            <hr class="my-6" />
+            <h2 class="text-xl font-bold text-green-700 mb-2">Membros do Projeto</h2>
+
+            @if (Model.Membros.Count == 0)
+            {
+                <p class="text-gray-500">Nenhum membro além do criador.</p>
+            }
+            else
+            {
+                <ul class="space-y-2">
+                    @foreach (var membro in Model.Membros)
+                    {
+                        <li class="flex items-center justify-between bg-gray-100 rounded-xl px-4 py-2">
+                            <div>
+                                <strong>@membro.Nome</strong>
+                                <span class="text-sm text-gray-600">(@membro.Email)</span>
+                            </div>
+                            <form method="post" asp-page-handler="RemoverMembro">
+                                <input type="hidden" name="utilizadorId" value="@membro.Id" />
+                                <button class="text-red-600 hover:text-red-800 font-semibold" type="submit">Remover</button>
+                            </form>
+                        </li>
+                    }
+                </ul>
+            }
+
+            <div class="flex justify-between mt-8">
+                <a asp-page="/Projetos/Index" class="bg-gray-300 hover:bg-gray-400 px-6 py-2 rounded-xl">Cancelar</a>
+                <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-2 rounded-xl">Guardar Alterações</button>
             </div>
         </form>
     </div>

@@ -44,10 +44,6 @@ namespace front.Pages
             {
                 var responseBody = await response.Content.ReadAsStringAsync();
 
-                Console.WriteLine("==== JSON recebido do backend ====");
-                Console.WriteLine(responseBody); // 🔍 MOSTRA O JSON REAL
-                Console.WriteLine("==================================");
-
                 var utilizador = JsonSerializer.Deserialize<UtilizadorResponse>(responseBody,
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
@@ -56,12 +52,13 @@ namespace front.Pages
                     HttpContext.Session.SetString("Nome", utilizador.Nome ?? "");
                     HttpContext.Session.SetString("Email", utilizador.Email ?? "");
                     HttpContext.Session.SetString("Tipo", utilizador.Tipo ?? "User");
-                    HttpContext.Session.SetInt32("UtilizadorId", utilizador.Id); // ✅ GUARDA ID
+                    HttpContext.Session.SetInt32("UtilizadorId", utilizador.Id);
 
-                    Console.WriteLine("Login OK - ID guardado na sessão: " + utilizador.Id); // 🟢 DEBUG
-
+                    // ✅ GUARDAR O TOKEN JWT NA SESSÃO
                     if (!string.IsNullOrEmpty(utilizador.Token))
                     {
+                        HttpContext.Session.SetString("AuthToken", utilizador.Token); // 👈 ISTO FAZ TODA A DIFERENÇA
+
                         HttpContext.Response.Cookies.Append("jwt", utilizador.Token, new CookieOptions
                         {
                             HttpOnly = true,

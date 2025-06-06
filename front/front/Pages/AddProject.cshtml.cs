@@ -101,16 +101,16 @@ namespace front.Pages
                     string.IsNullOrWhiteSpace(datasFim[i]))
                     continue;
 
-                tarefas.Add(new
+               tarefas.Add(new
                 {
-                    descricao = descricoes[i],
-                    dataInicio = DateTime.Parse(datasInicio[i]),
-                    dataFim = DateTime.Parse(datasFim[i]),
-                    status = "Em curso",
-                    horasGastas = 0,
-                    projetoId = 0,
-                    utilizadorId = 0
+                    Descricao = descricoes[i],
+                    DataInicio = DateTime.Parse(datasInicio[i]),
+                    DataFim = DateTime.Parse(datasFim[i]),
+                    Status = "Em curso",
+                    HorasGastas = 0,
+                    UtilizadorId = 0
                 });
+
             }
 
             // Projeto

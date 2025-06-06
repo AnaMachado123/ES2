@@ -11,4 +11,8 @@ public class ProjetoDetalhadoDTO
     public string NomeCriador { get; set; } = string.Empty;
 
     public List<TarefaHistoricoDTO> Tarefas { get; set; } = new();
+
+    public int ClienteId { get; set; }
+    public int UtilizadorId { get; set; }
+
 }

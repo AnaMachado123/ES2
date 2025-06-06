@@ -23,7 +23,26 @@
             <p><strong class="text-green-800">Estado:</strong> @Model.Projeto.Estado</p>
             <p><strong class="text-green-800">Datas:</strong> @Model.Projeto.DataInicio.ToString("dd/MM/yyyy") até @Model.Projeto.DataFim.ToString("dd/MM/yyyy")</p>
             <p><strong class="text-green-800">Horas Planeadas:</strong> @Model.Projeto.HorasTrabalho h</p>
+            <p><strong class="text-green-800">Valor Total:</strong> @Model.ValorTotal.ToString("0.00") €</p>
         </div>
+
+        <hr class="my-4" />
+
+        <!-- Membros -->
+        <h3 class="text-lg font-bold text-green-700">Membros do Projeto</h3>
+        @if (Model.Membros.Count == 0)
+        {
+            <p class="text-gray-600">Nenhum membro além do criador.</p>
+        }
+        else
+        {
+            <ul class="list-disc ml-5 text-sm text-gray-700">
+                @foreach (var m in Model.Membros)
+                {
+                    <li><strong>@m.Nome</strong> (<i>@m.Email</i>)</li>
+                }
+            </ul>
+        }
 
         <hr class="my-4" />
 
@@ -48,7 +67,16 @@
                     </li>
                 }
             </ul>
+        }
 
+        <!-- Finalizar Projeto -->
+        @if (Model.Projeto.Estado != "Concluído")
+        {
+            <form method="post" asp-page-handler="Concluir">
+                <button type="submit" class="mt-6 bg-green-700 hover:bg-green-800 text-white py-2 px-4 rounded">
+                    Finalizar Projeto
+                </button>
+            </form>
         }
 
         <!-- Botão -->

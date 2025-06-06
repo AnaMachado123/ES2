@@ -101,7 +101,9 @@ namespace BackendTesteESII.Services
                 HorasTrabalho = projeto.HorasTrabalho,
                 NomeCliente = clienteNome,
                 NomeCriador = utilizadorNome,
-                Tarefas = tarefas
+                Tarefas = tarefas,
+                ClienteId = projeto.ClienteId,
+                UtilizadorId = projeto.UtilizadorId,
             };
         }
 
@@ -116,25 +118,35 @@ namespace BackendTesteESII.Services
                 DataFim = dto.DataFim.ToUniversalTime(),
                 ClienteId = dto.ClienteId,
                 HorasTrabalho = dto.HorasTrabalho,
-                //UtilizadorId = dto.UtilizadorId,
                 UtilizadorId = userId,
-                Estado = dto.Estado,
-                Tarefas = dto.Tarefas.Select(t => new Tarefa
-                {
-                    Descricao = t.Descricao,
-                    DataInicio = t.DataInicio.ToUniversalTime(),
-                    DataFim = t.DataFim.ToUniversalTime(),
-                    Status = t.Status,
-                    HorasGastas = t.HorasGastas,
-                    UtilizadorId = userId
-                }).ToList()
+                Estado = dto.Estado
             };
 
             _context.Projetos.Add(novoProjeto);
-            _context.SaveChanges();
+            _context.SaveChanges(); // Garante que o projeto recebe o ID
 
+            // Agora associa tarefas manualmente com o ID correto
+            foreach (var tarefa in dto.Tarefas)
+            {
+                var novaTarefa = new Tarefa
+                {
+                    Descricao = tarefa.Descricao,
+                    DataInicio = tarefa.DataInicio.ToUniversalTime(),
+                    DataFim = tarefa.DataFim.ToUniversalTime(),
+                    Status = tarefa.Status,
+                    HorasGastas = tarefa.HorasGastas,
+                    UtilizadorId = userId,
+                    ProjetoId = novoProjeto.Id // ← ESSENCIAL
+                };
+
+                _context.Tarefas.Add(novaTarefa);
+            }
+
+            _context.SaveChanges();
             return novoProjeto;
         }
+
+
 
         public bool Update(int id, Projeto projeto)
         {
@@ -177,10 +189,11 @@ namespace BackendTesteESII.Services
             var projeto = _context.Projetos.FirstOrDefault(p => p.Id == id);
             if (projeto == null) return false;
 
-            projeto.Concluido = true;
+            projeto.Estado = "Concluído"; // ✅ Corrigido
             _context.SaveChanges();
             return true;
         }
+
 
         public decimal CalcularValorTotalProjeto(int projetoId)
         {
