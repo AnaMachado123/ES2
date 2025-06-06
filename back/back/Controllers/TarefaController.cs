@@ -63,7 +63,7 @@ public class TarefaController : ControllerBase
 
         return Ok(tarefas);
     }
-        [HttpPut("{id}/mover")]
+    [HttpPut("{id}/mover")]
     public IActionResult MoverTarefaParaOutroProjeto(int id, [FromQuery] int novoProjetoId)
     {
         var tarefa = _service.GetById(id);
@@ -88,5 +88,16 @@ public class TarefaController : ControllerBase
 
         return Ok("Tarefa finalizada com sucesso.");
     }
+    
+    [HttpGet("finalizadas")]
+    public IActionResult GetTarefasFinalizadas([FromQuery] int utilizadorId)
+    {
+        var tarefas = _context.Tarefas
+            .Where(t => t.UtilizadorId == utilizadorId && t.Status.ToLower() == "finalizada")
+            .ToList();
+
+        return Ok(tarefas);
+    }
+
 
 }
