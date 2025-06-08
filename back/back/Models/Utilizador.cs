@@ -19,7 +19,7 @@ namespace BackendTesteESII.Models
         [Required]
         public string Password { get; set; } = string.Empty;
 
-        public int HorasDia { get; set; }
+        public int HorasDia { get; set; } // ← já existe!
 
         [Required]
         [Column("tipo")]
@@ -29,9 +29,10 @@ namespace BackendTesteESII.Models
         [Column("is_admin")]
         public bool IsAdmin { get; set; } = false;
 
+        public string ImagemPerfil { get; set; } = "/images/default-profile.jpg";
+
         public ICollection<UtilizadorProjeto>? UtilizadorProjetos { get; set; }
 
-        // Método para exibir informações sobre o Utilizador
         public virtual void ExibirInformacoes()
         {
             Console.WriteLine($"{Nome} ({Email}) - {HorasDia} horas/dia");
