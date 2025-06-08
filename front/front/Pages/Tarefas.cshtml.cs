@@ -11,7 +11,10 @@ namespace front.Pages
 
         public List<Tarefa> TarefasEmCurso { get; set; } = new();
         public List<Tarefa> TarefasFinalizadas { get; set; } = new();
-        public List<Tarefa> TarefasIndividuais { get; set; } = new(); // ✅ nova secção
+        public List<Tarefa> TarefasIndividuais { get; set; } = new();
+
+        [TempData]
+        public string? Mensagem { get; set; } // ✅ Para mostrar alertas no .cshtml
 
         public TarefasModel(TarefaService service)
         {
@@ -32,7 +35,7 @@ namespace front.Pages
 
             TarefasEmCurso = await _service.GetTarefasEmCursoAsync(utilizadorId);
             TarefasFinalizadas = await _service.GetTarefasFinalizadasAsync(utilizadorId);
-            TarefasIndividuais = await _service.GetTarefasIndividuaisAsync(utilizadorId); // ✅ chamada nova
+            TarefasIndividuais = await _service.GetTarefasIndividuaisAsync(utilizadorId);
 
             return Page();
         }
