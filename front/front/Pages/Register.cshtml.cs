@@ -9,7 +9,6 @@ namespace front.Pages
     public class RegisterModel : PageModel
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private string responseText = string.Empty;
 
         public RegisterModel(IHttpClientFactory httpClientFactory)
         {
@@ -25,13 +24,8 @@ namespace front.Pages
         [BindProperty]
         public string? Password { get; set; }
 
-        [BindProperty(SupportsGet = true)] // 👈 permite capturar do query string automaticamente
-        public string Tipo { get; set; } = "regular";
-
-        public void OnGet()
-        {
-            // Já capturado automaticamente via [BindProperty(SupportsGet = true)]
-        }
+        [BindProperty]
+        public string TipoPerfil { get; set; } = "User"; // tipo aceito pelo backend
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -40,19 +34,22 @@ namespace front.Pages
                 Nome = Nome,
                 Email = Email,
                 Password = Password,
-                Tipo = Tipo
+                Tipo = TipoPerfil
             };
 
             var client = _httpClientFactory.CreateClient("Backend");
 
             var json = JsonSerializer.Serialize(novoUtilizador);
+            Console.WriteLine("JSON ENVIADO:");
+            Console.WriteLine(json); // 💥 Aqui vês o que vai para o backend
+
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await client.PostAsync("api/Utilizador", content);
+            var responseText = await response.Content.ReadAsStringAsync();
 
-            responseText = await response.Content.ReadAsStringAsync();
             Console.WriteLine("STATUS: " + response.StatusCode);
-            Console.WriteLine("RESPONSE: " + responseText);
+            Console.WriteLine("RESPOSTA: " + responseText);
 
             if (response.IsSuccessStatusCode)
             {
