@@ -42,13 +42,19 @@
                 <i class="bi bi-envelope-fill"></i> Meus Convites
             </a>
 
-            
-
         </nav>
     </div>
 
-    <!-- Rodapé -->
-    <div class="text-xs text-center text-white py-4 border-t border-green-800 px-2">
-        &copy; 2025 - Gestão de Serviços
+    <!-- Rodapé com botão -->
+    <div class="mt-auto px-4 pb-4 pt-2 border-t border-green-800">
+        <form method="get" asp-page="/Logout">
+            <button class="w-full text-sm text-white bg-green-800 hover:bg-green-700 py-2 rounded">
+                <i class="bi bi-box-arrow-right me-2"></i> Terminar Sessão
+            </button>
+        </form>
+
+        <div class="text-xs text-center text-white mt-4">
+            &copy; 2025 - Gestão de Serviços
+        </div>
     </div>
 </div>
