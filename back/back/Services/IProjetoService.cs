@@ -15,5 +15,6 @@ namespace BackendTesteESII.Services
         Projeto? GetProjetoComMembros(int projetoId);
         bool ConcluirProjeto(int id);
         decimal CalcularValorTotalProjeto(int projetoId);
+        List<MembroDTO> GetMembrosDoProjeto(int projetoId);
     }
 }

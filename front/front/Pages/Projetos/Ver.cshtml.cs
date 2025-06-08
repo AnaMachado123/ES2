@@ -16,8 +16,10 @@ namespace front.Pages.Projetos
         }
 
         public ProjetoDetalhadoDTO Projeto { get; set; } = new();
+        //public List<MembroDTO> Membros { get; set; } = new();
         public List<MembroDTO> Membros { get; set; } = new();
-        public decimal ValorTotal { get; set; }
+
+        public decimal ValorTotal { get; set; } = new();
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -32,6 +34,7 @@ namespace front.Pages.Projetos
 
             var json = await response.Content.ReadAsStringAsync();
             Projeto = JsonSerializer.Deserialize<ProjetoDetalhadoDTO>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            
 
             var responseMembros = await client.GetAsync($"api/Projeto/{id}/membros");
             if (responseMembros.IsSuccessStatusCode)
@@ -46,7 +49,7 @@ namespace front.Pages.Projetos
                 var jsonValor = await responseValor.Content.ReadAsStringAsync();
                 var valorObj = JsonDocument.Parse(jsonValor).RootElement;
 
-                // ✅ Usa chave correta: valorTotal (minúsculo)
+                //  Usa chave correta: valorTotal (minúsculo)
                 if (valorObj.TryGetProperty("valorTotal", out var valor))
                 {
                     ValorTotal = valor.GetDecimal();

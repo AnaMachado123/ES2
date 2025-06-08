@@ -1,5 +1,7 @@
 using BackendTesteESII.Data;
 using BackendTesteESII.Models;
+using BackendTesteESII.Models.DTOs;
+
 
 namespace BackendTesteESII.Services
 {
@@ -104,6 +106,25 @@ namespace BackendTesteESII.Services
             return true;
         }
 
+        public IEnumerable<ConviteDTO> GetDTOsByUtilizador(int utilizadorId)
+        {
+            var convites = _context.Convites
+                .Where(c => c.UtilizadorId == utilizadorId)
+                .ToList();
+
+            var projetos = _context.Projetos.ToDictionary(p => p.Id, p => p.Nome);
+
+            var dtos = convites.Select(c => new ConviteDTO
+            {
+                Id = c.Id,
+                ProjetoId = c.ProjetoId,
+                UtilizadorId = c.UtilizadorId,
+                Estado = c.Estado,
+                ProjetoNome = projetos.TryGetValue(c.ProjetoId, out var nome) ? nome : "(Desconhecido)"
+            });
+
+            return dtos;
+        }
 
 
     }

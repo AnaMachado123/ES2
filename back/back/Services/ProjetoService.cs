@@ -91,6 +91,18 @@ namespace BackendTesteESII.Services
                     Estado = t.Status
                 }).ToList();
 
+            var membros = _context.UtilizadorProjetos
+                .Where(up => up.ProjetoId == projeto.Id)
+                .Include(up => up.Utilizador)
+                .Select(up => new MembroDTO
+                {
+                    Id = up.Utilizador.Id,
+                    Nome = up.Utilizador.Nome,
+                    Email = up.Utilizador.Email
+                })
+                .ToList();
+
+
             return new ProjetoDetalhadoDTO
             {
                 Nome = projeto.Nome,
@@ -104,6 +116,7 @@ namespace BackendTesteESII.Services
                 Tarefas = tarefas,
                 ClienteId = projeto.ClienteId,
                 UtilizadorId = projeto.UtilizadorId,
+                Membros = membros
             };
         }
 
@@ -175,7 +188,7 @@ namespace BackendTesteESII.Services
             _context.SaveChanges();
             return true;
         }
-        
+
         public Projeto? GetProjetoComMembros(int projetoId)
         {
             return _context.Projetos
@@ -189,7 +202,7 @@ namespace BackendTesteESII.Services
             var projeto = _context.Projetos.FirstOrDefault(p => p.Id == id);
             if (projeto == null) return false;
 
-            projeto.Estado = "Concluído"; // ✅ Corrigido
+            projeto.Estado = "Concluído"; //  Corrigido
             _context.SaveChanges();
             return true;
         }
@@ -207,6 +220,20 @@ namespace BackendTesteESII.Services
             var totalHoras = projeto.Tarefas.Sum(t => t.HorasGastas);
 
             return precoHora * totalHoras;
+        }
+        
+        public List<MembroDTO> GetMembrosDoProjeto(int projetoId)
+        {
+            return _context.UtilizadorProjetos
+                .Include(up => up.Utilizador) // se navigation property não for carregada automaticamente
+                .Where(up => up.ProjetoId == projetoId)
+                .Select(up => new MembroDTO
+                {
+                    Id = up.Utilizador.Id,
+                    Nome = up.Utilizador.Nome,
+                    Email = up.Utilizador.Email
+                })
+                .ToList();
         }
 
     }

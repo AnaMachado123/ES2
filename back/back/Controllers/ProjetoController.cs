@@ -69,7 +69,7 @@ namespace BackendTesteESII.Controllers
             return projeto == null ? NotFound() : Ok(projeto);
         }
         
-        [HttpGet("{id}/membros")]
+        /*[HttpGet("{id}/membros")]
         public IActionResult GetMembrosDoProjeto(int id)
         {
             var projeto = _service.GetProjetoComMembros(id);
@@ -84,7 +84,7 @@ namespace BackendTesteESII.Controllers
                 }).ToList();
 
             return Ok(membros);
-        }
+        }*/
 
         [HttpPut("{id}/concluir")]
         public IActionResult ConcluirProjeto(int id)
@@ -100,6 +100,11 @@ namespace BackendTesteESII.Controllers
             return Ok(new { ProjetoId = id, ValorTotal = valor });
         }
 
-
+        [HttpGet("{id}/membros")]
+        public IActionResult GetMembros(int id)
+        {
+            var membros = _service.GetMembrosDoProjeto(id);
+            return Ok(membros);
+        }
     }
 }

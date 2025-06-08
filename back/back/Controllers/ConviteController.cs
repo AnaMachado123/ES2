@@ -72,19 +72,11 @@ public class ConviteController : ControllerBase
     [HttpGet("utilizador/{id}")]
     public IActionResult GetPorUtilizador(int id)
     {
-        var convites = _service.GetAll().Where(c => c.UtilizadorId == id);
-        return Ok(convites);
+        var convitesDTO = _service.GetDTOsByUtilizador(id);
+        return Ok(convitesDTO);
     }
 
-    [HttpPut("{id}/aceitar")]
-    public IActionResult AceitarConvite(int id)
-    {
-        var sucesso = _service.AceitarConvite(id);
-        if (!sucesso)
-            return BadRequest("Não foi possível aceitar o convite.");
 
-        return Ok("Convite aceite com sucesso.");
-    }
     
     [HttpPut("{id}/recusar")]
     public IActionResult RecusarConvite(int id)

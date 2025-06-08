@@ -6,42 +6,43 @@
 }
 
 <div class="flex">
-
     <div class="flex-grow p-6 bg-[url('/images/background.png')] bg-cover min-h-screen">
-        <h1 class="text-3xl font-bold text-green-700 mb-6">Convites Pendentes</h1>
+        <div class="max-w-4xl mx-auto bg-white bg-opacity-90 rounded-2xl shadow-md p-8">
+            <h1 class="text-3xl font-bold text-green-700 mb-6">Convites Pendentes</h1>
 
-        @if (Model.Convites.Any())
-        {
-            <table class="w-full bg-white shadow rounded-lg">
-                <thead>
-                    <tr class="text-left text-gray-700 border-b">
-                        <th class="p-3">Projeto</th>
-                        <th class="p-3">Estado</th>
-                        <th class="p-3">Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var convite in Model.Convites)
-                    {
-                        <tr class="border-t">
-                            <td class="p-3">@convite.ProjetoId</td>
-                            <td class="p-3">@convite.Estado</td>
-                            <td class="p-3 flex gap-3">
-                                <form method="post" asp-page-handler="Aceitar" asp-route-id="@convite.Id">
-                                    <button class="bg-green-600 text-white px-4 py-1 rounded hover:bg-green-800">Aceitar</button>
-                                </form>
-                                <form method="post" asp-page-handler="Recusar" asp-route-id="@convite.Id">
-                                    <button class="bg-red-600 text-white px-4 py-1 rounded hover:bg-red-800">Recusar</button>
-                                </form>
-                            </td>
+            @if (Model.Convites.Any())
+            {
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-green-100 text-green-800">
+                        <tr>
+                            <th class="p-3">Projeto</th>
+                            <th class="p-3">Estado</th>
+                            <th class="p-3">Ações</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        }
-        else
-        {
-            <p class="text-gray-600">Nenhum convite pendente.</p>
-        }
+                    </thead>
+                    <tbody>
+                        @foreach (var convite in Model.Convites)
+                        {
+                            <tr class="border-t border-gray-200 hover:bg-gray-50 transition">
+                                <td class="p-3">@convite.ProjetoNome</td>
+                                <td class="p-3">@convite.Estado</td>
+                                <td class="p-3 flex gap-3">
+                                    <form method="post" asp-page-handler="Aceitar" asp-route-id="@convite.Id">
+                                        <button class="bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700 transition">Aceitar</button>
+                                    </form>
+                                    <form method="post" asp-page-handler="Recusar" asp-route-id="@convite.Id">
+                                        <button class="bg-red-600 text-white px-4 py-1 rounded hover:bg-red-700 transition">Recusar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p class="text-gray-600">Nenhum convite pendente.</p>
+            }
+        </div>
     </div>
 </div>

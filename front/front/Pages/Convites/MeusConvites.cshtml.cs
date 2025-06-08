@@ -17,23 +17,33 @@ namespace front.Pages
 
         public List<ConviteDTO> Convites { get; set; } = new();
 
+        public class ConviteDTO
+        {
+            public int Id { get; set; }
+            public int ProjetoId { get; set; }
+            public int UtilizadorId { get; set; }
+            public string Estado { get; set; } = string.Empty;
+            public string ProjetoNome { get; set; } = "";
+        }
+
         public async Task<IActionResult> OnGetAsync()
         {
-            var userIdStr = HttpContext.Session.GetString("UserId");
-            if (string.IsNullOrEmpty(userIdStr)) return RedirectToPage("/Login");
-
-            int userId = int.Parse(userIdStr);
+            int? userId = HttpContext.Session.GetInt32("UtilizadorId");
+            if (userId == null) return RedirectToPage("/Login");
 
             var client = _httpClientFactory.CreateClient("Backend");
-            var response = await client.GetAsync($"api/Convite/utilizador/{userId}");
+
+            var response = await client.GetAsync($"api/Convite/utilizador/{userId.Value}");
 
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
-                var convites = JsonSerializer.Deserialize<List<ConviteDTO>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                var convites = JsonSerializer.Deserialize<List<ConviteDTO>>(json, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
 
-                if (convites != null)
-                    Convites = convites.Where(c => c.Estado == "Pendente").ToList();
+                Convites = convites?.Where(c => c.Estado == "Pendente").ToList() ?? new();
             }
 
             return Page();
@@ -53,14 +63,6 @@ namespace front.Pages
             var content = new StringContent("\"Recusado\"", Encoding.UTF8, "application/json");
             await client.PutAsync($"api/Convite/{id}/estado", content);
             return RedirectToPage();
-        }
-
-        public class ConviteDTO
-        {
-            public int Id { get; set; }
-            public int ProjetoId { get; set; }
-            public int UtilizadorId { get; set; }
-            public string Estado { get; set; } = string.Empty;
         }
     }
 }

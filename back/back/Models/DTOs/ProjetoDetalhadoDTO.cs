@@ -1,3 +1,5 @@
+using BackendTesteESII.Models.DTOs;
+
 public class ProjetoDetalhadoDTO
 {
     public string Nome { get; set; } = string.Empty;
@@ -14,5 +16,10 @@ public class ProjetoDetalhadoDTO
 
     public int ClienteId { get; set; }
     public int UtilizadorId { get; set; }
+    public List<MembroDTO> Membros { get; set; } = new();
+
+
+
+
 
 }

@@ -54,10 +54,10 @@ namespace front.Pages
                     HttpContext.Session.SetString("Tipo", utilizador.Tipo ?? "User");
                     HttpContext.Session.SetInt32("UtilizadorId", utilizador.Id);
 
-                    // ✅ GUARDAR O TOKEN JWT NA SESSÃO
+                    //  GUARDAR O TOKEN JWT NA SESSÃO
                     if (!string.IsNullOrEmpty(utilizador.Token))
                     {
-                        HttpContext.Session.SetString("AuthToken", utilizador.Token); // 👈 ISTO FAZ TODA A DIFERENÇA
+                        HttpContext.Session.SetString("AuthToken", utilizador.Token); //  ISTO FAZ TODA A DIFERENÇA
 
                         HttpContext.Response.Cookies.Append("jwt", utilizador.Token, new CookieOptions
                         {

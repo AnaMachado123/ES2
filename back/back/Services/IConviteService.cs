@@ -16,6 +16,8 @@ namespace BackendTesteESII.Services
         Convite CreateComValidacao(int userIdLogado, ConviteCreateDTO dto);
         bool AceitarConvite(int conviteId);
         bool RecusarConvite(int conviteId);
+        IEnumerable<ConviteDTO> GetDTOsByUtilizador(int utilizadorId);
+
 
 
     }
