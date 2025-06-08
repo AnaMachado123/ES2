@@ -5,66 +5,85 @@
     ViewData["ActivePage"] = "Tarefas";
 }
 
-<!-- FUNDO -->
 <div class="fixed inset-0 w-full h-full bg-[url('/images/background.png')] bg-cover bg-center -z-10"></div>
 
-<!-- CONTEÚDO -->
 <div class="relative min-h-screen w-full p-6 z-10">
     <div class="max-w-6xl mx-auto bg-white bg-opacity-90 rounded-2xl shadow-xl p-10 space-y-12">
         <h1 class="text-3xl font-extrabold text-green-800">As Minhas Tarefas</h1>
 
-        <!-- Tarefas em Curso -->
+        <!-- Em Curso -->
         <div>
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-bold text-yellow-700">Tarefas em Curso</h2>
                 <a href="/TarefasEmCurso" class="text-sm text-green-700 hover:underline font-medium">Ver todas</a>
             </div>
 
-            <div class="space-y-4">
-                @if (Model.TarefasEmCurso.Any())
+            @if (Model.TarefasEmCurso.Any())
+            {
+                foreach (var tarefa in Model.TarefasEmCurso)
                 {
-                    foreach (var tarefa in Model.TarefasEmCurso)
-                    {
-                        <div class="bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded shadow-sm">
-                            <h3 class="font-semibold text-yellow-800">@tarefa.Descricao</h3>
-                            <p class="text-sm text-yellow-700">Projeto ID: @tarefa.ProjetoId</p>
-                            <p class="text-xs italic text-yellow-600">Estado: @tarefa.Status</p>
-                            <span class="text-xs text-yellow-600">Início: @tarefa.DataInicio.ToString("dd/MM/yyyy HH:mm")</span>
-                        </div>
-                    }
+                    <div class="bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded shadow-sm mb-2">
+                        <strong>@tarefa.Descricao</strong><br />
+                        Projeto ID: @tarefa.ProjetoId<br />
+                        <em>Estado: @tarefa.Status</em><br />
+                        Início: @tarefa.DataInicio.ToString("HH:mm")
+                    </div>
                 }
-                else
-                {
-                    <p class="text-sm text-gray-500">Nenhuma tarefa em curso.</p>
-                }
-            </div>
+            }
+            else
+            {
+                <p class="text-gray-600">Nenhuma tarefa em curso.</p>
+            }
         </div>
 
-        <!-- Tarefas Finalizadas -->
+        <!-- Finalizadas -->
         <div>
             <div class="flex justify-between items-center mb-4 mt-10">
                 <h2 class="text-xl font-bold text-green-700">Tarefas Finalizadas</h2>
                 <a href="/TarefasFinalizadas" class="text-sm text-green-700 hover:underline font-medium">Ver todas</a>
             </div>
 
-            <div class="space-y-4">
-                @if (Model.TarefasFinalizadas.Any())
+            @if (Model.TarefasFinalizadas.Any())
+            {
+                foreach (var tarefa in Model.TarefasFinalizadas)
                 {
-                    foreach (var tarefa in Model.TarefasFinalizadas)
-                    {
-                        <div class="bg-green-100 border-l-4 border-green-500 p-4 rounded shadow-sm">
-                            <h3 class="font-semibold text-green-800">@tarefa.Descricao</h3>
-                            <p class="text-sm text-green-700">Projeto ID: @tarefa.ProjetoId</p>
-                            <p class="text-xs italic text-green-700">Estado: @tarefa.Status</p>
-                            <span class="text-xs text-green-600">Concluído em: @tarefa.DataFim?.ToString("dd/MM/yyyy HH:mm")</span>
-                        </div>
-                    }
+                    <div class="bg-green-100 border-l-4 border-green-500 p-4 rounded shadow-sm mb-2">
+                        <strong>@tarefa.Descricao</strong><br />
+                        Projeto ID: @tarefa.ProjetoId<br />
+                        <em>Estado: @tarefa.Status</em><br />
+                        Concluído em: @tarefa.DataFim?.ToString("dd/MM/yyyy HH:mm")
+                    </div>
                 }
-                else
-                {
-                    <p class="text-sm text-gray-500">Nenhuma tarefa finalizada.</p>
-                }
-            </div>
+            }
+            else
+            {
+                <p class="text-gray-600">Nenhuma tarefa finalizada.</p>
+            }
         </div>
+
+        <!-- Tarefas Individuais -->
+        <div>
+            <div class="flex justify-between items-center mb-4 mt-10">
+                <h2 class="text-xl font-bold text-blue-700">Tarefas Individuais</h2>
+                <a href="/CriarTarefaIndividual" class="text-sm text-blue-700 hover:underline font-medium">+ Criar Tarefa Individual</a>
+            </div>
+
+            @if (Model.TarefasIndividuais.Any())
+            {
+                foreach (var tarefa in Model.TarefasIndividuais)
+                {
+                    <div class="bg-blue-100 border-l-4 border-blue-500 p-4 rounded shadow-sm mb-2">
+                        <strong>@tarefa.Descricao</strong><br />
+                        <em>Estado:</em> @tarefa.Status<br />
+                        Início: @tarefa.DataInicio.ToString("HH:mm")
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-gray-600">Nenhuma tarefa individual encontrada.</p>
+            }
+        </div>
+
     </div>
 </div>

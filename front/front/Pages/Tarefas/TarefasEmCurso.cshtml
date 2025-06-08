@@ -13,6 +13,14 @@
     <div class="max-w-5xl mx-auto bg-white bg-opacity-90 rounded-xl p-8 shadow-lg">
         <h1 class="text-2xl font-bold text-yellow-700 mb-6">Todas as Tarefas em Curso</h1>
 
+        @* Mensagem de sucesso *@
+        @if (!string.IsNullOrEmpty(Model.Mensagem))
+        {
+            <div class="mb-6 p-4 rounded-lg bg-green-100 text-green-800 border border-green-300 shadow-sm">
+                @Model.Mensagem
+            </div>
+        }
+
         @if (tarefas.Any())
         {
             foreach (var tarefa in tarefas)
@@ -28,8 +36,14 @@
                     </div>
 
                     <div class="flex justify-end gap-4 mt-2">
-                        <button class="bg-green-600 text-white px-4 py-1 rounded-full text-sm hover:bg-green-700 transition">Concluir</button>
-                        <button class="bg-red-500 text-white px-4 py-1 rounded-full text-sm hover:bg-red-600 transition">Remover</button>
+                        <form method="post" asp-page-handler="Concluir">
+                            <input type="hidden" name="tarefaId" value="@tarefa.Id" />
+                            <button class="bg-green-600 text-white px-4 py-1 rounded-full text-sm hover:bg-green-700 transition">Concluir</button>
+                        </form>
+                        <form method="post" asp-page-handler="Remover">
+                            <input type="hidden" name="tarefaId" value="@tarefa.Id" />
+                            <button class="bg-red-500 text-white px-4 py-1 rounded-full text-sm hover:bg-red-600 transition">Remover</button>
+                        </form>
                     </div>
                 </div>
             }

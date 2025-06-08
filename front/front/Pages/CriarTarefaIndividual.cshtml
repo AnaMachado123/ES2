@@ -1,0 +1,41 @@
+@page
+@model front.Pages.CriarTarefaIndividualModel
+@{
+    ViewData["Title"] = "Criar Tarefa Individual";
+}
+
+<div class="max-w-2xl mx-auto p-6 bg-white rounded shadow mt-10 space-y-6">
+    <h1 class="text-2xl font-bold text-green-800">Criar Tarefa Individual</h1>
+
+    <form method="post">
+        <div class="space-y-4">
+            <div>
+                <label class="block font-semibold">Descrição</label>
+                <input asp-for="NovaTarefa.Descricao" class="w-full border rounded p-2" />
+            </div>
+
+            <div>
+                <label class="block font-semibold">Data de Início</label>
+                <input asp-for="NovaTarefa.DataInicio" type="datetime-local" class="w-full border rounded p-2" />
+            </div>
+
+            <div>
+                <label class="block font-semibold">Data de Fim (opcional)</label>
+                <input asp-for="NovaTarefa.DataFim" type="datetime-local" class="w-full border rounded p-2" />
+            </div>
+
+            <div>
+                <label class="block font-semibold">Projeto (opcional)</label>
+                <select asp-for="NovaTarefa.ProjetoId" class="w-full border rounded p-2">
+                    <option value="">-- Nenhum --</option>
+                    @foreach (var projeto in Model.ProjetosDisponiveis)
+                    {
+                        <option value="@projeto.Id">@projeto.Nome</option>
+                    }
+                </select>
+            </div>
+
+            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Criar Tarefa</button>
+        </div>
+    </form>
+</div>
