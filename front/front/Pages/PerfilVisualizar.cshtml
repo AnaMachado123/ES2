@@ -14,11 +14,8 @@
         <!-- Coluna 1: Card do Perfil -->
         <div class="bg-white bg-opacity-90 p-8 rounded-2xl shadow-lg hover:shadow-2xl transition">
             <div class="flex justify-center mb-4">
-                <div class="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center shadow-md">
-                    <svg class="w-10 h-10 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M5.121 17.804A9.004 9.004 0 0112 15c1.657 0 3.183.507 4.443 1.367M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
+                <div class="w-20 h-20 rounded-full overflow-hidden shadow-md">
+                    <img src="@Model.ImagemPerfil" class="w-full h-full object-cover" />
                 </div>
             </div>
 
@@ -27,15 +24,15 @@
             <div class="text-sm space-y-4">
                 <div>
                     <p class="text-gray-700 font-semibold">Nome</p>
-                    <p class="text-lg font-medium">@Model.Utilizador.Nome</p>
+                    <p class="text-lg font-medium">@Model.Nome</p>
                 </div>
                 <div>
                     <p class="text-gray-700 font-semibold">Email</p>
-                    <p class="text-lg font-medium">@Model.Utilizador.Email</p>
+                    <p class="text-lg font-medium">@Model.Email</p>
                 </div>
                 <div>
                     <p class="text-gray-700 font-semibold">Carga Horária Diária</p>
-                    <p class="text-lg font-medium">@Model.Utilizador.CargaHorariaDiaria horas</p>
+                    <p class="text-lg font-medium">@Model.CargaHoraria horas</p>
                 </div>
             </div>
 
@@ -62,21 +59,21 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M3 7v10a1 1 0 001 1h16a1 1 0 001-1V7M3 7l9 6 9-6" />
                         </svg>
-                        <strong>3</strong> projetos ativos
+                        <strong>@Model.ProjetosAtivos</strong> projetos ativos
                     </li>
                     <li class="flex items-center gap-2">
                         <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <strong>32</strong> horas este mês
+                        <strong>@Model.HorasEsteMes</strong> horas este mês
                     </li>
                     <li class="flex items-center gap-2">
                         <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M8 7V3m8 4V3m-9 4h10M5 11h14M5 15h14M5 19h14" />
                         </svg>
-                        <strong>4</strong> tarefas em curso
+                        <strong>@Model.TarefasEmCurso</strong> tarefas em curso
                     </li>
                 </ul>
             </div>
