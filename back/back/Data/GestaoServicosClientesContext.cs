@@ -11,19 +11,13 @@ public class GestaoServicosClientesContext : DbContext
     }
 
     public DbSet<Cliente> Clientes { get; set; }
-    public DbSet<Projeto> Projetos { get; set; }  
+    public DbSet<Projeto> Projetos { get; set; }
     public DbSet<Utilizador> Utilizadores { get; set; }
     public DbSet<Tarefa> Tarefas { get; set; }
     public DbSet<Convite> Convites { get; set; }
     public DbSet<Relatorio> Relatorios { get; set; }
-    public DbSet<RelatorioProjeto> RelatoriosProjeto { get; set; }
-    public DbSet<UtilizadorProjeto> UtilizadoresProjeto { get; set; }
-    public DbSet<RelatorioProjeto> RelatorioProjetos { get; set; }
-    public DbSet<UtilizadorProjeto> UtilizadorProjetos { get; set; }
-
-
-
-
+    public DbSet<RelatorioProjeto> RelatorioProjetos { get; set; } // ✅ correto
+    public DbSet<UtilizadorProjeto> UtilizadorProjetos { get; set; } // ✅ correto
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -49,6 +43,13 @@ public class GestaoServicosClientesContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
+
+            // ✅ Relacionamento opcional com Projeto
+            entity
+                .HasOne(t => t.Projeto)
+                .WithMany(p => p.Tarefas)
+                .HasForeignKey(t => t.ProjetoId)
+                .IsRequired(false);
         });
 
         modelBuilder.Entity<Convite>(entity =>
@@ -81,7 +82,5 @@ public class GestaoServicosClientesContext : DbContext
             .HasOne(up => up.Projeto)
             .WithMany(p => p.UtilizadorProjetos)
             .HasForeignKey(up => up.ProjetoId);
-
-
     }
 }
