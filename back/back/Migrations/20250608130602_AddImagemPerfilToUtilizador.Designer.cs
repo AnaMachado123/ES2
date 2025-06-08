@@ -3,6 +3,7 @@ using System;
 using BackendTesteESII.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendTesteESII.Migrations
 {
     [DbContext(typeof(GestaoServicosClientesContext))]
-    partial class GestaoServicosClientesContextModelSnapshot : ModelSnapshot
+    [Migration("20250608130602_AddImagemPerfilToUtilizador")]
+    partial class AddImagemPerfilToUtilizador
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -229,7 +232,7 @@ namespace BackendTesteESII.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("horas_gastas");
 
-                    b.Property<int?>("ProjetoId")
+                    b.Property<int>("ProjetoId")
                         .HasColumnType("integer")
                         .HasColumnName("projeto_id");
 
@@ -314,7 +317,9 @@ namespace BackendTesteESII.Migrations
                 {
                     b.HasOne("BackendTesteESII.Models.Projeto", "Projeto")
                         .WithMany("Tarefas")
-                        .HasForeignKey("ProjetoId");
+                        .HasForeignKey("ProjetoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("BackendTesteESII.Models.Utilizador", "Utilizador")
                         .WithMany()
