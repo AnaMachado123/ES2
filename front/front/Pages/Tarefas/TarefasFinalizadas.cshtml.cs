@@ -11,6 +11,9 @@ namespace front.Pages.Tarefas
 
         public List<Tarefa> Tarefas { get; set; } = new();
 
+        [TempData]
+        public string? Mensagem { get; set; }
+
         public TarefasFinalizadasModel(TarefaService service)
         {
             _service = service;
@@ -18,11 +21,16 @@ namespace front.Pages.Tarefas
 
         public async Task<IActionResult> OnGetAsync()
         {
-           int utilizadorId = HttpContext.Session.GetInt32("UtilizadorId") ?? 0;
-
-
+            int utilizadorId = HttpContext.Session.GetInt32("UtilizadorId") ?? 0;
             Tarefas = await _service.GetTarefasFinalizadasAsync(utilizadorId);
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostRemoverAsync(int tarefaId)
+        {
+            await _service.RemoverTarefaAsync(tarefaId);
+            Mensagem = "Tarefa removida com sucesso!";
+            return RedirectToPage();
         }
     }
 }

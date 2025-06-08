@@ -2,17 +2,24 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Razor Pages e dependências
 builder.Services.AddRazorPages();
-builder.Services.AddSession();
 builder.Services.AddAuthorization();
-builder.Services.AddHttpContextAccessor(); // ✅ necessário para ler o cookie do contexto
+builder.Services.AddHttpContextAccessor(); // Para aceder ao contexto da requisição
 
-// Registar o HttpClient nomeado (opcional, genérico)
-builder.Services.AddHttpClient("Backend", client =>
+// ✅ Sessão com timeout de 2 horas
+builder.Services.AddSession(options =>
 {
-    client.BaseAddress = new Uri("http://localhost:5176/"); // URL do backend
+    options.IdleTimeout = TimeSpan.FromHours(2); // ← mantém login ativo por 2h
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
 });
 
-// ✅ Registar o TarefaService com HttpClient que envia automaticamente o token JWT
+// ✅ HttpClient genérico (opcional)
+builder.Services.AddHttpClient("Backend", client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5176/"); // URL do teu backend
+});
+
+// ✅ HttpClient com JWT automático (para TarefaService)
 builder.Services.AddHttpClient<front.Services.TarefaService>((provider, client) =>
 {
     var accessor = provider.GetRequiredService<IHttpContextAccessor>();
@@ -41,8 +48,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// ✅ Ordem correta do middleware
+app.UseSession();       // ← Tem de vir antes do Razor Pages
 app.UseAuthorization();
-app.UseSession(); // ✅ middleware de sessão deve vir antes de MapRazorPages
 
 app.MapRazorPages();
 
