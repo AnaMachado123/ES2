@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendTesteESII.Migrations
 {
     [DbContext(typeof(GestaoServicosClientesContext))]
-    [Migration("20250608161449_AddPrecoHoraToProjeto")]
-    partial class AddPrecoHoraToProjeto
+    [Migration("20250608211429_AtualizarDepoisDoErro")]
+    partial class AtualizarDepoisDoErro
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -269,6 +269,10 @@ namespace BackendTesteESII.Migrations
 
                     b.Property<int>("HorasDia")
                         .HasColumnType("integer");
+
+                    b.Property<string>("ImagemPerfil")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<bool>("IsAdmin")
                         .HasColumnType("boolean")
