@@ -69,7 +69,6 @@ namespace front.Pages
             client.DefaultRequestHeaders.Authorization =
                 new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
 
-            // Obter clienteId real da API
             var responseClientes = await client.GetAsync("api/Cliente");
             var jsonClientes = await responseClientes.Content.ReadAsStringAsync();
             var clientes = JsonSerializer.Deserialize<List<ClienteDTO>>(jsonClientes, new JsonSerializerOptions
@@ -85,35 +84,33 @@ namespace front.Pages
                 return Page();
             }
 
-            // Tarefas
             var descricoes = Request.Form["descricao"];
             var datasInicio = Request.Form["dataInicio"];
             var datasFim = Request.Form["dataFim"];
 
             var tarefas = new List<object>();
-
-            int numTarefas = Math.Min(descricoes.Count, Math.Min(datasInicio.Count, datasFim.Count));
+            int numTarefas = new[] { descricoes.Count, datasInicio.Count, datasFim.Count }.Min();
 
             for (int i = 0; i < numTarefas; i++)
             {
-                if (string.IsNullOrWhiteSpace(descricoes[i]) ||
-                    string.IsNullOrWhiteSpace(datasInicio[i]) ||
-                    string.IsNullOrWhiteSpace(datasFim[i]))
-                    continue;
+                if (string.IsNullOrWhiteSpace(descricoes[i])) continue;
 
-               tarefas.Add(new
+                var inicio = DateTime.Parse(datasInicio[i]);
+                var fim = DateTime.Parse(datasFim[i]);
+                int horas = (int)(fim - inicio).TotalHours;
+                if (horas < 1) horas = 1;
+
+                tarefas.Add(new
                 {
                     Descricao = descricoes[i],
-                    DataInicio = DateTime.Parse(datasInicio[i]),
-                    DataFim = DateTime.Parse(datasFim[i]),
+                    DataInicio = inicio,
+                    DataFim = fim,
                     Status = "Em curso",
-                    HorasGastas = 0,
+                    HorasGastas = horas,
                     UtilizadorId = 0
                 });
-
             }
 
-            // Projeto
             var projeto = new
             {
                 nome = Nome,

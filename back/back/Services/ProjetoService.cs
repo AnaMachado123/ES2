@@ -149,7 +149,7 @@ namespace BackendTesteESII.Services
                     Status = tarefa.Status,
                     HorasGastas = tarefa.HorasGastas,
                     UtilizadorId = userId,
-                    ProjetoId = novoProjeto.Id // ← ESSENCIAL
+                    ProjetoId = novoProjeto.Id 
                 };
 
                 _context.Tarefas.Add(novaTarefa);
