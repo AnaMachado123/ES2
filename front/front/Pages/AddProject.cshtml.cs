@@ -83,7 +83,6 @@ namespace front.Pages
             var handler = new JwtSecurityTokenHandler();
             var token = handler.ReadJwtToken(jwt);
 
-            // 🛡️ Compatível com tokens que usam ClaimTypes.NameIdentifier
             var userIdClaim = token.Claims.FirstOrDefault(c =>
                 c.Type == "nameid" ||
                 c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
@@ -121,6 +120,12 @@ namespace front.Pages
             var tarefas = new List<object>();
             int numTarefas = new[] { descricoes.Count, datasInicio.Count, datasFim.Count, statusList.Count, horasGastasList.Count }.Min();
 
+            Console.WriteLine("== TAREFAS RECOLHIDAS DO FORMULARIO ==");
+            for (int i = 0; i < numTarefas; i++)
+            {
+                Console.WriteLine($"[{i}] descricao={descricoes[i]}, dataInicio={datasInicio[i]}, dataFim={datasFim[i]}, status={statusList[i]}, horas={horasGastasList[i]}");
+            }
+
             for (int i = 0; i < numTarefas; i++)
             {
                 if (string.IsNullOrWhiteSpace(descricoes[i]) ||
@@ -148,21 +153,28 @@ namespace front.Pages
 
             var projeto = new
             {
-                nome = Nome,
-                descricao = Descricao,
-                dataInicio = DataInicio.ToUniversalTime(),
-                dataFim = DataFim.ToUniversalTime(),
-                clienteId = cliente.Id,
-                horasTrabalho = HorasTrabalho,
-                utilizadorId = userId,
-                estado = "Pendente",
-                tarefas = tarefas
+                Nome = Nome,
+                Descricao = Descricao,
+                DataInicio = DataInicio.ToUniversalTime(),
+                DataFim = DataFim.ToUniversalTime(),
+                ClienteId = cliente.Id,
+                HorasTrabalho = HorasTrabalho,
+                UtilizadorId = userId,
+                Estado = "Pendente",
+                Tarefas = tarefas
             };
+
+            Console.WriteLine("== JSON FINAL ENVIADO ==");
+            Console.WriteLine(JsonSerializer.Serialize(projeto, new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                PropertyNamingPolicy = null
+            }));
 
             var content = new StringContent(
                 JsonSerializer.Serialize(projeto, new JsonSerializerOptions
                 {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    PropertyNamingPolicy = null,
                     WriteIndented = false
                 }),
                 Encoding.UTF8,
@@ -176,7 +188,6 @@ namespace front.Pages
                 return RedirectToPage("/Projetos/Index");
             }
 
-            // 🔍 Exibir erro retornado pela API
             var erro = await response.Content.ReadAsStringAsync();
             Mensagem = $"Erro ao criar projeto: {erro}";
             ClientesDisponiveis = clientes?.Select(c => c.Nome).ToList() ?? new();
