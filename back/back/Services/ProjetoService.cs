@@ -229,5 +229,26 @@ namespace BackendTesteESII.Services
                 })
                 .ToList();
         }
+          public int ContarClientesUnicosPorUserId(int userId)
+        {
+            var projetosCriados = _context.Projetos
+                .Where(p => p.UtilizadorId == userId);
+
+            var projetosAssociados = _context.UtilizadorProjetos
+                .Include(up => up.Projeto)
+                .Where(up => up.UtilizadorId == userId)
+                .Select(up => up.Projeto);
+
+            var todosProjetos = projetosCriados
+                .Union(projetosAssociados)
+                .Where(p => p.ClienteId != null)
+                .Distinct()
+                .ToList();
+
+            return todosProjetos
+                .Select(p => p.ClienteId)
+                .Distinct()
+                .Count();
+        }
     }
 }

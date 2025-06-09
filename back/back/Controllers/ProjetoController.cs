@@ -97,5 +97,17 @@ namespace BackendTesteESII.Controllers
             var membros = _service.GetMembrosDoProjeto(id);
             return Ok(membros);
         }
+        [HttpGet("clientes/count")]
+    public IActionResult GetNumeroClientes()
+        {
+        var userIdStr = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (  userIdStr == null)
+        return Unauthorized();
+
+        int userId = int.Parse(userIdStr);
+        int total = _service.ContarClientesUnicosPorUserId(userId);
+       return Ok(new { totalClientes = total });
+        }
+
     }
 }

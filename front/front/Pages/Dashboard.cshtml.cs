@@ -75,17 +75,23 @@ namespace front.Pages
                         Projetos = projetosApi;
                     }
                 }
+
+                // ✅ Buscar número real de clientes únicos via novo endpoint
+                var clientesResponse = await client.GetAsync("api/projeto/clientes/count");
+                if (clientesResponse.IsSuccessStatusCode)
+                {
+                    var json = await clientesResponse.Content.ReadAsStringAsync();
+                    var doc = JsonDocument.Parse(json);
+                    TotalClientes = doc.RootElement.GetProperty("totalClientes").GetInt32();
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao carregar projetos: {ex.Message}");
+                Console.WriteLine($"Erro ao carregar dados do dashboard: {ex.Message}");
             }
 
             TotalProjetos = Projetos.Count;
             TarefasPendentes = Projetos.Count(p => p.Estado == "Pendente");
-
-            // Distintos por cliente ID para evitar duplicados quando nomes forem nulos
-            TotalClientes = Projetos.Select(p => p.ClienteId).Distinct().Count();
         }
 
         public class Projeto
