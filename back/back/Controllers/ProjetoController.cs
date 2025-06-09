@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using BackendTesteESII.Services;
 using BackendTesteESII.Models;
 using BackendTesteESII.Models.DTOs;
@@ -7,6 +8,7 @@ namespace BackendTesteESII.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize] // ✅ Protege todas as ações com JWT
     public class ProjetoController : ControllerBase
     {
         private readonly IProjetoService _service;
@@ -57,6 +59,7 @@ namespace BackendTesteESII.Controllers
 
             int userId = int.Parse(userIdStr);
             var novo = _service.Create(dto, userId);
+
             return CreatedAtAction(nameof(GetProjeto), new { id = novo.Id }, novo);
         }
 

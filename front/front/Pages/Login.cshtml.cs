@@ -62,7 +62,7 @@ namespace front.Pages
                         HttpContext.Response.Cookies.Append("jwt", utilizador.Token, new CookieOptions
                         {
                             HttpOnly = true,
-                            Secure = false,
+                            Secure = true,
                             SameSite = SameSiteMode.Strict
                         });
                     }

@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace front.Pages
 {
@@ -16,12 +17,11 @@ namespace front.Pages
         }
 
         [BindProperty] public string Nome { get; set; } = string.Empty;
-        [BindProperty] public decimal Precohora { get; set; }
+        [BindProperty] public int HorasTrabalho { get; set; }
         [BindProperty] public string NomeCliente { get; set; } = string.Empty;
         [BindProperty] public string Descricao { get; set; } = string.Empty;
         [BindProperty] public DateTime DataInicio { get; set; } = DateTime.Today;
         [BindProperty] public DateTime DataFim { get; set; } = DateTime.Today.AddDays(30);
-        [BindProperty] public int HorasTrabalho { get; set; } = 40;
 
         public List<string> ClientesDisponiveis { get; set; } = new();
         public string? Mensagem { get; set; }
@@ -36,11 +36,14 @@ namespace front.Pages
         {
             var client = _httpClientFactory.CreateClient("Backend");
 
-            if (Request.Cookies.TryGetValue("jwt", out string? jwt))
+            if (!Request.Cookies.TryGetValue("jwt", out string? jwt))
             {
-                client.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+                Mensagem = "Token não encontrado. Faça login para continuar.";
+                return;
             }
+
+            client.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
 
             var response = await client.GetAsync("api/Cliente");
 
@@ -54,20 +57,45 @@ namespace front.Pages
 
                 ClientesDisponiveis = clientes?.Select(c => c.Nome).ToList() ?? new();
             }
+            else
+            {
+                Mensagem = "Erro ao carregar clientes.";
+            }
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
             var client = _httpClientFactory.CreateClient("Backend");
 
-            if (!Request.Cookies.TryGetValue("jwt", out string? jwt))
+            var hasCookie = Request.Cookies.TryGetValue("jwt", out string? jwt);
+            Console.WriteLine($"JWT encontrado: {hasCookie}, valor: {jwt}");
+
+            if (!hasCookie || string.IsNullOrEmpty(jwt))
             {
-                Mensagem = "Token não encontrado. Por favor, faça login novamente.";
-                return RedirectToPage("/Login");
+                Mensagem = "Você não está autenticado. Faça login e tente novamente.";
+                ClientesDisponiveis = new();
+                return Page();
             }
 
             client.DefaultRequestHeaders.Authorization =
                 new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+
+            var handler = new JwtSecurityTokenHandler();
+            var token = handler.ReadJwtToken(jwt);
+
+            // 🛡️ Compatível com tokens que usam ClaimTypes.NameIdentifier
+            var userIdClaim = token.Claims.FirstOrDefault(c =>
+                c.Type == "nameid" ||
+                c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
+
+            var userIdStr = userIdClaim?.Value;
+
+            if (!int.TryParse(userIdStr, out int userId))
+            {
+                Mensagem = "ID do utilizador inválido. Por favor, refaça o login.";
+                ClientesDisponiveis = new();
+                return Page();
+            }
 
             var responseClientes = await client.GetAsync("api/Cliente");
             var jsonClientes = await responseClientes.Content.ReadAsStringAsync();
@@ -87,27 +115,34 @@ namespace front.Pages
             var descricoes = Request.Form["descricao"];
             var datasInicio = Request.Form["dataInicio"];
             var datasFim = Request.Form["dataFim"];
+            var statusList = Request.Form["status"];
+            var horasGastasList = Request.Form["horasGastas"];
 
             var tarefas = new List<object>();
-            int numTarefas = new[] { descricoes.Count, datasInicio.Count, datasFim.Count }.Min();
+            int numTarefas = new[] { descricoes.Count, datasInicio.Count, datasFim.Count, statusList.Count, horasGastasList.Count }.Min();
 
             for (int i = 0; i < numTarefas; i++)
             {
-                if (string.IsNullOrWhiteSpace(descricoes[i])) continue;
+                if (string.IsNullOrWhiteSpace(descricoes[i]) ||
+                    string.IsNullOrWhiteSpace(datasInicio[i]) ||
+                    string.IsNullOrWhiteSpace(datasFim[i]) ||
+                    string.IsNullOrWhiteSpace(statusList[i]) ||
+                    string.IsNullOrWhiteSpace(horasGastasList[i]))
+                    continue;
 
-                var inicio = DateTime.Parse(datasInicio[i]);
-                var fim = DateTime.Parse(datasFim[i]);
-                int horas = (int)(fim - inicio).TotalHours;
-                if (horas < 1) horas = 1;
+                if (!DateTime.TryParse(datasInicio[i], out var inicio) ||
+                    !DateTime.TryParse(datasFim[i], out var fim) ||
+                    !int.TryParse(horasGastasList[i], out var horas))
+                    continue;
 
                 tarefas.Add(new
                 {
                     Descricao = descricoes[i],
-                    DataInicio = inicio,
-                    DataFim = fim,
-                    Status = "Em curso",
+                    DataInicio = inicio.ToUniversalTime(),
+                    DataFim = fim.ToUniversalTime(),
+                    Status = statusList[i],
                     HorasGastas = horas,
-                    UtilizadorId = 0
+                    UtilizadorId = userId
                 });
             }
 
@@ -115,16 +150,24 @@ namespace front.Pages
             {
                 nome = Nome,
                 descricao = Descricao,
-                dataInicio = DataInicio,
-                dataFim = DataFim,
+                dataInicio = DataInicio.ToUniversalTime(),
+                dataFim = DataFim.ToUniversalTime(),
                 clienteId = cliente.Id,
                 horasTrabalho = HorasTrabalho,
-                utilizadorId = 0,
+                utilizadorId = userId,
                 estado = "Pendente",
                 tarefas = tarefas
             };
 
-            var content = new StringContent(JsonSerializer.Serialize(projeto), Encoding.UTF8, "application/json");
+            var content = new StringContent(
+                JsonSerializer.Serialize(projeto, new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    WriteIndented = false
+                }),
+                Encoding.UTF8,
+                "application/json"
+            );
 
             var response = await client.PostAsync("api/Projeto", content);
 
@@ -133,7 +176,9 @@ namespace front.Pages
                 return RedirectToPage("/Projetos/Index");
             }
 
-            Mensagem = "Erro ao criar projeto.";
+            // 🔍 Exibir erro retornado pela API
+            var erro = await response.Content.ReadAsStringAsync();
+            Mensagem = $"Erro ao criar projeto: {erro}";
             ClientesDisponiveis = clientes?.Select(c => c.Nome).ToList() ?? new();
             return Page();
         }

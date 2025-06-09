@@ -5,30 +5,25 @@
     ViewData["ActivePage"] = "Projetos";
 }
 
-<!-- Fundo -->
 <div class="fixed inset-0 w-full h-full bg-[url('/images/background.png')] bg-cover bg-center -z-10"></div>
 
-<!-- Conteúdo -->
 <div class="relative min-h-screen w-full p-10 z-10 flex items-center justify-center">
     <div class="bg-white bg-opacity-90 p-10 rounded-2xl shadow-xl w-full max-w-3xl space-y-6">
 
-        <!-- Título -->
         <h2 class="text-2xl font-bold text-green-800">Projeto de @Model.Projeto.Nome</h2>
 
-        <!-- Bloco de Informações -->
         <div class="text-base text-gray-800 space-y-1 leading-relaxed">
             <p><strong class="text-green-800">Descrição:</strong> @Model.Projeto.Descricao</p>
             <p><strong class="text-green-800">Cliente:</strong> @Model.Projeto.NomeCliente</p>
             <p><strong class="text-green-800">Criador:</strong> @Model.Projeto.NomeCriador</p>
             <p><strong class="text-green-800">Estado:</strong> @Model.Projeto.Estado</p>
             <p><strong class="text-green-800">Datas:</strong> @Model.Projeto.DataInicio.ToString("dd/MM/yyyy") até @Model.Projeto.DataFim.ToString("dd/MM/yyyy")</p>
-            <p><strong class="text-green-800">Horas Planeadas:</strong> @Model.Projeto.HorasTrabalho h</p>
+            <p><strong class="text-green-800">Preço/Hora:</strong> @Model.Projeto.HorasTrabalho.ToString("0.00") €</p>
             <p><strong class="text-green-800">Valor Total:</strong> @Model.ValorTotal.ToString("0.00") €</p>
         </div>
 
         <hr class="my-4" />
 
-        <!-- Membros -->
         <h3 class="text-lg font-bold text-green-700">Membros do Projeto</h3>
         @if (Model.Membros.Count == 0)
         {
@@ -46,9 +41,7 @@
 
         <hr class="my-4" />
 
-        <!-- Tarefas -->
         <h3 class="text-lg font-bold text-green-700">Histórico de Tarefas</h3>
-
         @if (Model.Projeto.Tarefas == null || Model.Projeto.Tarefas.Count == 0)
         {
             <p class="text-gray-600">Sem tarefas registadas para este projeto.</p>
@@ -61,7 +54,7 @@
                     <li class="bg-yellow-100 border-l-4 border-yellow-400 text-yellow-800 rounded-xl p-4 shadow-sm">
                         <h4 class="text-lg font-bold">@tarefa.Descricao</h4>
                         <p class="text-sm text-gray-700 italic">Projeto: @Model.Projeto.Nome</p>
-                        <p class="text-sm mt-1"><strong>Datas:</strong> @tarefa.DataInicio.ToShortDateString() até @tarefa.DataFim.ToShortDateString()</p>
+                        <p class="text-sm"><strong>Datas:</strong> @tarefa.DataInicio.ToString("dd/MM/yyyy") até @tarefa.DataFim.ToString("dd/MM/yyyy")</p>
                         <p class="text-sm"><strong>Estado:</strong> @tarefa.Estado</p>
                         <p class="text-sm"><strong>Horas:</strong> @tarefa.HorasGastas h</p>
                     </li>
@@ -69,7 +62,6 @@
             </ul>
         }
 
-        <!-- Finalizar Projeto -->
         @if (Model.Projeto.Estado != "Concluído")
         {
             <form method="post" asp-page-handler="Concluir">
@@ -79,7 +71,6 @@
             </form>
         }
 
-        <!-- Botão -->
         <div class="mt-8">
             <a href="/Projetos" class="text-green-700 hover:underline">← Voltar</a>
         </div>
