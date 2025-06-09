@@ -57,7 +57,7 @@ public class RelatorioController : ControllerBase
         var contextStrategy = new RelatorioContext<List<RelatorioMensalDTO>>(strategy);
         var resultado = contextStrategy.Executar(_service.GetContext(), utilizadorId, mes, ano); // ← ajusta para obter context
 
-            return Ok(resultado);
+        return Ok(resultado);
     }
     [HttpGet("projeto")]
     public IActionResult GetRelatorioProjeto([FromQuery] int projetoId)
@@ -68,5 +68,22 @@ public class RelatorioController : ControllerBase
 
         return Ok(resultado);
     }
+   [HttpGet("mensal/pdf")]
+    public IActionResult GetRelatorioMensalPdf([FromQuery] int utilizadorId, [FromQuery] int mes, [FromQuery] int ano)
+    {
+        var strategy = new RelatorioMensalStrategy();
+        var contextStrategy = new RelatorioContext<List<RelatorioMensalDTO>>(strategy);
+        var relatorio = contextStrategy.Executar(_service.GetContext(), utilizadorId, mes, ano);
+
+        if (relatorio == null || relatorio.Count == 0)
+            return NotFound("Nenhum relatório encontrado para o mês e ano.");
+
+        var pdfService = new PdfService();
+        var pdfBytes = pdfService.GerarRelatorioMensalPdf(relatorio, "Freelancer", mes, ano);
+
+        return File(pdfBytes, "application/pdf", $"Relatorio_{mes}_{ano}.pdf");
+    }
+
+
 
 }
