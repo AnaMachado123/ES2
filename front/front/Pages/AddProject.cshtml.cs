@@ -32,6 +32,16 @@ namespace front.Pages
             public string Nome { get; set; } = "";
         }
 
+        public class TarefaDTO
+        {
+            public string Descricao { get; set; } = "";
+            public DateTime DataInicio { get; set; }
+            public DateTime DataFim { get; set; }
+            public string Status { get; set; } = "";
+            public int HorasGastas { get; set; }
+            public int UtilizadorId { get; set; }
+        }
+
         public async Task OnGetAsync()
         {
             var client = _httpClientFactory.CreateClient("Backend");
@@ -67,10 +77,7 @@ namespace front.Pages
         {
             var client = _httpClientFactory.CreateClient("Backend");
 
-            var hasCookie = Request.Cookies.TryGetValue("jwt", out string? jwt);
-            Console.WriteLine($"JWT encontrado: {hasCookie}, valor: {jwt}");
-
-            if (!hasCookie || string.IsNullOrEmpty(jwt))
+            if (!Request.Cookies.TryGetValue("jwt", out string? jwt))
             {
                 Mensagem = "Você não está autenticado. Faça login e tente novamente.";
                 ClientesDisponiveis = new();
@@ -87,12 +94,9 @@ namespace front.Pages
                 c.Type == "nameid" ||
                 c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
 
-            var userIdStr = userIdClaim?.Value;
-
-            if (!int.TryParse(userIdStr, out int userId))
+            if (!int.TryParse(userIdClaim?.Value, out int userId))
             {
-                Mensagem = "ID do utilizador inválido. Por favor, refaça o login.";
-                ClientesDisponiveis = new();
+                Mensagem = "ID do utilizador inválido.";
                 return Page();
             }
 
@@ -107,7 +111,6 @@ namespace front.Pages
             if (cliente == null)
             {
                 Mensagem = "Cliente inválido selecionado.";
-                ClientesDisponiveis = clientes?.Select(c => c.Nome).ToList() ?? new();
                 return Page();
             }
 
@@ -117,30 +120,18 @@ namespace front.Pages
             var statusList = Request.Form["status"];
             var horasGastasList = Request.Form["horasGastas"];
 
-            var tarefas = new List<object>();
+            var tarefas = new List<TarefaDTO>();
             int numTarefas = new[] { descricoes.Count, datasInicio.Count, datasFim.Count, statusList.Count, horasGastasList.Count }.Min();
-
-            Console.WriteLine("== TAREFAS RECOLHIDAS DO FORMULARIO ==");
-            for (int i = 0; i < numTarefas; i++)
-            {
-                Console.WriteLine($"[{i}] descricao={descricoes[i]}, dataInicio={datasInicio[i]}, dataFim={datasFim[i]}, status={statusList[i]}, horas={horasGastasList[i]}");
-            }
 
             for (int i = 0; i < numTarefas; i++)
             {
                 if (string.IsNullOrWhiteSpace(descricoes[i]) ||
-                    string.IsNullOrWhiteSpace(datasInicio[i]) ||
-                    string.IsNullOrWhiteSpace(datasFim[i]) ||
-                    string.IsNullOrWhiteSpace(statusList[i]) ||
-                    string.IsNullOrWhiteSpace(horasGastasList[i]))
-                    continue;
-
-                if (!DateTime.TryParse(datasInicio[i], out var inicio) ||
+                    !DateTime.TryParse(datasInicio[i], out var inicio) ||
                     !DateTime.TryParse(datasFim[i], out var fim) ||
                     !int.TryParse(horasGastasList[i], out var horas))
                     continue;
 
-                tarefas.Add(new
+                tarefas.Add(new TarefaDTO
                 {
                     Descricao = descricoes[i],
                     DataInicio = inicio.ToUniversalTime(),
@@ -164,33 +155,19 @@ namespace front.Pages
                 Tarefas = tarefas
             };
 
-            Console.WriteLine("== JSON FINAL ENVIADO ==");
-            Console.WriteLine(JsonSerializer.Serialize(projeto, new JsonSerializerOptions
-            {
-                WriteIndented = true,
-                PropertyNamingPolicy = null
-            }));
-
             var content = new StringContent(
                 JsonSerializer.Serialize(projeto, new JsonSerializerOptions
                 {
-                    PropertyNamingPolicy = null,
-                    WriteIndented = false
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
                 }),
                 Encoding.UTF8,
-                "application/json"
-            );
+                "application/json");
 
             var response = await client.PostAsync("api/Projeto", content);
-
             if (response.IsSuccessStatusCode)
-            {
                 return RedirectToPage("/Projetos/Index");
-            }
 
-            var erro = await response.Content.ReadAsStringAsync();
-            Mensagem = $"Erro ao criar projeto: {erro}";
-            ClientesDisponiveis = clientes?.Select(c => c.Nome).ToList() ?? new();
+            Mensagem = "Erro ao criar projeto.";
             return Page();
         }
     }
