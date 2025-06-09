@@ -27,14 +27,10 @@ namespace BackendTesteESII.Services
                 Nome = p.Nome,
                 Descricao = p.Descricao,
                 Estado = p.Estado,
-<<<<<<< HEAD
                 Cliente = clientes.TryGetValue(p.ClienteId, out var nome) ? nome : "Desconhecido",
                 DataInicio = p.DataInicio,
                 DataFim = p.DataFim,
-                HorasTrabalho = p.HorasTrabalho // usado como preço/hora
-=======
-                Cliente = clientes.TryGetValue(p.ClienteId, out var nome) ? nome : "Desconhecido"
->>>>>>> b2443abf1f8c2e1b245d2ba03977a006b4bfb1ec
+                HorasTrabalho = p.HorasTrabalho
             }).ToList();
         }
 
@@ -67,14 +63,11 @@ namespace BackendTesteESII.Services
             });
         }
 
-<<<<<<< HEAD
-=======
         public Projeto? GetById(int id)
         {
             return _context.Projetos.FirstOrDefault(p => p.Id == id);
         }
 
->>>>>>> b2443abf1f8c2e1b245d2ba03977a006b4bfb1ec
         public ProjetoDetalhadoDTO? GetDetalhadoById(int id)
         {
             var projeto = _context.Projetos.FirstOrDefault(p => p.Id == id);
@@ -118,7 +111,7 @@ namespace BackendTesteESII.Services
                 Estado = projeto.Estado,
                 DataInicio = projeto.DataInicio,
                 DataFim = projeto.DataFim,
-                HorasTrabalho = projeto.HorasTrabalho, // preço/hora
+                HorasTrabalho = projeto.HorasTrabalho,
                 TotalHoras = tarefas.Sum(t => t.HorasGastas),
                 NomeCliente = clienteNome,
                 NomeCriador = utilizadorNome,
@@ -140,7 +133,7 @@ namespace BackendTesteESII.Services
                 ClienteId = dto.ClienteId,
                 UtilizadorId = userId,
                 Estado = dto.Estado,
-                HorasTrabalho = dto.HorasTrabalho // usado como preço por hora
+                HorasTrabalho = dto.HorasTrabalho
             };
 
             _context.Projetos.Add(novoProjeto);
@@ -166,7 +159,6 @@ namespace BackendTesteESII.Services
             return novoProjeto;
         }
 
-<<<<<<< HEAD
         public decimal CalcularValorTotalProjeto(int projetoId)
         {
             var projeto = _context.Projetos
@@ -176,15 +168,11 @@ namespace BackendTesteESII.Services
             if (projeto == null) return 0;
 
             decimal precoHora = projeto.HorasTrabalho > 0 ? projeto.HorasTrabalho : 1;
-            var totalHorasConcluidas = projeto.Tarefas
-                .Where(t => t.Status.ToLower() == "concluída")
-                .Sum(t => t.HorasGastas);
+            var totalHoras = projeto.Tarefas.Sum(t => t.HorasGastas);
 
-            return precoHora * totalHorasConcluidas;
+            return precoHora * totalHoras;
         }
 
-=======
->>>>>>> b2443abf1f8c2e1b245d2ba03977a006b4bfb1ec
         public bool Update(int id, Projeto projeto)
         {
             var existente = _context.Projetos.Find(id);
@@ -231,21 +219,6 @@ namespace BackendTesteESII.Services
             return true;
         }
 
-        public decimal CalcularValorTotalProjeto(int projetoId)
-        {
-            var projeto = _context.Projetos
-                .Include(p => p.Tarefas)
-                .FirstOrDefault(p => p.Id == projetoId);
-
-            if (projeto == null) return 0;
-
-            decimal precoHora = projeto.HorasTrabalho > 0 ? (decimal)projeto.HorasTrabalho : 1;
-            var totalHoras = projeto.Tarefas.Sum(t => t.HorasGastas);
-
-            return precoHora * totalHoras;
-        }
-
-
         public List<MembroDTO> GetMembrosDoProjeto(int projetoId)
         {
             return _context.UtilizadorProjetos
@@ -258,6 +231,7 @@ namespace BackendTesteESII.Services
                     Email = up.Utilizador.Email
                 }).ToList();
         }
+
         public int ContarClientesUnicosPorUserId(int userId)
         {
             var projetosCriados = _context.Projetos
@@ -279,6 +253,7 @@ namespace BackendTesteESII.Services
                 .Distinct()
                 .Count();
         }
+
         public int ContarTodosClientesUnicos()
         {
             return _context.Projetos
