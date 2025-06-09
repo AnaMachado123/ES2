@@ -16,7 +16,6 @@ namespace front.Pages.Projetos
         }
 
         public ProjetoDetalhadoDTO Projeto { get; set; } = new();
-        //public List<MembroDTO> Membros { get; set; } = new();
         public List<MembroDTO> Membros { get; set; } = new();
 
         public decimal ValorTotal { get; set; } = new();

@@ -9,7 +9,7 @@ namespace front.Pages
         {
             // Apenas remove o token JWT
             Response.Cookies.Delete("jwt");
-
+            HttpContext.Session.Clear();
             // Dados da sessão (nome, email, etc.) continuam guardados
             return RedirectToPage("/Login");
         }
@@ -18,6 +18,7 @@ namespace front.Pages
         {
             // Mesmo comportamento para segurança
             Response.Cookies.Delete("jwt");
+            HttpContext.Session.Clear();
             return RedirectToPage("/Login");
         }
     }
