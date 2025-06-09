@@ -7,19 +7,14 @@ public class ProjetoDetalhadoDTO
     public string Estado { get; set; } = string.Empty;
     public DateTime DataInicio { get; set; }
     public DateTime DataFim { get; set; }
-    public int HorasTrabalho { get; set; }
+    public int HorasTrabalho { get; set; }  // ← representa o preço por hora
+    public int TotalHoras { get; set; }     // ← soma das horas de tarefas
 
     public string NomeCliente { get; set; } = string.Empty;
     public string NomeCriador { get; set; } = string.Empty;
 
     public List<TarefaHistoricoDTO> Tarefas { get; set; } = new();
-
     public int ClienteId { get; set; }
     public int UtilizadorId { get; set; }
     public List<MembroDTO> Membros { get; set; } = new();
-
-
-
-
-
 }

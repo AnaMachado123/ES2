@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace BackendTesteESII.Services
 {
     public class ProjetoService : IProjetoService
@@ -22,26 +21,24 @@ namespace BackendTesteESII.Services
             var projetos = _context.Projetos.ToList();
             var clientes = _context.Clientes.ToDictionary(c => c.Id, c => c.Nome);
 
-            var lista = projetos.Select(p => new ProjetoDTO
+            return projetos.Select(p => new ProjetoDTO
             {
                 Id = p.Id,
                 Nome = p.Nome,
                 Descricao = p.Descricao,
                 Estado = p.Estado,
-                //Cliente = clientes.TryGetValue(p.ClienteId, out var nome) ? nome : "Desconhecido"
-                Cliente = p.ClienteId.ToString()
-
+                Cliente = clientes.TryGetValue(p.ClienteId, out var nome) ? nome : "Desconhecido",
+                DataInicio = p.DataInicio,
+                DataFim = p.DataFim,
+                HorasTrabalho = p.HorasTrabalho // usado como preço/hora
             }).ToList();
-
-            return lista;
         }
 
         public IEnumerable<ProjetoDTO> GetByUserId(int userId)
-        {   
+        {
             var clientes = _context.Clientes.ToDictionary(c => c.Id, c => c.Nome);
 
-            var projetosCriados = _context.Projetos
-                .Where(p => p.UtilizadorId == userId);
+            var projetosCriados = _context.Projetos.Where(p => p.UtilizadorId == userId);
 
             var projetosAssociados = _context.UtilizadorProjetos
                 .Include(up => up.Projeto)
@@ -52,17 +49,6 @@ namespace BackendTesteESII.Services
                 .Union(projetosAssociados)
                 .Distinct()
                 .ToList();
-
-
-            /*var projetos = _context.Projetos
-                .Where(p => p.UtilizadorId == userId)
-                .ToList();
-            
-            var projetos = _context.UtilizadorProjetos
-                .Include(up => up.Projeto)
-                .Where(up => up.UtilizadorId == userId)
-                .Select(up => up.Projeto)
-                .ToList();*/
 
             return todosProjetos.Select(p => new ProjetoDTO
             {
@@ -77,18 +63,10 @@ namespace BackendTesteESII.Services
             });
         }
 
-
-
-
-        //public Projeto GetById(int id) => _context.Projetos.Find(id);
         public ProjetoDetalhadoDTO? GetDetalhadoById(int id)
         {
-            var projeto = _context.Projetos
-                .Where(p => p.Id == id)
-                .FirstOrDefault();
-
-            if (projeto == null)
-                return null;
+            var projeto = _context.Projetos.FirstOrDefault(p => p.Id == id);
+            if (projeto == null) return null;
 
             var clienteNome = _context.Clientes
                 .Where(c => c.Id == projeto.ClienteId)
@@ -121,7 +99,6 @@ namespace BackendTesteESII.Services
                     Email = up.Utilizador.Email
                 }).ToList();
 
-
             return new ProjetoDetalhadoDTO
             {
                 Nome = projeto.Nome,
@@ -129,7 +106,8 @@ namespace BackendTesteESII.Services
                 Estado = projeto.Estado,
                 DataInicio = projeto.DataInicio,
                 DataFim = projeto.DataFim,
-                HorasTrabalho = projeto.HorasTrabalho,
+                HorasTrabalho = projeto.HorasTrabalho, // preço/hora
+                TotalHoras = tarefas.Sum(t => t.HorasGastas),
                 NomeCliente = clienteNome,
                 NomeCriador = utilizadorNome,
                 Tarefas = tarefas,
@@ -138,7 +116,6 @@ namespace BackendTesteESII.Services
                 Membros = membros
             };
         }
-
 
         public Projeto Create(ProjetoCreateDTO dto, int userId)
         {
@@ -149,15 +126,14 @@ namespace BackendTesteESII.Services
                 DataInicio = dto.DataInicio.ToUniversalTime(),
                 DataFim = dto.DataFim.ToUniversalTime(),
                 ClienteId = dto.ClienteId,
-                HorasTrabalho = dto.HorasTrabalho,
                 UtilizadorId = userId,
-                Estado = dto.Estado
+                Estado = dto.Estado,
+                HorasTrabalho = dto.HorasTrabalho // usado como preço por hora
             };
 
             _context.Projetos.Add(novoProjeto);
-            _context.SaveChanges(); // Garante que o projeto recebe o ID
+            _context.SaveChanges();
 
-            // Agora associa tarefas manualmente com o ID correto
             foreach (var tarefa in dto.Tarefas)
             {
                 var novaTarefa = new Tarefa
@@ -168,7 +144,7 @@ namespace BackendTesteESII.Services
                     Status = tarefa.Status,
                     HorasGastas = tarefa.HorasGastas,
                     UtilizadorId = userId,
-                    ProjetoId = novoProjeto.Id 
+                    ProjetoId = novoProjeto.Id
                 };
 
                 _context.Tarefas.Add(novaTarefa);
@@ -178,7 +154,21 @@ namespace BackendTesteESII.Services
             return novoProjeto;
         }
 
+        public decimal CalcularValorTotalProjeto(int projetoId)
+        {
+            var projeto = _context.Projetos
+                .Include(p => p.Tarefas)
+                .FirstOrDefault(p => p.Id == projetoId);
 
+            if (projeto == null) return 0;
+
+            decimal precoHora = projeto.HorasTrabalho > 0 ? projeto.HorasTrabalho : 1;
+            var totalHorasConcluidas = projeto.Tarefas
+                .Where(t => t.Status.ToLower() == "concluída")
+                .Sum(t => t.HorasGastas);
+
+            return precoHora * totalHorasConcluidas;
+        }
 
         public bool Update(int id, Projeto projeto)
         {
@@ -190,9 +180,9 @@ namespace BackendTesteESII.Services
             existente.DataInicio = projeto.DataInicio.ToUniversalTime();
             existente.DataFim = projeto.DataFim.ToUniversalTime();
             existente.ClienteId = projeto.ClienteId;
-            existente.HorasTrabalho = projeto.HorasTrabalho;
             existente.UtilizadorId = projeto.UtilizadorId;
             existente.Estado = projeto.Estado;
+            existente.HorasTrabalho = projeto.HorasTrabalho;
 
             _context.SaveChanges();
             return true;
@@ -221,39 +211,22 @@ namespace BackendTesteESII.Services
             var projeto = _context.Projetos.FirstOrDefault(p => p.Id == id);
             if (projeto == null) return false;
 
-            projeto.Estado = "Concluído"; //  Corrigido
+            projeto.Estado = "Concluído";
             _context.SaveChanges();
             return true;
         }
 
-
-        public decimal CalcularValorTotalProjeto(int projetoId)
-        {
-            var projeto = _context.Projetos
-                .Include(p => p.Tarefas)
-                .FirstOrDefault(p => p.Id == projetoId);
-
-            if (projeto == null) return 0;
-
-            decimal precoHora = projeto.HorasTrabalho > 0 ? (decimal)projeto.HorasTrabalho : 1;
-            var totalHoras = projeto.Tarefas.Sum(t => t.HorasGastas);
-
-            return precoHora * totalHoras;
-        }
-        
         public List<MembroDTO> GetMembrosDoProjeto(int projetoId)
         {
             return _context.UtilizadorProjetos
-                .Include(up => up.Utilizador) // se navigation property não for carregada automaticamente
+                .Include(up => up.Utilizador)
                 .Where(up => up.ProjetoId == projetoId)
                 .Select(up => new MembroDTO
                 {
                     Id = up.Utilizador.Id,
                     Nome = up.Utilizador.Nome,
                     Email = up.Utilizador.Email
-                })
-                .ToList();
+                }).ToList();
         }
-
     }
 }

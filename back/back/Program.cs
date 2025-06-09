@@ -20,7 +20,7 @@ builder.Logging.SetMinimumLevel(LogLevel.Warning);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-
+// Swagger com suporte a JWT
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
@@ -51,6 +51,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+// Serviços do projeto
 builder.Services.AddScoped<IRelatorioService, RelatorioService>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IProjetoService, ProjetoService>();
@@ -61,11 +62,13 @@ builder.Services.AddScoped<IRelatorioProjetoService, RelatorioProjetoService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 
+// DB Context
 builder.Services.AddDbContext<GestaoServicosClientesContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
            .ConfigureWarnings(w => w.Ignore(RelationalEventId.CommandExecuting))
 );
 
+// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -76,7 +79,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-
+// JWT Authentication
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
@@ -88,7 +91,8 @@ builder.Services.AddAuthentication("Bearer")
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)),
+            NameClaimType = ClaimTypes.NameIdentifier // ✅ ESSENCIAL para FindFirst funcionar
         };
     });
 
@@ -103,16 +107,16 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthentication();
+app.UseAuthentication(); // ✅ OBRIGATÓRIO antes de UseAuthorization
 app.UseCors("AllowAll");
 app.UseAuthorization();
 app.MapControllers();
 
+// ⚙️ Criação do admin default
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<GestaoServicosClientesContext>();
     context.Database.Migrate();
-
 
     var admin = context.Utilizadores.FirstOrDefault(u => u.Email == "admin@admin.com");
 
@@ -147,11 +151,13 @@ using (var scope = app.Services.CreateScope())
         admin.IsAdmin = true;
         context.SaveChanges();
     }
+
+    // ✅ (Opcional) Mostrar claims do admin no arranque
     var claims = new List<Claim>
-{
-    new Claim(ClaimTypes.NameIdentifier, admin.Id.ToString()),
-    new Claim(ClaimTypes.Role, admin.Tipo), 
-};
+    {
+        new Claim(ClaimTypes.NameIdentifier, admin.Id.ToString()),
+        new Claim(ClaimTypes.Role, admin.Tipo),
+    };
 }
 
 app.Run();

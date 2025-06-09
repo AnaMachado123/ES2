@@ -33,10 +33,6 @@ public class Projeto
     public int ClienteId { get; set; }
 
     [Required]
-    [Column("horas_trabalho")]
-    public int HorasTrabalho { get; set; }
-
-    [Required]
     [Column("utilizador_id")]
     public int UtilizadorId { get; set; }
 
@@ -47,6 +43,10 @@ public class Projeto
 
     [Column("concluido")]
     public bool Concluido { get; set; } = false;
+
+    [Required]
+    [Column("preco_hora")]
+    public int HorasTrabalho { get; set; }  // ← usado como preço por hora
 
     public ICollection<UtilizadorProjeto> UtilizadorProjetos { get; set; } = new List<UtilizadorProjeto>();
     public ICollection<Tarefa> Tarefas { get; set; } = new List<Tarefa>();

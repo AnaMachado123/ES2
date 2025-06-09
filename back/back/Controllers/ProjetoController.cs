@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using BackendTesteESII.Services;
 using BackendTesteESII.Models;
 using BackendTesteESII.Models.DTOs;
@@ -7,6 +8,7 @@ namespace BackendTesteESII.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize] // ✅ Protege todas as ações com JWT
     public class ProjetoController : ControllerBase
     {
         private readonly IProjetoService _service;
@@ -23,8 +25,7 @@ namespace BackendTesteESII.Controllers
             if (userIdStr == null)
                 return Unauthorized();
 
-            int userId = int.Parse(userIdStr); // ← o UtilizadorId é inteiro, dí a conversão
-
+            int userId = int.Parse(userIdStr);
             return Ok(_service.GetByUserId(userId));
         }
 
@@ -41,18 +42,16 @@ namespace BackendTesteESII.Controllers
             var userIdStr = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             if (userIdStr == null) return Unauthorized();
 
-            int userId = int.Parse(userIdStr); // UtilizadorId como int
-
+            int userId = int.Parse(userIdStr);
             var novo = _service.Create(dto, userId);
+
             return CreatedAtAction(nameof(GetProjeto), new { id = novo.Id }, novo);
         }
-
 
         [HttpPut("{id}")]
         public IActionResult PutProjeto(int id, Projeto projeto)
         {
             if (id != projeto.Id) return BadRequest();
-
             return _service.Update(id, projeto) ? NoContent() : NotFound();
         }
 
@@ -68,23 +67,6 @@ namespace BackendTesteESII.Controllers
             var projeto = _service.GetDetalhadoById(id);
             return projeto == null ? NotFound() : Ok(projeto);
         }
-        
-        /*[HttpGet("{id}/membros")]
-        public IActionResult GetMembrosDoProjeto(int id)
-        {
-            var projeto = _service.GetProjetoComMembros(id);
-            if (projeto == null) return NotFound();
-
-            var membros = projeto.UtilizadorProjetos
-                .Select(up => new
-                {
-                    up.Utilizador.Id,
-                    up.Utilizador.Nome,
-                    up.Utilizador.Email
-                }).ToList();
-
-            return Ok(membros);
-        }*/
 
         [HttpPut("{id}/concluir")]
         public IActionResult ConcluirProjeto(int id)

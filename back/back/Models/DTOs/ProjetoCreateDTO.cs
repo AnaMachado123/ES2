@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 
-
 namespace BackendTesteESII.Models.DTOs;
 
 public class ProjetoCreateDTO
@@ -10,7 +9,9 @@ public class ProjetoCreateDTO
     public DateTime DataInicio { get; set; }
     public DateTime DataFim { get; set; }
     public int ClienteId { get; set; }
-    public int HorasTrabalho { get; set; }
+
+    public int HorasTrabalho { get; set; }  // ← usado como preço por hora
+
     public int UtilizadorId { get; set; }
     public string Estado { get; set; } = string.Empty;
 
