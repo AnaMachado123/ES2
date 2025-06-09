@@ -229,7 +229,7 @@ namespace BackendTesteESII.Services
                 })
                 .ToList();
         }
-          public int ContarClientesUnicosPorUserId(int userId)
+        public int ContarClientesUnicosPorUserId(int userId)
         {
             var projetosCriados = _context.Projetos
                 .Where(p => p.UtilizadorId == userId);
@@ -250,5 +250,14 @@ namespace BackendTesteESII.Services
                 .Distinct()
                 .Count();
         }
+        public int ContarTodosClientesUnicos()
+        {
+            return _context.Projetos
+              .Where(p => p.ClienteId != null)
+              .Select(p => p.ClienteId)
+              .Distinct()
+              .Count();
+        }
+
     }
 }

@@ -27,6 +27,21 @@ namespace BackendTesteESII.Controllers
             return Ok(_service.GetByUserId(userId));
         }
 
+        [HttpGet("todos")]
+        public IActionResult GetTodosProjetos()
+        {
+            var userIdStr = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+
+            if (userIdStr == null)
+                return Unauthorized();
+
+            if (role != "Admin")
+                return Forbid();
+
+            return Ok(_service.GetAll());
+        }
+
         [HttpGet("{id}")]
         public IActionResult GetProjeto(int id)
         {
@@ -49,11 +64,9 @@ namespace BackendTesteESII.Controllers
         public IActionResult PutProjeto(int id, Projeto projeto)
         {
             if (id != projeto.Id) return BadRequest();
-
             return _service.Update(id, projeto) ? NoContent() : NotFound();
         }
 
-        // ✅ ATUALIZADO: Apagar projeto com mensagem personalizada
         [HttpDelete("{id}")]
         public IActionResult DeleteProjeto(int id)
         {
@@ -62,7 +75,6 @@ namespace BackendTesteESII.Controllers
                 return NotFound("Projeto não encontrado.");
 
             var nome = projeto.Nome;
-
             var apagado = _service.Delete(id);
             if (!apagado)
                 return BadRequest("Erro ao apagar o projeto.");
@@ -97,17 +109,25 @@ namespace BackendTesteESII.Controllers
             var membros = _service.GetMembrosDoProjeto(id);
             return Ok(membros);
         }
-        [HttpGet("clientes/count")]
-    public IActionResult GetNumeroClientes()
+
+        [HttpGet("clientes/contagem")]
+        public IActionResult GetNumeroClientes([FromQuery] string? modo = "meus")
         {
-        var userIdStr = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-        if (  userIdStr == null)
-        return Unauthorized();
+            var userIdStr = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+            if (userIdStr == null)
+                return Unauthorized();
 
-        int userId = int.Parse(userIdStr);
-        int total = _service.ContarClientesUnicosPorUserId(userId);
-       return Ok(new { totalClientes = total });
+            int userId = int.Parse(userIdStr);
+
+            if (modo == "todos" && role == "Admin")
+            {
+                int total = _service.ContarTodosClientesUnicos();
+                return Ok(new { totalClientes = total });
+            }
+
+            int pessoais = _service.ContarClientesUnicosPorUserId(userId);
+            return Ok(new { totalClientes = pessoais });
         }
-
     }
 }

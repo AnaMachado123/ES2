@@ -60,8 +60,12 @@ namespace front.Pages
                     }
                 }
 
-                // Buscar projetos
-                var response = await client.GetAsync("api/Projeto");
+                // 🔄 Escolher endpoint com base no modo e role
+                var endpointProjetos = (ModoVisualizacao == "todos" && RoleUtilizador == "Admin")
+                    ? "api/projeto/todos"
+                    : "api/projeto";
+
+                var response = await client.GetAsync(endpointProjetos);
                 if (response.IsSuccessStatusCode)
                 {
                     var json = await response.Content.ReadAsStringAsync();
@@ -76,8 +80,8 @@ namespace front.Pages
                     }
                 }
 
-                // ✅ Buscar número real de clientes únicos via novo endpoint
-                var clientesResponse = await client.GetAsync("api/projeto/clientes/count");
+                // ✅ Corrigido: passar 'modo' ao endpoint de contagem
+                var clientesResponse = await client.GetAsync($"api/projeto/clientes/contagem?modo={ModoVisualizacao}");
                 if (clientesResponse.IsSuccessStatusCode)
                 {
                     var json = await clientesResponse.Content.ReadAsStringAsync();
@@ -98,13 +102,10 @@ namespace front.Pages
         {
             public int Id { get; set; }
             public string? Nome { get; set; }
-
-            public string? Cliente { get; set; } = ""; // Pode vir nulo
+            public string? Cliente { get; set; } = "";
             public int ClienteId { get; set; }
-
             public string? Estado { get; set; } = "Indefinido";
-
-            public string? Status => Estado; // Compatibilidade
+            public string? Status => Estado;
         }
 
         public class UserInfoDTO
