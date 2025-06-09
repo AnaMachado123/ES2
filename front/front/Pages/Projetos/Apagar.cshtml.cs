@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text.Json;
-using System.Threading.Tasks;
+using front.Models;
 
 namespace front.Pages.Projetos
 {
@@ -21,8 +22,13 @@ namespace front.Pages.Projetos
         public async Task<IActionResult> OnGetAsync(int id)
         {
             var client = _httpClientFactory.CreateClient("Backend");
-            var response = await client.GetAsync($"api/Projeto/{id}");
 
+            var token = HttpContext.Session.GetString("AuthToken");
+            if (string.IsNullOrEmpty(token)) return RedirectToPage("/Login");
+
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await client.GetAsync($"api/Projeto/{id}/detalhado");
             if (!response.IsSuccessStatusCode)
             {
                 TempData["MensagemSucesso"] = "Erro ao buscar o projeto.";
@@ -48,27 +54,17 @@ namespace front.Pages.Projetos
         public async Task<IActionResult> OnPostAsync()
         {
             var client = _httpClientFactory.CreateClient("Backend");
+
+            var token = HttpContext.Session.GetString("AuthToken");
+            if (string.IsNullOrEmpty(token)) return RedirectToPage("/Login");
+
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
             var response = await client.DeleteAsync($"api/Projeto/{Projeto.Id}");
 
-            if (response.IsSuccessStatusCode)
-            {
-                // ✅ Lê a mensagem vinda da API
-                var json = await response.Content.ReadAsStringAsync();
-                var result = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
-
-                if (result != null && result.TryGetValue("message", out string msg))
-                {
-                    TempData["MensagemSucesso"] = msg;
-                }
-                else
-                {
-                    TempData["MensagemSucesso"] = "Projeto apagado com sucesso.";
-                }
-            }
-            else
-            {
-                TempData["MensagemSucesso"] = "Erro ao apagar o projeto.";
-            }
+            TempData["MensagemSucesso"] = response.IsSuccessStatusCode
+                ? "Projeto apagado com sucesso."
+                : "Erro ao apagar o projeto.";
 
             return RedirectToPage("/Projetos/Index");
         }
@@ -77,7 +73,7 @@ namespace front.Pages.Projetos
         {
             public int Id { get; set; }
             public string Nome { get; set; } = string.Empty;
-            public string Cliente { get; set; } = string.Empty;
+            public string NomeCliente { get; set; } = string.Empty;
             public string Estado { get; set; } = string.Empty;
         }
     }

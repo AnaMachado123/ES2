@@ -193,10 +193,15 @@ namespace BackendTesteESII.Services
 
         public bool Delete(int id)
         {
-            var projeto = _context.Projetos.Find(id);
+            var projeto = _context.Projetos
+                .Include(p => p.Tarefas)
+                .FirstOrDefault(p => p.Id == id);
+
             if (projeto == null) return false;
 
+            _context.Tarefas.RemoveRange(projeto.Tarefas);
             _context.Projetos.Remove(projeto);
+
             _context.SaveChanges();
             return true;
         }
