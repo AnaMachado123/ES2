@@ -37,14 +37,34 @@ namespace BackendTesteESII.Services
         }
 
         public IEnumerable<ProjetoDTO> GetByUserId(int userId)
-        {
+        {   
             var clientes = _context.Clientes.ToDictionary(c => c.Id, c => c.Nome);
 
-            var projetos = _context.Projetos
-                .Where(p => p.UtilizadorId == userId)
+            var projetosCriados = _context.Projetos
+                .Where(p => p.UtilizadorId == userId);
+
+            var projetosAssociados = _context.UtilizadorProjetos
+                .Include(up => up.Projeto)
+                .Where(up => up.UtilizadorId == userId)
+                .Select(up => up.Projeto);
+
+            var todosProjetos = projetosCriados
+                .Union(projetosAssociados)
+                .Distinct()
                 .ToList();
 
-            return projetos.Select(p => new ProjetoDTO
+
+            /*var projetos = _context.Projetos
+                .Where(p => p.UtilizadorId == userId)
+                .ToList();
+            
+            var projetos = _context.UtilizadorProjetos
+                .Include(up => up.Projeto)
+                .Where(up => up.UtilizadorId == userId)
+                .Select(up => up.Projeto)
+                .ToList();*/
+
+            return todosProjetos.Select(p => new ProjetoDTO
             {
                 Id = p.Id,
                 Nome = p.Nome,
@@ -92,15 +112,14 @@ namespace BackendTesteESII.Services
                 }).ToList();
 
             var membros = _context.UtilizadorProjetos
-                .Where(up => up.ProjetoId == projeto.Id)
                 .Include(up => up.Utilizador)
+                .Where(up => up.ProjetoId == projeto.Id)
                 .Select(up => new MembroDTO
                 {
                     Id = up.Utilizador.Id,
                     Nome = up.Utilizador.Nome,
                     Email = up.Utilizador.Email
-                })
-                .ToList();
+                }).ToList();
 
 
             return new ProjetoDetalhadoDTO

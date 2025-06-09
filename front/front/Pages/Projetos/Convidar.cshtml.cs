@@ -19,7 +19,11 @@ namespace front.Pages.Projetos
         public int ProjetoId { get; set; }
 
         public List<UtilizadorDTO> Utilizadores { get; set; } = new();
-        public string? Mensagem { get; set; }
+        //public string? Mensagem { get; set; }
+
+        [TempData]
+        public string? MensagemConvite { get; set; }
+
 
         public class UtilizadorDTO
         {
@@ -51,11 +55,12 @@ namespace front.Pages.Projetos
             var response = await client.PostAsync("api/Convite", content);
 
             if (response.IsSuccessStatusCode)
-                Mensagem = "Convite enviado com sucesso!";
+                MensagemConvite = "Convite enviado com sucesso!";
             else
-                Mensagem = "Erro ao enviar convite.";
+                MensagemConvite = "Erro ao enviar convite.";
 
-            return RedirectToPage(new { ProjetoId = ProjetoId });
+            //return RedirectToPage(new { ProjetoId = ProjetoId });
+            return RedirectToPage(new { id = ProjetoId });
         }
     }
 }

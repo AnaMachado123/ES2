@@ -3,6 +3,8 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http.Headers;
+
 
 namespace front.Pages
 {
@@ -49,13 +51,37 @@ namespace front.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAceitarAsync(int id)
+        /*public async Task<IActionResult> OnPostAceitarAsync(int id)
         {
             var client = _httpClientFactory.CreateClient("Backend");
             var content = new StringContent("\"Aceite\"", Encoding.UTF8, "application/json");
             await client.PutAsync($"api/Convite/{id}/estado", content);
             return RedirectToPage();
+        }*/
+
+        public async Task<IActionResult> OnPostAceitarAsync(int id)
+        {
+            var token = HttpContext.Session.GetString("AuthToken");
+            if (string.IsNullOrEmpty(token))
+                return RedirectToPage("/Login");
+
+            var client = _httpClientFactory.CreateClient("Backend");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await client.PutAsync($"api/Convite/{id}/aceitar", null);
+
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["Mensagem"] = "Convite aceite com sucesso!";
+            }
+            else
+            {
+                TempData["Mensagem"] = "Erro ao aceitar o convite.";
+            }
+
+            return RedirectToPage();
         }
+
 
         public async Task<IActionResult> OnPostRecusarAsync(int id)
         {

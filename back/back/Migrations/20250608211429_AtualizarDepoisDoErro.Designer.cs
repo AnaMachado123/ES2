@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendTesteESII.Migrations
 {
     [DbContext(typeof(GestaoServicosClientesContext))]
-    [Migration("20250608205259_SincronizarEstado")]
-    partial class SincronizarEstado
+    [Migration("20250608211429_AtualizarDepoisDoErro")]
+    partial class AtualizarDepoisDoErro
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

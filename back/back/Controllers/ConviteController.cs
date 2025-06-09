@@ -77,16 +77,27 @@ public class ConviteController : ControllerBase
     }
 
 
-    
+
     [HttpPut("{id}/recusar")]
     public IActionResult RecusarConvite(int id)
     {
         var sucesso = _service.RecusarConvite(id);
         if (!sucesso)
             return BadRequest("Não foi possível recusar o convite.");
-    
+
         return Ok("Convite recusado com sucesso.");
     }
+    
+    [HttpPut("{id}/aceitar")]
+    public IActionResult AceitarConvite(int id)
+    {
+        var sucesso = _service.AceitarConvite(id);
+        if (!sucesso)
+            return BadRequest("Não foi possível aceitar o convite.");
+
+        return Ok("Convite aceite com sucesso.");
+    }
+
 
 
     

@@ -22,7 +22,9 @@ namespace front.Pages.Projetos
                 var client = _httpClientFactory.CreateClient("Backend");
 
                 // 🔐 Adicionar JWT ao header Authorization
-                if (Request.Cookies.TryGetValue("jwt", out string? jwt))
+                //if (Request.Cookies.TryGetValue("jwt", out string? jwt))
+                string? jwt = HttpContext.Session.GetString("AuthToken");
+                if(!string.IsNullOrEmpty(jwt))
                 {
                     client.DefaultRequestHeaders.Authorization =
                         new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
