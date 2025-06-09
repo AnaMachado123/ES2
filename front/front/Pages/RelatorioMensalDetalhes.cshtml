@@ -5,31 +5,42 @@
 }
 
 <div class="min-h-screen bg-[url('/images/background.png')] bg-cover bg-fixed bg-no-repeat py-10">
+    <div class="max-w-3xl mx-auto mt-10 bg-white rounded-lg shadow-md p-8 space-y-6">
 
-<div class="max-w-3xl mx-auto mt-10 bg-white rounded-lg shadow-md p-8 space-y-6">
+        <h2 class="text-2xl font-bold text-green-800">Relatório nº @Model.Relatorio.Id</h2>
 
-    <h2 class="text-2xl font-bold text-green-800">Relatório nº @Model.Relatorio.Id</h2>
+        <div class="text-gray-700 space-y-2">
+            <p><strong>Mês/Ano:</strong> @Model.Relatorio.Mes / @Model.Relatorio.Ano</p>
+            <p><strong>Total de Horas:</strong> @Model.Relatorio.TotalHoras</p>
+            <p><strong>Total Faturado:</strong> @Model.Relatorio.TotalPreco €</p>
 
-    <div class="text-gray-700 space-y-2">
-        <p><strong>Mês/Ano:</strong> @Model.Relatorio.Mes / @Model.Relatorio.Ano</p>
-        <p><strong>Total de Horas:</strong> @Model.Relatorio.TotalHoras</p>
-        <p><strong>Total Faturado:</strong> @Model.Relatorio.TotalPreco €</p>
+            @if (!string.IsNullOrEmpty(Model.Relatorio.Texto))
+            {
+                <div class="mt-4 bg-gray-50 border border-gray-200 p-4 rounded">
+                    <p class="text-gray-600"><strong>Observações:</strong></p>
+                    <p class="italic">@Model.Relatorio.Texto</p>
+                </div>
+            }
+        </div>
 
-        @if (!string.IsNullOrEmpty(Model.Relatorio.Texto))
-        {
-            <div class="mt-4 bg-gray-50 border border-gray-200 p-4 rounded">
-                <p class="text-gray-600"><strong>Observações:</strong></p>
-                <p class="italic">@Model.Relatorio.Texto</p>
-            </div>
-        }
+        <!-- ✅ Botão de Exportação PDF -->
+        <div class="pt-4">
+            <form method="get" action="/api/relatorio/mensal/pdf" target="_blank">
+                <input type="hidden" name="utilizadorId" value="@Model.Relatorio.UtilizadorId" />
+                <input type="hidden" name="mes" value="@Model.Relatorio.Mes" />
+                <input type="hidden" name="ano" value="@Model.Relatorio.Ano" />
+                <button type="submit"
+                        class="inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+                    Exportar para PDF
+                </button>
+            </form>
+        </div>
+
+        <div class="pt-4">
+            <a href="/RelatorioMensal"
+               class="inline-block bg-green-100 text-green-800 px-4 py-2 rounded hover:bg-green-200 transition">
+                ← Voltar à Lista
+            </a>
+        </div>
     </div>
-
-    <div class="pt-4">
-        <a href="/RelatorioMensal"
-           class="inline-block bg-green-100 text-green-800 px-4 py-2 rounded hover:bg-green-200 transition">
-            ← Voltar à Lista
-        </a>
-    </div>
-</div>
-
 </div>

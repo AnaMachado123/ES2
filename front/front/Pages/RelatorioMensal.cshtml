@@ -1,13 +1,13 @@
 @page
-@model RelatorioMensalModel
+@model front.Pages.RelatorioMensalModel
 @{
     ViewData["Title"] = "Relatório Mensal";
 }
 
-<!-- FUNDO FIXO -->
+<!-- Fundo -->
 <div class="fixed inset-0 w-full h-full bg-[url('/images/background.png')] bg-cover bg-center -z-10"></div>
 
-<!-- CONTEÚDO -->
+<!-- Conteúdo -->
 <div class="relative min-h-screen w-full p-10 z-10">
     <div class="max-w-3xl mx-auto bg-white bg-opacity-90 rounded-lg shadow-md p-8 space-y-6">
 
@@ -34,23 +34,45 @@
         </form>
 
         <!-- Resultado -->
-        @if (Model.Relatorios != null && Model.Relatorios.Any())
+        @if (Model.RelatoriosMensais != null && Model.RelatoriosMensais.Any())
         {
-            var relatorio = Model.Relatorios.First(); <!-- Mostrar só o primeiro -->
+            <div class="mt-8 space-y-4">
+                <h3 class="text-xl font-semibold text-green-700">Resultados do Relatório</h3>
 
-            <div class="mt-8 border-t pt-6 space-y-2 text-gray-800">
-                <h3 class="text-xl font-semibold text-green-700">Relatório nº @relatorio.Id</h3>
+                <table class="min-w-full bg-white border border-gray-300 text-center text-sm">
+                    <thead class="bg-green-100 font-bold text-green-800">
+                        <tr>
+                            <th class="p-2 border">Dia</th>
+                            <th class="p-2 border">Projeto</th>
+                            <th class="p-2 border">Horas</th>
+                            <th class="p-2 border">Valor (€)</th>
+                            <th class="p-2 border">Excedeu</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.RelatoriosMensais)
+                        {
+                            <tr class="hover:bg-gray-100">
+                                <td class="p-2 border">@item.Dia</td>
+                                <td class="p-2 border">@item.NomeProjeto</td>
+                                <td class="p-2 border">@item.TotalHoras</td>
+                                <td class="p-2 border">@item.TotalPreco.ToString("F2")</td>
+                                <td class="p-2 border">@(item.ExcedeuLimite ? "Sim" : "Não")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
 
-                <p><strong>Mês:</strong> @relatorio.Mes</p>
-                <p><strong>Ano:</strong> @relatorio.Ano</p>
-
-                <!-- Nome do projeto (placeholder por agora) -->
-                <p><strong>Projeto:</strong> Nome do Projeto aqui</p>
-
-                <a asp-page="/RelatorioMensalDetalhes" asp-route-id="@relatorio.Id"
-                   class="text-green-700 hover:underline">
-                   Ver detalhes...
-                </a>
+                <!-- Exportar PDF -->
+                <form method="get" asp-page="/RelatorioMensalDetalhes" action="/api/relatorio/mensal/pdf" target="_blank">
+                    <input type="hidden" name="utilizadorId" value="@Model.UtilizadorId" />
+                    <input type="hidden" name="mes" value="@Model.Mes" />
+                    <input type="hidden" name="ano" value="@Model.Ano" />
+                    <button type="submit"
+                            class="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+                        Exportar para PDF
+                    </button>
+                </form>
             </div>
         }
         else if (Model.Mes != 0 && Model.Ano != 0)
