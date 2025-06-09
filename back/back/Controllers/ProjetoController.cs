@@ -23,8 +23,7 @@ namespace BackendTesteESII.Controllers
             if (userIdStr == null)
                 return Unauthorized();
 
-            int userId = int.Parse(userIdStr); // ← o UtilizadorId é inteiro, dí a conversão
-
+            int userId = int.Parse(userIdStr);
             return Ok(_service.GetByUserId(userId));
         }
 
@@ -41,12 +40,10 @@ namespace BackendTesteESII.Controllers
             var userIdStr = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             if (userIdStr == null) return Unauthorized();
 
-            int userId = int.Parse(userIdStr); // UtilizadorId como int
-
+            int userId = int.Parse(userIdStr);
             var novo = _service.Create(dto, userId);
             return CreatedAtAction(nameof(GetProjeto), new { id = novo.Id }, novo);
         }
-
 
         [HttpPut("{id}")]
         public IActionResult PutProjeto(int id, Projeto projeto)
@@ -56,10 +53,21 @@ namespace BackendTesteESII.Controllers
             return _service.Update(id, projeto) ? NoContent() : NotFound();
         }
 
+        // ✅ ATUALIZADO: Apagar projeto com mensagem personalizada
         [HttpDelete("{id}")]
         public IActionResult DeleteProjeto(int id)
         {
-            return _service.Delete(id) ? NoContent() : NotFound();
+            var projeto = _service.GetById(id);
+            if (projeto == null)
+                return NotFound("Projeto não encontrado.");
+
+            var nome = projeto.Nome;
+
+            var apagado = _service.Delete(id);
+            if (!apagado)
+                return BadRequest("Erro ao apagar o projeto.");
+
+            return Ok(new { message = $"Projeto \"{nome}\" apagado com sucesso!" });
         }
 
         [HttpGet("{id}/detalhado")]
@@ -68,23 +76,6 @@ namespace BackendTesteESII.Controllers
             var projeto = _service.GetDetalhadoById(id);
             return projeto == null ? NotFound() : Ok(projeto);
         }
-        
-        /*[HttpGet("{id}/membros")]
-        public IActionResult GetMembrosDoProjeto(int id)
-        {
-            var projeto = _service.GetProjetoComMembros(id);
-            if (projeto == null) return NotFound();
-
-            var membros = projeto.UtilizadorProjetos
-                .Select(up => new
-                {
-                    up.Utilizador.Id,
-                    up.Utilizador.Nome,
-                    up.Utilizador.Email
-                }).ToList();
-
-            return Ok(membros);
-        }*/
 
         [HttpPut("{id}/concluir")]
         public IActionResult ConcluirProjeto(int id)

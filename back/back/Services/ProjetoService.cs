@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace BackendTesteESII.Services
 {
     public class ProjetoService : IProjetoService
@@ -22,22 +21,18 @@ namespace BackendTesteESII.Services
             var projetos = _context.Projetos.ToList();
             var clientes = _context.Clientes.ToDictionary(c => c.Id, c => c.Nome);
 
-            var lista = projetos.Select(p => new ProjetoDTO
+            return projetos.Select(p => new ProjetoDTO
             {
                 Id = p.Id,
                 Nome = p.Nome,
                 Descricao = p.Descricao,
                 Estado = p.Estado,
-                //Cliente = clientes.TryGetValue(p.ClienteId, out var nome) ? nome : "Desconhecido"
-                Cliente = p.ClienteId.ToString()
-
+                Cliente = clientes.TryGetValue(p.ClienteId, out var nome) ? nome : "Desconhecido"
             }).ToList();
-
-            return lista;
         }
 
         public IEnumerable<ProjetoDTO> GetByUserId(int userId)
-        {   
+        {
             var clientes = _context.Clientes.ToDictionary(c => c.Id, c => c.Nome);
 
             var projetosCriados = _context.Projetos
@@ -53,17 +48,6 @@ namespace BackendTesteESII.Services
                 .Distinct()
                 .ToList();
 
-
-            /*var projetos = _context.Projetos
-                .Where(p => p.UtilizadorId == userId)
-                .ToList();
-            
-            var projetos = _context.UtilizadorProjetos
-                .Include(up => up.Projeto)
-                .Where(up => up.UtilizadorId == userId)
-                .Select(up => up.Projeto)
-                .ToList();*/
-
             return todosProjetos.Select(p => new ProjetoDTO
             {
                 Id = p.Id,
@@ -77,18 +61,15 @@ namespace BackendTesteESII.Services
             });
         }
 
+        public Projeto? GetById(int id)
+        {
+            return _context.Projetos.FirstOrDefault(p => p.Id == id);
+        }
 
-
-
-        //public Projeto GetById(int id) => _context.Projetos.Find(id);
         public ProjetoDetalhadoDTO? GetDetalhadoById(int id)
         {
-            var projeto = _context.Projetos
-                .Where(p => p.Id == id)
-                .FirstOrDefault();
-
-            if (projeto == null)
-                return null;
+            var projeto = _context.Projetos.FirstOrDefault(p => p.Id == id);
+            if (projeto == null) return null;
 
             var clienteNome = _context.Clientes
                 .Where(c => c.Id == projeto.ClienteId)
@@ -121,7 +102,6 @@ namespace BackendTesteESII.Services
                     Email = up.Utilizador.Email
                 }).ToList();
 
-
             return new ProjetoDetalhadoDTO
             {
                 Nome = projeto.Nome,
@@ -139,7 +119,6 @@ namespace BackendTesteESII.Services
             };
         }
 
-
         public Projeto Create(ProjetoCreateDTO dto, int userId)
         {
             var novoProjeto = new Projeto
@@ -155,9 +134,8 @@ namespace BackendTesteESII.Services
             };
 
             _context.Projetos.Add(novoProjeto);
-            _context.SaveChanges(); // Garante que o projeto recebe o ID
+            _context.SaveChanges();
 
-            // Agora associa tarefas manualmente com o ID correto
             foreach (var tarefa in dto.Tarefas)
             {
                 var novaTarefa = new Tarefa
@@ -168,7 +146,7 @@ namespace BackendTesteESII.Services
                     Status = tarefa.Status,
                     HorasGastas = tarefa.HorasGastas,
                     UtilizadorId = userId,
-                    ProjetoId = novoProjeto.Id 
+                    ProjetoId = novoProjeto.Id
                 };
 
                 _context.Tarefas.Add(novaTarefa);
@@ -177,8 +155,6 @@ namespace BackendTesteESII.Services
             _context.SaveChanges();
             return novoProjeto;
         }
-
-
 
         public bool Update(int id, Projeto projeto)
         {
@@ -212,7 +188,7 @@ namespace BackendTesteESII.Services
         {
             return _context.Projetos
                 .Include(p => p.UtilizadorProjetos)
-                    .ThenInclude(up => up.Utilizador)
+                .ThenInclude(up => up.Utilizador)
                 .FirstOrDefault(p => p.Id == projetoId);
         }
 
@@ -221,11 +197,10 @@ namespace BackendTesteESII.Services
             var projeto = _context.Projetos.FirstOrDefault(p => p.Id == id);
             if (projeto == null) return false;
 
-            projeto.Estado = "Concluído"; //  Corrigido
+            projeto.Estado = "Concluído";
             _context.SaveChanges();
             return true;
         }
-
 
         public decimal CalcularValorTotalProjeto(int projetoId)
         {
@@ -240,11 +215,11 @@ namespace BackendTesteESII.Services
 
             return precoHora * totalHoras;
         }
-        
+
         public List<MembroDTO> GetMembrosDoProjeto(int projetoId)
         {
             return _context.UtilizadorProjetos
-                .Include(up => up.Utilizador) // se navigation property não for carregada automaticamente
+                .Include(up => up.Utilizador)
                 .Where(up => up.ProjetoId == projetoId)
                 .Select(up => new MembroDTO
                 {
@@ -254,6 +229,5 @@ namespace BackendTesteESII.Services
                 })
                 .ToList();
         }
-
     }
 }
