@@ -1,0 +1,9 @@
+bin/
+obj/
+build/
+node_modules/
+.vscode/
+*.user
+*.db
+*.log
+back/back/appsettings.json

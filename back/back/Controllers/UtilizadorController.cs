@@ -3,9 +3,8 @@ using BackendTesteESII.Models;
 using BackendTesteESII.Models.DTOs;
 using BackendTesteESII.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
-using BackendTesteESII.Data; 
+using BackendTesteESII.Data;
 
 namespace BackendTesteESII.Controllers
 {
@@ -61,14 +60,20 @@ namespace BackendTesteESII.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult PutUtilizador(int id, Utilizador utilizador)
+        public IActionResult PutUtilizador(int id, [FromBody] UtilizadorUpdateDTO dto)
         {
-            if (id != utilizador.Id)
-                return BadRequest();
-
-            if (!_service.Update(id, utilizador))
+            var utilizador = _context.Utilizadores.FirstOrDefault(u => u.Id == id);
+            if (utilizador == null)
                 return NotFound();
 
+            utilizador.Nome = dto.Nome;
+            utilizador.Email = dto.Email;
+            utilizador.HorasDia = dto.CargaHorariaDiaria;
+
+            // ✅ Atualizar imagem do perfil
+            utilizador.ImagemPerfil = dto.ImagemPerfil ?? utilizador.ImagemPerfil;
+
+            _context.SaveChanges();
             return NoContent();
         }
 
@@ -97,7 +102,6 @@ namespace BackendTesteESII.Controllers
             return sucesso ? Ok("Email enviado com sucesso.") : NotFound("Utilizador não encontrado.");
         }
 
-       
         [Authorize]
         [HttpGet("me")]
         public IActionResult GetUserInfo()
@@ -114,9 +118,12 @@ namespace BackendTesteESII.Controllers
 
             var userInfo = new UserInfoDTO
             {
+                Id = utilizador.Id,
                 Nome = utilizador.Nome,
                 Email = utilizador.Email,
-                Role = utilizador.Tipo
+                Role = utilizador.Tipo,
+                CargaHorariaDiaria = utilizador.HorasDia,
+                ImagemPerfil = utilizador.ImagemPerfil
             };
 
             return Ok(userInfo);

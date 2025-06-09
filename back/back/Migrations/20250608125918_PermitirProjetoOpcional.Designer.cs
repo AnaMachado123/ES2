@@ -3,6 +3,7 @@ using System;
 using BackendTesteESII.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BackendTesteESII.Migrations
 {
     [DbContext(typeof(GestaoServicosClientesContext))]
-    partial class GestaoServicosClientesContextModelSnapshot : ModelSnapshot
+    [Migration("20250608125918_PermitirProjetoOpcional")]
+    partial class PermitirProjetoOpcional
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -266,10 +269,6 @@ namespace BackendTesteESII.Migrations
 
                     b.Property<int>("HorasDia")
                         .HasColumnType("integer");
-
-                    b.Property<string>("ImagemPerfil")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<bool>("IsAdmin")
                         .HasColumnType("boolean")

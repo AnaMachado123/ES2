@@ -61,11 +61,11 @@
             }
         </div>
 
-        <!-- Tarefas Individuais -->
+      <!-- Tarefas Individuais -->
         <div>
             <div class="flex justify-between items-center mb-4 mt-10">
                 <h2 class="text-xl font-bold text-blue-700">Tarefas Individuais</h2>
-                <a href="/CriarTarefaIndividual" class="text-sm text-blue-700 hover:underline font-medium">+ Criar Tarefa Individual</a>
+                <a href="/TarefasIndividuais" class="text-sm text-green-700 hover:underline font-medium">Ver todas</a>
             </div>
 
             @if (Model.TarefasIndividuais.Any())
@@ -78,12 +78,21 @@
                         Início: @tarefa.DataInicio.ToString("HH:mm")
                     </div>
                 }
+
+                <!-- ✅ Criar tarefa individual aqui no fim -->
+                <div class="mt-4">
+                    <a href="/CriarTarefaIndividual" class="text-sm text-blue-700 hover:underline font-medium">+ Criar Tarefa Individual</a>
+                </div>
             }
             else
             {
                 <p class="text-gray-600">Nenhuma tarefa individual encontrada.</p>
+
+                <!-- Ainda assim mostrar botão de criar -->
+                <div class="mt-4">
+                    <a href="/CriarTarefaIndividual" class="text-sm text-blue-700 hover:underline font-medium">+ Criar Tarefa Individual</a>
+                </div>
             }
         </div>
-
     </div>
 </div>

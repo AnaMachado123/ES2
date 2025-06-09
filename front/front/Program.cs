@@ -2,19 +2,37 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Razor Pages e dependências
 builder.Services.AddRazorPages();
-builder.Services.AddSession();
 builder.Services.AddAuthorization();
+builder.Services.AddHttpContextAccessor(); // Para aceder ao contexto da requisição
 
-// Registar o HttpClient nomeado (opcional)
-builder.Services.AddHttpClient("Backend", client =>
+// ✅ Sessão com timeout de 2 horas
+builder.Services.AddSession(options =>
 {
-    client.BaseAddress = new Uri("http://localhost:5176/"); // URL do backend
+    options.IdleTimeout = TimeSpan.FromHours(2); // ← mantém login ativo por 2h
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
 });
 
-// Registar o TarefaService com HttpClient dedicado
-builder.Services.AddHttpClient<front.Services.TarefaService>(client =>
+// ✅ HttpClient genérico (opcional)
+builder.Services.AddHttpClient("Backend", client =>
 {
-    client.BaseAddress = new Uri("http://localhost:5176/"); // URL da tua Web API
+    client.BaseAddress = new Uri("http://localhost:5176/"); // URL do teu backend
+});
+
+// ✅ HttpClient com JWT automático (para TarefaService)
+builder.Services.AddHttpClient<front.Services.TarefaService>((provider, client) =>
+{
+    var accessor = provider.GetRequiredService<IHttpContextAccessor>();
+    var context = accessor.HttpContext;
+
+    var token = context?.Request.Cookies["jwt"];
+    if (!string.IsNullOrEmpty(token))
+    {
+        client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+    }
+
+    client.BaseAddress = new Uri("http://localhost:5176/");
 });
 
 var app = builder.Build();
@@ -29,8 +47,11 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+// ✅ Ordem correta do middleware
+app.UseSession();       // ← Tem de vir antes do Razor Pages
 app.UseAuthorization();
-app.UseSession(); // Middleware de sessão
 
 app.MapRazorPages();
+
 app.Run();

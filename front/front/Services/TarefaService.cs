@@ -36,7 +36,21 @@ namespace front.Services
 
         public async Task<bool> CreateTarefaAsync(Tarefa nova)
         {
+            Console.WriteLine("🚀 Enviando tarefa:");
+            Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(nova));
+
             var response = await _http.PostAsJsonAsync("/api/tarefa", nova);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var erro = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"❌ Erro ao criar tarefa: {response.StatusCode} → {erro}");
+            }
+            else
+            {
+                Console.WriteLine("✅ Tarefa criada com sucesso.");
+            }
+
             return response.IsSuccessStatusCode;
         }
 

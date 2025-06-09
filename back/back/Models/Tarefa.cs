@@ -1,9 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using System.Text.Json.Serialization;
-
-
 
 namespace BackendTesteESII.Models;
 
@@ -27,20 +24,17 @@ public class Tarefa
     [Column("data_fim")]
     public DateTime DataFim { get; set; }
 
-    [Required]
+    // 🔁 Atualizado: removido [Required]
     [Column("status")]
     [StringLength(50)]
     public string Status { get; set; } = string.Empty;
 
-    [Required]
     [Column("projeto_id")]
-    public int ProjetoId { get; set; }
+    public int? ProjetoId { get; set; }
 
-    // 🔗 Relacionamento com Projeto (1 Projeto tem muitas Tarefas)
     [ForeignKey("ProjetoId")]
     [JsonIgnore]
     public Projeto? Projeto { get; set; }
-
 
     [Required]
     [Column("utilizador_id")]
@@ -52,5 +46,4 @@ public class Tarefa
 
     [ForeignKey("UtilizadorId")]
     public Utilizador? Utilizador { get; set; }
-
 }
