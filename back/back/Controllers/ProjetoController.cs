@@ -29,6 +29,21 @@ namespace BackendTesteESII.Controllers
             return Ok(_service.GetByUserId(userId));
         }
 
+        [HttpGet("todos")]
+        public IActionResult GetTodosProjetos()
+        {
+            var userIdStr = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+
+            if (userIdStr == null)
+                return Unauthorized();
+
+            if (role != "Admin")
+                return Forbid();
+
+            return Ok(_service.GetAll());
+        }
+
         [HttpGet("{id}")]
         public IActionResult GetProjeto(int id)
         {
@@ -58,7 +73,16 @@ namespace BackendTesteESII.Controllers
         [HttpDelete("{id}")]
         public IActionResult DeleteProjeto(int id)
         {
-            return _service.Delete(id) ? NoContent() : NotFound();
+            var projeto = _service.GetById(id);
+            if (projeto == null)
+                return NotFound("Projeto não encontrado.");
+
+            var nome = projeto.Nome;
+            var apagado = _service.Delete(id);
+            if (!apagado)
+                return BadRequest("Erro ao apagar o projeto.");
+
+            return Ok(new { message = $"Projeto \"{nome}\" apagado com sucesso!" });
         }
 
         [HttpGet("{id}/detalhado")]
@@ -87,6 +111,26 @@ namespace BackendTesteESII.Controllers
         {
             var membros = _service.GetMembrosDoProjeto(id);
             return Ok(membros);
+        }
+
+        [HttpGet("clientes/contagem")]
+        public IActionResult GetNumeroClientes([FromQuery] string? modo = "meus")
+        {
+            var userIdStr = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+            if (userIdStr == null)
+                return Unauthorized();
+
+            int userId = int.Parse(userIdStr);
+
+            if (modo == "todos" && role == "Admin")
+            {
+                int total = _service.ContarTodosClientesUnicos();
+                return Ok(new { totalClientes = total });
+            }
+
+            int pessoais = _service.ContarClientesUnicosPorUserId(userId);
+            return Ok(new { totalClientes = pessoais });
         }
     }
 }

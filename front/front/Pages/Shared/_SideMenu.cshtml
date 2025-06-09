@@ -30,6 +30,12 @@
                 <i class="bi bi-check2-square"></i> Tarefas
             </a>
 
+            <a href="/RelatorioMensal"
+               class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium
+                      @(active == "Relatorios" ? "bg-white text-green-900" : "text-white hover:bg-green-800")">
+                <i class="bi bi-bar-chart-fill"></i> Relatórios
+            </a>
+
             <a href="/PerfilVisualizar"
                class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium
                       @(active == "Perfil" ? "bg-white text-green-900" : "text-white hover:bg-green-800")">
@@ -41,7 +47,6 @@
                       @(active == "Convites" ? "bg-white text-green-900" : "text-white hover:bg-green-800")">
                 <i class="bi bi-envelope-fill"></i> Meus Convites
             </a>
-
         </nav>
     </div>
 

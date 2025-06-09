@@ -11,10 +11,12 @@ namespace BackendTesteESII.Services
         bool Update(int id, Projeto projeto);
         bool Delete(int id);
         IEnumerable<ProjetoDTO> GetByUserId(int userId);
-
+        Projeto? GetById(int id);
         Projeto? GetProjetoComMembros(int projetoId);
         bool ConcluirProjeto(int id);
         decimal CalcularValorTotalProjeto(int projetoId);
         List<MembroDTO> GetMembrosDoProjeto(int projetoId);
+        int ContarClientesUnicosPorUserId(int userId);
+        int ContarTodosClientesUnicos(); // ✅ NOVO
     }
 }

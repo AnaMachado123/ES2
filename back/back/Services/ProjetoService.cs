@@ -27,10 +27,14 @@ namespace BackendTesteESII.Services
                 Nome = p.Nome,
                 Descricao = p.Descricao,
                 Estado = p.Estado,
+<<<<<<< HEAD
                 Cliente = clientes.TryGetValue(p.ClienteId, out var nome) ? nome : "Desconhecido",
                 DataInicio = p.DataInicio,
                 DataFim = p.DataFim,
                 HorasTrabalho = p.HorasTrabalho // usado como preço/hora
+=======
+                Cliente = clientes.TryGetValue(p.ClienteId, out var nome) ? nome : "Desconhecido"
+>>>>>>> b2443abf1f8c2e1b245d2ba03977a006b4bfb1ec
             }).ToList();
         }
 
@@ -63,6 +67,14 @@ namespace BackendTesteESII.Services
             });
         }
 
+<<<<<<< HEAD
+=======
+        public Projeto? GetById(int id)
+        {
+            return _context.Projetos.FirstOrDefault(p => p.Id == id);
+        }
+
+>>>>>>> b2443abf1f8c2e1b245d2ba03977a006b4bfb1ec
         public ProjetoDetalhadoDTO? GetDetalhadoById(int id)
         {
             var projeto = _context.Projetos.FirstOrDefault(p => p.Id == id);
@@ -154,6 +166,7 @@ namespace BackendTesteESII.Services
             return novoProjeto;
         }
 
+<<<<<<< HEAD
         public decimal CalcularValorTotalProjeto(int projetoId)
         {
             var projeto = _context.Projetos
@@ -170,6 +183,8 @@ namespace BackendTesteESII.Services
             return precoHora * totalHorasConcluidas;
         }
 
+=======
+>>>>>>> b2443abf1f8c2e1b245d2ba03977a006b4bfb1ec
         public bool Update(int id, Projeto projeto)
         {
             var existente = _context.Projetos.Find(id);
@@ -202,7 +217,7 @@ namespace BackendTesteESII.Services
         {
             return _context.Projetos
                 .Include(p => p.UtilizadorProjetos)
-                    .ThenInclude(up => up.Utilizador)
+                .ThenInclude(up => up.Utilizador)
                 .FirstOrDefault(p => p.Id == projetoId);
         }
 
@@ -216,6 +231,21 @@ namespace BackendTesteESII.Services
             return true;
         }
 
+        public decimal CalcularValorTotalProjeto(int projetoId)
+        {
+            var projeto = _context.Projetos
+                .Include(p => p.Tarefas)
+                .FirstOrDefault(p => p.Id == projetoId);
+
+            if (projeto == null) return 0;
+
+            decimal precoHora = projeto.HorasTrabalho > 0 ? (decimal)projeto.HorasTrabalho : 1;
+            var totalHoras = projeto.Tarefas.Sum(t => t.HorasGastas);
+
+            return precoHora * totalHoras;
+        }
+
+
         public List<MembroDTO> GetMembrosDoProjeto(int projetoId)
         {
             return _context.UtilizadorProjetos
@@ -227,6 +257,35 @@ namespace BackendTesteESII.Services
                     Nome = up.Utilizador.Nome,
                     Email = up.Utilizador.Email
                 }).ToList();
+        }
+        public int ContarClientesUnicosPorUserId(int userId)
+        {
+            var projetosCriados = _context.Projetos
+                .Where(p => p.UtilizadorId == userId);
+
+            var projetosAssociados = _context.UtilizadorProjetos
+                .Include(up => up.Projeto)
+                .Where(up => up.UtilizadorId == userId)
+                .Select(up => up.Projeto);
+
+            var todosProjetos = projetosCriados
+                .Union(projetosAssociados)
+                .Where(p => p.ClienteId != null)
+                .Distinct()
+                .ToList();
+
+            return todosProjetos
+                .Select(p => p.ClienteId)
+                .Distinct()
+                .Count();
+        }
+        public int ContarTodosClientesUnicos()
+        {
+            return _context.Projetos
+              .Where(p => p.ClienteId != null)
+              .Select(p => p.ClienteId)
+              .Distinct()
+              .Count();
         }
     }
 }

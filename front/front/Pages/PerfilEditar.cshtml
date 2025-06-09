@@ -5,7 +5,11 @@
     Layout = "_Layout";
 }
 
-<div class="min-h-screen flex items-center justify-center bg-cover bg-center" style="background-image: url('/images/background.png');">
+<!-- FUNDO FIXO -->
+<div class="fixed inset-0 w-full h-full bg-[url('/images/background.png')] bg-cover bg-center -z-10"></div>
+
+<!-- CONTEÚDO -->
+<div class="relative min-h-screen w-full p-10 z-10 flex items-center justify-center">
     <div class="bg-white bg-opacity-90 p-10 rounded-2xl shadow-lg w-full max-w-4xl">
         <form method="post">
             <!-- CAMPOS ESCONDIDOS -->

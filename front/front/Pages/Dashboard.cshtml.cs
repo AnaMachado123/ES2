@@ -60,8 +60,12 @@ namespace front.Pages
                     }
                 }
 
-                // Buscar projetos
-                var response = await client.GetAsync("api/Projeto");
+                // 🔄 Escolher endpoint com base no modo e role
+                var endpointProjetos = (ModoVisualizacao == "todos" && RoleUtilizador == "Admin")
+                    ? "api/projeto/todos"
+                    : "api/projeto";
+
+                var response = await client.GetAsync(endpointProjetos);
                 if (response.IsSuccessStatusCode)
                 {
                     var json = await response.Content.ReadAsStringAsync();
@@ -75,30 +79,33 @@ namespace front.Pages
                         Projetos = projetosApi;
                     }
                 }
+
+                // ✅ Corrigido: passar 'modo' ao endpoint de contagem
+                var clientesResponse = await client.GetAsync($"api/projeto/clientes/contagem?modo={ModoVisualizacao}");
+                if (clientesResponse.IsSuccessStatusCode)
+                {
+                    var json = await clientesResponse.Content.ReadAsStringAsync();
+                    var doc = JsonDocument.Parse(json);
+                    TotalClientes = doc.RootElement.GetProperty("totalClientes").GetInt32();
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao carregar projetos: {ex.Message}");
+                Console.WriteLine($"Erro ao carregar dados do dashboard: {ex.Message}");
             }
 
             TotalProjetos = Projetos.Count;
             TarefasPendentes = Projetos.Count(p => p.Estado == "Pendente");
-
-            // Distintos por cliente ID para evitar duplicados quando nomes forem nulos
-            TotalClientes = Projetos.Select(p => p.ClienteId).Distinct().Count();
         }
 
         public class Projeto
         {
             public int Id { get; set; }
             public string? Nome { get; set; }
-
-            public string? Cliente { get; set; } = ""; // Pode vir nulo
+            public string? Cliente { get; set; } = "";
             public int ClienteId { get; set; }
-
             public string? Estado { get; set; } = "Indefinido";
-
-            public string? Status => Estado; // Compatibilidade
+            public string? Status => Estado;
         }
 
         public class UserInfoDTO

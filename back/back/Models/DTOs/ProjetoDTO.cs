@@ -10,5 +10,6 @@ namespace BackendTesteESII.Models.DTOs
         public int HorasTrabalho { get; set; }  // ← representa o preço por hora
         public DateTime DataInicio { get; set; }
         public DateTime? DataFim { get; set; }
+         public int ClienteId { get; set; }
     }
 }

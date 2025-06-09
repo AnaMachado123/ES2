@@ -52,7 +52,18 @@ namespace front.Pages.Projetos
 
             if (response.IsSuccessStatusCode)
             {
-                TempData["MensagemSucesso"] = $"Projeto \"{Projeto.Nome}\" foi apagado com sucesso.";
+                // ✅ Lê a mensagem vinda da API
+                var json = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+
+                if (result != null && result.TryGetValue("message", out string msg))
+                {
+                    TempData["MensagemSucesso"] = msg;
+                }
+                else
+                {
+                    TempData["MensagemSucesso"] = "Projeto apagado com sucesso.";
+                }
             }
             else
             {

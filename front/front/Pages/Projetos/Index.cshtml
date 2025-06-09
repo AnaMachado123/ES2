@@ -5,12 +5,9 @@
     ViewData["ActivePage"] = "Projetos";
 }
 
-<!-- FUNDO aplicado como plano de fundo total -->
 <div class="fixed inset-0 w-full h-full bg-[url('/images/background.png')] bg-cover bg-center -z-10"></div>
 
-<!-- CONTEÚDO da página por cima do fundo -->
 <div class="relative min-h-screen w-full p-10 z-10">
-
     <h1 class="text-3xl font-bold text-green-800 mb-8">Projetos</h1>
 
     @if (TempData["MensagemSucesso"] != null)
@@ -61,7 +58,6 @@
             <span class="text-2xl">+</span> <span>Novo Projeto</span>
         </a>
     </div>
-
 </div>
 
 @section Scripts {
