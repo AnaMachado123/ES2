@@ -6,4 +6,4 @@ node_modules/
 *.user
 *.db
 *.log
-back/back/appsettings.json
+
