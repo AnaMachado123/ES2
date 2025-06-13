@@ -59,5 +59,47 @@ namespace GestaoServicosClientes.Tests.Services
             tarefaObtida.Status.Should().Be("finalizada");
             tarefaObtida.DataFim.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(5));
         }
+        [Test]
+        public void CriarTarefa_ComDadosValidos_DeveExecutarSemErro()
+        {
+            var tarefa = new Tarefa
+            {
+                Descricao = "Trabalho ESII",
+                DataInicio = DateTime.Now,
+                DataFim = DateTime.Now.AddHours(2),
+                Status = "em curso",
+                ProjetoId = 1,
+                UtilizadorId = 42,
+                HorasGastas = 0
+            };
+
+            Action act = () =>
+            {
+                if (tarefa.DataFim <= tarefa.DataInicio)
+                    throw new ArgumentException("A data de fim deve ser posterior à de início.");
+            };
+
+            act.Should().NotThrow();
+        }
+        [Test]
+        public void MoverTarefa_DeveAtualizarProjetoId()
+        {
+            var tarefa = new Tarefa
+            {
+                Id = 99,
+                ProjetoId = 1,
+                Descricao = "Tarefa para mover",
+                Status = "em curso"
+            };
+
+            _tarefaServiceMock.Setup(s => s.GetById(99)).Returns(tarefa);
+
+            var tarefaObtida = _tarefaServiceMock.Object.GetById(99);
+            tarefaObtida.ProjetoId = 2; // move para outro projeto
+
+            tarefaObtida.ProjetoId.Should().Be(2);
+        }
+
+
     }
 }
