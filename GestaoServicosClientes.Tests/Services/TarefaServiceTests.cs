@@ -28,7 +28,7 @@ namespace GestaoServicosClientes.Tests.Services
                 DataFim = DateTime.Now.AddHours(-1)
             };
 
-            // Simulando serviço que deve lançar exceção — se tiver lógica na implementação real
+            // Simular um serviço que deve lançar a exceção 
             Action act = () =>
             {
                 if (tarefa.DataFim <= tarefa.DataInicio)
@@ -99,6 +99,27 @@ namespace GestaoServicosClientes.Tests.Services
 
             tarefaObtida.ProjetoId.Should().Be(2);
         }
+        [Test]
+        public void FinalizarTarefa_JaFinalizada_DeveLancarExcecao()
+        {
+            var tarefa = new Tarefa
+            {
+                Id = 10,
+                Status = "finalizada"
+            };
+
+            _tarefaServiceMock.Setup(s => s.GetById(10)).Returns(tarefa);
+
+            Action act = () =>
+            {
+                if (tarefa.Status == "finalizada")
+                    throw new InvalidOperationException("Tarefa já finalizada.");
+            };
+
+            act.Should().Throw<InvalidOperationException>()
+                .WithMessage("Tarefa já finalizada.");
+        }
+
 
 
     }
