@@ -1,27 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Admin\\Desktop\\UNI\\2ºANO\\2_SEMESTRE\\EngSoftII\\trabalhoPratico\\esfinal\\ES2\\GestaoServicosClientes.Tests\\GestaoServicosClientes.Tests.csproj": {}
+    "C:\\Users\\diana\\OneDrive\\Documentos\\2ano2semestre\\EngenhariadeSoftwareII\\esfinal\\esfinal\\GestaoServicosClientes.Tests\\GestaoServicosClientes.Tests.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Admin\\Desktop\\UNI\\2ºANO\\2_SEMESTRE\\EngSoftII\\trabalhoPratico\\esfinal\\ES2\\back\\back\\BackendTesteESII.csproj": {
+    "C:\\Users\\diana\\OneDrive\\Documentos\\2ano2semestre\\EngenhariadeSoftwareII\\esfinal\\esfinal\\back\\back\\BackendTesteESII.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Admin\\Desktop\\UNI\\2ºANO\\2_SEMESTRE\\EngSoftII\\trabalhoPratico\\esfinal\\ES2\\back\\back\\BackendTesteESII.csproj",
+        "projectUniqueName": "C:\\Users\\diana\\OneDrive\\Documentos\\2ano2semestre\\EngenhariadeSoftwareII\\esfinal\\esfinal\\back\\back\\BackendTesteESII.csproj",
         "projectName": "BackendTesteESII",
-        "projectPath": "C:\\Users\\Admin\\Desktop\\UNI\\2ºANO\\2_SEMESTRE\\EngSoftII\\trabalhoPratico\\esfinal\\ES2\\back\\back\\BackendTesteESII.csproj",
-        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Admin\\Desktop\\UNI\\2ºANO\\2_SEMESTRE\\EngSoftII\\trabalhoPratico\\esfinal\\ES2\\back\\back\\obj\\",
+        "projectPath": "C:\\Users\\diana\\OneDrive\\Documentos\\2ano2semestre\\EngenhariadeSoftwareII\\esfinal\\esfinal\\back\\back\\BackendTesteESII.csproj",
+        "packagesPath": "C:\\Users\\diana\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\diana\\OneDrive\\Documentos\\2ano2semestre\\EngenhariadeSoftwareII\\esfinal\\esfinal\\back\\back\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\diana\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -106,32 +104,30 @@
         }
       }
     },
-    "C:\\Users\\Admin\\Desktop\\UNI\\2ºANO\\2_SEMESTRE\\EngSoftII\\trabalhoPratico\\esfinal\\ES2\\GestaoServicosClientes.Tests\\GestaoServicosClientes.Tests.csproj": {
+    "C:\\Users\\diana\\OneDrive\\Documentos\\2ano2semestre\\EngenhariadeSoftwareII\\esfinal\\esfinal\\GestaoServicosClientes.Tests\\GestaoServicosClientes.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Admin\\Desktop\\UNI\\2ºANO\\2_SEMESTRE\\EngSoftII\\trabalhoPratico\\esfinal\\ES2\\GestaoServicosClientes.Tests\\GestaoServicosClientes.Tests.csproj",
+        "projectUniqueName": "C:\\Users\\diana\\OneDrive\\Documentos\\2ano2semestre\\EngenhariadeSoftwareII\\esfinal\\esfinal\\GestaoServicosClientes.Tests\\GestaoServicosClientes.Tests.csproj",
         "projectName": "GestaoServicosClientes.Tests",
-        "projectPath": "C:\\Users\\Admin\\Desktop\\UNI\\2ºANO\\2_SEMESTRE\\EngSoftII\\trabalhoPratico\\esfinal\\ES2\\GestaoServicosClientes.Tests\\GestaoServicosClientes.Tests.csproj",
-        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Admin\\Desktop\\UNI\\2ºANO\\2_SEMESTRE\\EngSoftII\\trabalhoPratico\\esfinal\\ES2\\GestaoServicosClientes.Tests\\obj\\",
+        "projectPath": "C:\\Users\\diana\\OneDrive\\Documentos\\2ano2semestre\\EngenhariadeSoftwareII\\esfinal\\esfinal\\GestaoServicosClientes.Tests\\GestaoServicosClientes.Tests.csproj",
+        "packagesPath": "C:\\Users\\diana\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\diana\\OneDrive\\Documentos\\2ano2semestre\\EngenhariadeSoftwareII\\esfinal\\esfinal\\GestaoServicosClientes.Tests\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\diana\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\Admin\\Desktop\\UNI\\2ºANO\\2_SEMESTRE\\EngSoftII\\trabalhoPratico\\esfinal\\ES2\\back\\back\\BackendTesteESII.csproj": {
-                "projectPath": "C:\\Users\\Admin\\Desktop\\UNI\\2ºANO\\2_SEMESTRE\\EngSoftII\\trabalhoPratico\\esfinal\\ES2\\back\\back\\BackendTesteESII.csproj"
+              "C:\\Users\\diana\\OneDrive\\Documentos\\2ano2semestre\\EngenhariadeSoftwareII\\esfinal\\esfinal\\back\\back\\BackendTesteESII.csproj": {
+                "projectPath": "C:\\Users\\diana\\OneDrive\\Documentos\\2ano2semestre\\EngenhariadeSoftwareII\\esfinal\\esfinal\\back\\back\\BackendTesteESII.csproj"
               }
             }
           }
@@ -156,9 +152,17 @@
               "target": "Package",
               "version": "[8.3.0, )"
             },
+            "Microsoft.AspNetCore.Identity": {
+              "target": "Package",
+              "version": "[2.3.1, )"
+            },
+            "Microsoft.EntityFrameworkCore.InMemory": {
+              "target": "Package",
+              "version": "[9.0.6, )"
+            },
             "Microsoft.NET.Test.Sdk": {
               "target": "Package",
-              "version": "[17.12.0, )"
+              "version": "[17.14.1, )"
             },
             "Moq": {
               "target": "Package",
@@ -166,7 +170,7 @@
             },
             "NUnit": {
               "target": "Package",
-              "version": "[4.2.2, )"
+              "version": "[4.3.2, )"
             },
             "NUnit.Analyzers": {
               "target": "Package",
@@ -174,11 +178,25 @@
             },
             "NUnit3TestAdapter": {
               "target": "Package",
-              "version": "[4.6.0, )"
+              "version": "[5.0.0, )"
+            },
+            "Selenium.Support": {
+              "target": "Package",
+              "version": "[4.33.0, )"
+            },
+            "Selenium.WebDriver": {
+              "target": "Package",
+              "version": "[4.33.0, )"
+            },
+            "Selenium.WebDriver.ChromeDriver": {
+              "target": "Package",
+              "version": "[137.0.7151.7000, )"
             },
             "coverlet.collector": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
               "target": "Package",
-              "version": "[6.0.2, )"
+              "version": "[6.0.4, )"
             }
           },
           "imports": [
